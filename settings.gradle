@@ -1,0 +1,6 @@
+include ':EMA'
+include ':datakitapi'
+project(':datakitapi').projectDir=new File('../mCerebrum-DataKitAPI/datakitapi')
+include ':utilities'
+project(':utilities').projectDir=new File('../mCerebrum-Utilities/utilities')
+

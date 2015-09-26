@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="selected">#4fa5d5</color>
+    <color name="notselected">#ffffff</color>
+    <color name="white">#ff0000</color>
+    <color name="transparent">#80000000</color>
+
+    <color name="lightblue_50">#E1F5FE</color>
+    <color name="lightblue_100">#B3E5FC</color>
+    <color name="lightblue_200">#81D4FA</color>
+    <color name="lightblue_300">#4FC3F7</color>
+    <color name="lightblue_400">#29B6F6</color>
+    <color name="lightblue_500">#03A9F4</color>
+    <color name="lightblue_600">#039BE5</color>
+    <color name="lightblue_700">#0288D1</color>
+    <color name="lightblue_800">#0277BD</color>
+    <color name="lightblue_900">#01579B</color>
+    <color name="lightblue_A100">#80D8FF</color>
+    <color name="lightblue_A200">#40C4FF</color>
+    <color name="lightblue_A400">#00B0FF</color>
+    <color name="lightblue_A700">#0091EA</color>
+
+</resources>

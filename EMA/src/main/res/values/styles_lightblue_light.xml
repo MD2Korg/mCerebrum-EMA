@@ -1,0 +1,27 @@
+<resources>
+    <!-- Base application theme. -->
+    <style name="AppThemeLightBlueLight" parent="@android:style/Theme.Holo.Light">
+        <item name="android:actionBarStyle">@style/actionbar_light</item>
+        <item name="android:buttonStyle">@style/ButtonLightGreen</item>
+        <item name="android:buttonStyleToggle">@style/ToggleLightGreen</item>
+
+    </style>
+
+    <style name="actionbar_light" parent="@android:style/Widget.Holo.Light.ActionBar">
+        <item name="android:background">@color/lightblue_700</item>
+        <item name="android:titleTextStyle">@style/TitleTextStyle</item>    </style>
+    <style name="TitleTextStyle" parent="@android:style/TextAppearance.Holo.Widget.ActionBar.Title">
+        <item name="android:textColor">@color/WHITE</item>
+    </style>
+    <style name="ButtonLightGreen" parent="android:Widget.Holo.Light.Button">
+        <item name="android:background">@drawable/button_lightblue</item>
+        <item name="android:textAppearance">?android:attr/textAppearanceMedium</item>
+    </style>
+
+    <style name="ToggleLightGreen" parent="android:Widget.Holo.Light.Button.Toggle">
+        <item name="android:background">@drawable/button_toggle_lightblue</item>
+        <item name="android:textAppearance">?android:attr/textAppearanceMedium</item>
+    </style>
+
+
+</resources>
