@@ -34,6 +34,9 @@ public class QuestionAnswers{
     long promptTime;
     long startTime;
     long endTime;
+    long delayStartTime;
+    long delayStopTime;
+    String emaStatus;
     String emaType;
     ArrayList<QuestionAnswer> questionAnswers;
     QuestionAnswers(String emaType){
@@ -51,5 +54,61 @@ public class QuestionAnswers{
     }
     void add(QuestionAnswer questionAnswer){
         questionAnswers.add(questionAnswer);
+    }
+
+    public long getPromptTime() {
+        return promptTime;
+    }
+
+    public void setPromptTime(long promptTime) {
+        this.promptTime = promptTime;
+    }
+
+    public long getStartTime() {
+        return startTime;
+    }
+
+    public long getEndTime() {
+        return endTime;
+    }
+
+    public long getDelayStartTime() {
+        return delayStartTime;
+    }
+
+    public void setDelayStartTime(long delayStartTime) {
+        this.delayStartTime = delayStartTime;
+    }
+
+    public long getDelayStopTime() {
+        return delayStopTime;
+    }
+
+    public void setDelayStopTime(long delayStopTime) {
+        this.delayStopTime = delayStopTime;
+    }
+
+    public String getEmaStatus() {
+        return emaStatus;
+    }
+
+    public void setEmaStatus(String emaStatus) {
+        this.emaStatus = emaStatus;
+    }
+
+    public String getEmaType() {
+        return emaType;
+    }
+
+    public void setEmaType(String emaType) {
+        this.emaType = emaType;
+    }
+
+    public ArrayList<QuestionAnswer> getQuestionAnswers() {
+        return questionAnswers;
+    }
+
+    public void setQuestionAnswers(ArrayList<QuestionAnswer> questionAnswers) {
+        this.questionAnswers = questionAnswers;
     }
 }

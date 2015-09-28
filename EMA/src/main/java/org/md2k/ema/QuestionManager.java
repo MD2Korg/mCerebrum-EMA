@@ -54,6 +54,9 @@ public class QuestionManager {
         }
         return instance;
     }
+    void clear(){
+        instance=null;
+    }
     private QuestionManager(Context context, String ema_type){
         emaType=ema_type;
         String filename=EMA_Info.getInstance(context).getFileName(ema_type);

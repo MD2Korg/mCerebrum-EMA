@@ -86,7 +86,7 @@ public class FragmentBase extends Fragment {
     }
 
     public void updateNext(boolean answered) {
-        if (menu != null)
+        if (menu != null && menu.findItem(R.id.action_next)!=null)
             menu.findItem(R.id.action_next).setEnabled(answered);
     }
 

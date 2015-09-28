@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/ButtonLayout"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/textView_text"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Question Text Here blah blah blah this should expand the text view size"
+		android:layout_gravity="center"
+        android:textSize="20dp"
+
+        android:paddingTop="50dp"
+        android:gravity="center_horizontal"
+        android:textColor="@color/lightblue_900"></TextView>
+    <TextView
+        android:id="@+id/textView_remaining_time"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Question Text Here blah blah blah this should expand the text view size"
+        android:layout_gravity="center"
+        android:textSize="20sp"
+
+        android:paddingTop="50dp"
+        android:paddingBottom="50dp"
+        android:gravity="center_horizontal"></TextView>
+
+    <Button
+        android:id="@+id/button_start_interview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_below="@+id/textView_texe"
+        android:text="Start Interview Now" />
+
+</LinearLayout>
+

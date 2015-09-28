@@ -48,6 +48,7 @@
                 android:id="@+id/textView"
                 android:layout_gravity="center"
                 android:padding="20dp" />
+
         </LinearLayout>
 
 

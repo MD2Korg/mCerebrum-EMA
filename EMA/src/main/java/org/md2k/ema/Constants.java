@@ -39,6 +39,11 @@ public class Constants {
     public static final String TEXT="text";
     public static final String NUMERIC="numeric";
 
+    public static final String EMA_COMPLETED="Completed";
+    public static final String EMA_ABANDONED="Abandoned";
+    public static final String EMA_MISSED = "Missed";
+
+
     public static final int RANDOM_EMA = 0;
     public static final int SMOKING_EMA = 1;
     public static final int SURF_THE_MOOD = 2;

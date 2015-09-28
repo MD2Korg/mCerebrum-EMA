@@ -3,14 +3,18 @@
     "minimum_time_between_ema": "18 minutes",
     "maximum_ema": 12
   },
-  "ema_notification": {
-    "beep_time": "4 minute",
-    "platformType": "PHONE"
-  },
+  "ema_notification": [
+    {
+      "beep_type": ["notification","vibrate"],
+      "beep_count":10,
+      "beep_delay":10,
+      "platformType": "PHONE"
+    }
+  ],
   "ema_timeout": {
-    "start_timeout": "5 minutes",
-    "interview_timeout": "7 minutes",
-    "user_delay": "10 minutes"
+    "start_timeout": 30,
+    "interview_timeout": 420,
+    "user_delay": 600
   },
   "ema_triggertype": [
     {

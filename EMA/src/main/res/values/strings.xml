@@ -2,7 +2,6 @@
     <string name="app_name">EMA</string>
 
     <string name="action_settings">Menu</string>
-    <string name="title_screen_slide">Screen Slide</string>
     <string name="title_template_step">Step <xliff:g id="step_number">%1$d</xliff:g>: Lorem
         Ipsum</string>
 

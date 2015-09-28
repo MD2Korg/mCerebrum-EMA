@@ -36,7 +36,7 @@ import android.widget.PopupMenu;
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-public class ActivityEMA extends Activity {
+public class ActivityMain extends Activity {
     EMA_Info ema_info;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,7 +48,7 @@ public class ActivityEMA extends Activity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(ActivityEMA.this, ActivityQuestion.class);
+                Intent intent = new Intent(ActivityMain.this, ActivityInterview.class);
                 intent.putExtra("ema_type", ema_info.ema_triggertype[0].name);
                 intent.putExtra("filename",ema_info.ema_triggertype[0].filename);
                 startActivity(intent);
@@ -58,7 +58,7 @@ public class ActivityEMA extends Activity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(ActivityEMA.this, ActivityQuestion.class);
+                Intent intent = new Intent(ActivityMain.this, ActivityInterview.class);
                 intent.putExtra("ema_type", ema_info.ema_triggertype[1].name);
                 intent.putExtra("filename",ema_info.ema_triggertype[1].filename);
                 startActivity(intent);
@@ -72,32 +72,6 @@ public class ActivityEMA extends Activity {
         switch (item.getItemId()) {
             // Respond to the action bar's Up/Home button
             case android.R.id.home:
-                Window window = getWindow();
-                View v = window.getDecorView();
-                int resId = getResources().getIdentifier("home", "id", "android");
-//                return v.findViewById(resId);
-                PopupMenu popup = new PopupMenu(getActionBar().getThemedContext(), v.findViewById(resId));
-                //Inflating the Popup using xml file
-                popup.getMenuInflater().inflate(R.menu.menu_options, popup.getMenu());
-
-                //registering popup with OnMenuItemClickListener
-                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                    public boolean onMenuItemClick(MenuItem item) {
-                        switch (item.getItemId()) {
-                            case R.id.action_home:
-//                                NavUtils.navigateUpTo(ActivityMoodSurfingExerciseBegin.this, new Intent(ActivityMoodSurfingExerciseBegin.this, ActivityEMA.class));
-                                return true;
-                            case R.id.action_supporting_literature:
-                                return true;
-                            default:
-                                return false;
-                        }
-                    }
-                });
-
-                popup.show();//showing popup menu
-
-                //              NavUtils.navigateUpFromSameTask(this);
                 return true;
         }
         return super.onOptionsItemSelected(item);

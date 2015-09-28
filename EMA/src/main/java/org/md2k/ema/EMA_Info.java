@@ -42,7 +42,7 @@ import java.io.Serializable;
 public class EMA_Info {
     private static final String TAG = EMA_Info.class.getSimpleName();
     public EMA_General ema_general;
-    public EMA_Notification ema_notification;
+    public EMA_Notification[] ema_notification;
     public EMA_Timeout ema_timeout;
     public EMA_TriggerType[] ema_triggertype;
     private static EMA_Info instance = null;
@@ -50,7 +50,7 @@ public class EMA_Info {
 
     public void show() {
         ema_general.show();
-        ema_notification.show();
+//        ema_notification.show();
         ema_timeout.show();
         for (EMA_TriggerType ema_triggerType1 : ema_triggertype) {
             ema_triggerType1.show();
@@ -105,20 +105,20 @@ public class EMA_Info {
     }
 
     class EMA_Notification {
-        public String beep_time;
+        public String[] beep_type;
+        public int beep_count;
+        public long beep_delay;
         public String platformType;
-        public String platformId;
-        public String location;
 
         public void show() {
-            Log.d(TAG, "beep_time=" + beep_time + " platformType=" + platformType + " platformId=" + platformId + " location=" + location);
+//            Log.d(TAG, "beep_time=" + beep_time + " platformType=" + platformType + " platformId=" + platformId + " location=" + location);
         }
     }
 
     class EMA_Timeout {
-        public String start_timeout;
-        public String interview_timeout;
-        public String user_delay;
+        public long start_timeout;
+        public long interview_timeout;
+        public long user_delay;
 
         public void show() {
             Log.d(TAG, "start_timeout=" + start_timeout + " interview_timeout=" + interview_timeout + " user_delay=" + user_delay);
