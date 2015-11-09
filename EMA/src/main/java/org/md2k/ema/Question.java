@@ -74,10 +74,8 @@ public class Question implements Serializable {
     public ArrayList<String> getResponse_option() {
         return response_option;
     }
-    public boolean isType(String TYPE){
-        if(question_type==null) return false;
-        if(question_type.equals(TYPE)) return true;
-        return false;
+    public boolean isType(String TYPE) {
+        return question_type != null && question_type.equals(TYPE);
     }
 
     public void setResponse_option(ArrayList<String> response_option) {

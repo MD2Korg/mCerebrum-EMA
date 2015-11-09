@@ -28,6 +28,7 @@ package org.md2k.ema;
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 public class Constants {
+    public static final String TAP = "(Please 'TAP' here to type)";
     public static final int ASSET=0;
     public static final int INTERNAL_SDCARD=1;
     public static final int EXTERNAL_SDCARD=2;
@@ -37,25 +38,9 @@ public class Constants {
     public static final String MULTIPLE_CHOICE="multiple_choice";
     public static final String MULTIPLE_SELECT="multiple_select";
     public static final String TEXT="text";
-    public static final String NUMERIC="numeric";
+    public static final String TEXT_NUMERIC ="text_numeric";
 
-    public static final String EMA_COMPLETED="Completed";
-    public static final String EMA_ABANDONED="Abandoned";
-    public static final String EMA_MISSED = "Missed";
-
-
-    public static final int RANDOM_EMA = 0;
-    public static final int SMOKING_EMA = 1;
-    public static final int SURF_THE_MOOD = 2;
-
-    public static final String[] BEGIN_TITLE={
-            "Use Your Imagination",
-            "Notice and Accept",
-            "Surf the Mood"
-    };
-    public static final String[] BEGIN_DESCRIPTION={
-            "This is an exercise to help you use your imagination to manage your unpleasant thoughts or emotions. Please tap 'Begin' to start this exercise",
-            "This is an exercise to help you become aware of and accept any physical sensations caused by stress. Please tap 'Begin' to start this exercise",
-            "This is an exercise that will guide you through some imagery to help you manage stress. Please tap 'Begin' to start this exercise"
-    };
+    public static final String EMA_COMPLETED="COMPLETED";
+    public static final String EMA_ABANDONED="ABANDONED";
+    public static final String EMA_MISSED = "MISSED";
 }

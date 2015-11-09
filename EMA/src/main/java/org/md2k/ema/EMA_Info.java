@@ -5,13 +5,18 @@ import android.content.Context;
 import android.content.res.AssetManager;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
+import org.md2k.datakitapi.source.datasource.DataSource;
 import org.md2k.utilities.Report.Log;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Serializable;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Copyright (c) 2015, The University of Memphis, MD2K Center
@@ -41,105 +46,43 @@ import java.io.Serializable;
  */
 public class EMA_Info {
     private static final String TAG = EMA_Info.class.getSimpleName();
-    public EMA_General ema_general;
-    public EMA_Notification[] ema_notification;
-    public EMA_Timeout ema_timeout;
-    public EMA_TriggerType[] ema_triggertype;
-    private static EMA_Info instance = null;
+    private ArrayList<EMA> emas;
     Context context;
 
-    public void show() {
-        ema_general.show();
-//        ema_notification.show();
-        ema_timeout.show();
-        for (EMA_TriggerType ema_triggerType1 : ema_triggertype) {
-            ema_triggerType1.show();
-        }
+    class EMA {
+        String id;
+        String display_name;
+        String file_name;
+        long timeout;
     }
 
-    public static EMA_Info getInstance(Context context) {
-        if (instance == null)
-            new EMA_Info(context);
-        return instance;
+    int size() {
+        return emas.size();
     }
 
-    String getFileName(String emaType) {
-        for (int i = 0; i < ema_triggertype.length; i++)
-            if (ema_triggertype[i].name.equals(emaType))
-                return ema_triggertype[i].filename;
-        return null;
+    EMA get(int i) {
+        return emas.get(i);
     }
 
-    EMA_Info(Context context) {
+
+    public EMA_Info(Context context) {
         this.context = context;
         BufferedReader br;
         Log.d(TAG, "File location=" + Constants.FILE_LOCATION);
         try {
-
-            if (Constants.FILE_LOCATION == Constants.ASSET) {
-                Log.d(TAG, "inside asset...");
-                AssetManager assetManager = context.getAssets();
-                Log.d(TAG, "assetManager=" + assetManager.toString() + " filename=" + Constants.CONFIG_FILENAME);
-                br = new BufferedReader(new InputStreamReader(context.getAssets().open(Constants.CONFIG_FILENAME)));
-                Log.d(TAG, "br=" + br.toString());
-            } else {
-//            br = new BufferedReader(new FileReader(Constants.DIR_FILENAME()));
-            }
+            Log.d(TAG, "inside asset...");
+            AssetManager assetManager = context.getAssets();
+            Log.d(TAG, "assetManager=" + assetManager.toString() + " filename=" + Constants.CONFIG_FILENAME);
+            br = new BufferedReader(new InputStreamReader(context.getAssets().open(Constants.CONFIG_FILENAME)));
+            Log.d(TAG, "br=" + br.toString());
             Log.d(TAG, "before gson=");
             Gson gson = new Gson();
-            instance = gson.fromJson(br, EMA_Info.class);
-            instance.show();
+            Type collectionType = new TypeToken<List<EMA>>() {
+            }.getType();
+            emas = gson.fromJson(br, collectionType);
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    class EMA_General {
-        public String minimum_time_between_ema;
-        public int maximum_ema;
-
-        public void show() {
-            Log.d(TAG, "minimum_time_between_ema=" + minimum_time_between_ema);
-            Log.d(TAG, "maximum_ema=" + maximum_ema);
-        }
-    }
-
-    class EMA_Notification {
-        public String[] beep_type;
-        public int beep_count;
-        public long beep_delay;
-        public String platformType;
-
-        public void show() {
-//            Log.d(TAG, "beep_time=" + beep_time + " platformType=" + platformType + " platformId=" + platformId + " location=" + location);
-        }
-    }
-
-    class EMA_Timeout {
-        public long start_timeout;
-        public long interview_timeout;
-        public long user_delay;
-
-        public void show() {
-            Log.d(TAG, "start_timeout=" + start_timeout + " interview_timeout=" + interview_timeout + " user_delay=" + user_delay);
-        }
-
-    }
-
-    public class EMA_TriggerType implements Serializable {
-        public String name;
-        public String filename;
-        public int budget;
-        public int expected_event;
-        public int trigger_delay;
-        public String priority;
-
-        public void show() {
-            Log.d(TAG, "name=" + name + " filename=" + filename +
-                    " budget=" + budget + " expected_event=" + expected_event +
-                    " trigger_delay=" + trigger_delay + "priority=" + priority);
-        }
-
     }
 }
 

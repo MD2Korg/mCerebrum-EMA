@@ -55,9 +55,9 @@ public class FragmentMultipleChoiceSelect extends FragmentBase {
     /**
      * Factory method for this fragment class. Constructs a new fragment for the given page number.
      */
-    public static FragmentMultipleChoiceSelect create(String emaType, int pageNumber) {
+    public static FragmentMultipleChoiceSelect create(int pageNumber, String id, String file_name) {
         FragmentMultipleChoiceSelect fragment = new FragmentMultipleChoiceSelect();
-        fragment.setArguments(getArgument(emaType, pageNumber));
+        fragment.setArguments(getArgument(pageNumber, id, file_name));
         return fragment;
     }
 

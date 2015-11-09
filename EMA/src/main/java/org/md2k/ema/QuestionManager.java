@@ -47,21 +47,21 @@ public class QuestionManager {
     private static final String TAG = QuestionManager.class.getSimpleName();
     QuestionAnswers questionAnswers;
     private static QuestionManager instance=null;
-    private static String emaType=null;
-    public static QuestionManager getInstance(Context context, String ema_type){
-        if(instance==null || emaType==null || !emaType.equals(ema_type)){
-            instance = new QuestionManager(context, ema_type);
+    private static String id =null;
+    public static QuestionManager getInstance(Context context, String id, String file_name){
+        if(instance==null || QuestionManager.id ==null || !QuestionManager.id.equals(id)){
+            instance = new QuestionManager(context, id, file_name);
         }
         return instance;
     }
     void clear(){
         instance=null;
     }
-    private QuestionManager(Context context, String ema_type){
-        emaType=ema_type;
-        String filename=EMA_Info.getInstance(context).getFileName(ema_type);
-        ArrayList<Question> questions=readQuestionsFromFile(context,filename);
-        questionAnswers=new QuestionAnswers(ema_type);
+    private QuestionManager(Context context, String id,String file_name){
+        QuestionManager.id =id;
+        ArrayList<Question> questions=readQuestionsFromFile(context,file_name);
+        questionAnswers=new QuestionAnswers(id);
+        assert questions != null;
         for(int i=0;i<questions.size();i++){
             QuestionAnswer questionAnswer=new QuestionAnswer(questions.get(i));
             questionAnswers.add(questionAnswer);

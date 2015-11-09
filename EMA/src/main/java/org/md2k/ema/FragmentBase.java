@@ -7,6 +7,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -49,7 +50,9 @@ public class FragmentBase extends Fragment {
      * The argument key for the page number this fragment represents.
      */
     public static final String ARG_PAGE = "page";
-    public static final String ARG_TYPE = "type";
+    public static final String ARG_ID = "id";
+    public static final String ARG_FILENAME = "file_name";
+
     private static final String TAG = FragmentBase.class.getSimpleName();
     Menu menu = null;
 
@@ -57,16 +60,18 @@ public class FragmentBase extends Fragment {
      * The fragment's page number, which is set to the argument value for {@link #ARG_PAGE}.
      */
     protected int mPageNumber;
-    protected String emaType;
+    protected String id;
+    protected String file_name;
     QuestionAnswer questionAnswer = null;
 
     /**
      * Factory method for this fragment class. Constructs a new fragment for the given page number.
      */
-    protected static Bundle getArgument(String emaType, int pageNumber) {
+    protected static Bundle getArgument(int pageNumber, String id,String file_name) {
         Bundle args = new Bundle();
         args.putInt(ARG_PAGE, pageNumber);
-        args.putString(ARG_TYPE, emaType);
+        args.putString(ARG_ID, id);
+        args.putString(ARG_FILENAME,file_name);
         return args;
     }
 
@@ -75,8 +80,9 @@ public class FragmentBase extends Fragment {
         Log.d(TAG, "FragmentBase-> onCreate()");
         super.onCreate(savedInstanceState);
         mPageNumber = getArguments().getInt(ARG_PAGE);
-        emaType = getArguments().getString(ARG_TYPE);
-        questionAnswer = QuestionManager.getInstance(getActivity(),emaType).questionAnswers.questionAnswers.get(mPageNumber);
+        id = getArguments().getString(ARG_ID);
+        file_name=getArguments().getString(ARG_FILENAME);
+        questionAnswer = QuestionManager.getInstance(getActivity(),id,file_name).questionAnswers.questionAnswers.get(mPageNumber);
         setHasOptionsMenu(true);
     }
 
@@ -120,4 +126,12 @@ public class FragmentBase extends Fragment {
     public void onPause() {
         super.onPause();
     }
+    void hideKeyboard(){
+        View view = getActivity().getCurrentFocus();
+        if (view != null) {
+            InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(getActivity().INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
+    }
+
 }

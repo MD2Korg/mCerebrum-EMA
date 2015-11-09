@@ -1,17 +1,23 @@
 package org.md2k.ema;
 
+import android.graphics.Color;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
+import android.widget.EditText;
 import android.widget.NumberPicker;
+import android.widget.TextView;
 
 import org.md2k.datakitapi.time.DateTime;
 import org.md2k.utilities.Report.Log;
 
 import java.util.ArrayList;
+
 
 
 /**
@@ -45,15 +51,16 @@ import java.util.ArrayList;
  * A fragment representing a single step in a wizard. The fragment shows a dummy title indicating
  * the page number, along with some dummy text.
  */
-public class FragmentNumeric extends FragmentBase {
-    private static final String TAG = FragmentNumeric.class.getSimpleName();
+public class FragmentTextNumeric extends FragmentBase {
+    private static final String TAG = FragmentTextNumeric.class.getSimpleName();
+    EditText editText;
 
     /**
      * Factory method for this fragment class. Constructs a new fragment for the given page number.
      */
-    public static FragmentNumeric create(String emaType, int pageNumber) {
-        FragmentNumeric fragment = new FragmentNumeric();
-        fragment.setArguments(getArgument(emaType, pageNumber));
+    public static FragmentTextNumeric create(int pageNumber, String id, String file_name) {
+        FragmentTextNumeric fragment = new FragmentTextNumeric();
+        fragment.setArguments(getArgument(pageNumber,id, file_name));
         return fragment;
     }
 
@@ -62,29 +69,57 @@ public class FragmentNumeric extends FragmentBase {
         super.onCreate(savedInstanceState);
     }
 
-    void setTypeMultipleChoiceSelect(ViewGroup rootView, final QuestionAnswer questionAnswer) {
-        Log.d(TAG, "setTypeMultipleChoiceSelect() questionAnswer=" + questionAnswer.getQuestion_id() + " " + questionAnswer.getResponse_option());
-        NumberPicker numberPicker_option = (NumberPicker) rootView.findViewById(R.id.numberPicker_option);
-        Log.d(TAG, "size=" + questionAnswer.response_option.size() + " " + questionAnswer.response_option.get(0) + " " + questionAnswer.response_option.get(1));
-        int minValue=Integer.valueOf(questionAnswer.response_option.get(0));
-        int maxValue=Integer.valueOf(questionAnswer.response_option.get(1));
-        Log.d(TAG,"minvalue="+minValue+" maxvalue="+maxValue);
+    void setEditTextFocused() {
+        if (editText.getText().toString().equals(Constants.TAP)) {
+            editText.setText("");
+        }
+        editText.setTextColor(Color.BLACK);
+    }
 
-        numberPicker_option.setMaxValue(maxValue);
-        numberPicker_option.setMinValue(minValue);
-        numberPicker_option.setWrapSelectorWheel(false);
-        updateNext(true);
+    void setEditTextNotFocused() {
+        if (editText.getText().toString().length() == 0) {
+            editText.setText(Constants.TAP);
+            editText.setTextColor(getResources().getColor(R.color.teal_100));
+        }
+    }
+    void setEditText(ViewGroup rootView) {
+        editText = (EditText) rootView.findViewById(R.id.editTextNumber);
+        setEditTextNotFocused();
 
-        numberPicker_option.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
+        editText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if ((event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) || (actionId == EditorInfo.IME_ACTION_DONE)) {
+                    String response = editText.getText().toString();
+                    response = response.trim();
+                    ArrayList<String> responses=new ArrayList<String>();
+                    responses.add(response);
+                    if (response.length() > 0) {
+                        questionAnswer.setResponse(responses);
+                    }
+                }
+                return false;
+            }
+        });
+        editText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
-            public void onValueChange(NumberPicker numberPicker, int i, int i1) {
-                ArrayList<String> response=new ArrayList<>();
-                response.add(String.valueOf(i1));
-                questionAnswer.setResponse(response);
-                updateNext(true);
+            public void onFocusChange(View view, boolean b) {
+                Log.d(TAG, "Focus=" + b);
+                if (b)
+                    setEditTextFocused();
+                else setEditTextNotFocused();
 
             }
         });
+    }
+
+    @Override
+    public void onPause(){
+        if(!editText.getText().toString().equals(Constants.TAP) && editText.getText().toString().length()!=0) {
+            questionAnswer.getResponse().clear();
+            questionAnswer.getResponse().add(editText.getText().toString());
+        }
+        hideKeyboard();
+        super.onPause();
     }
 
     public boolean isAnswered() {
@@ -103,11 +138,10 @@ public class FragmentNumeric extends FragmentBase {
                              Bundle savedInstanceState) {
         Log.d(TAG, "onCreateView() mPageNumber=" + mPageNumber);
         final ViewGroup rootView = (ViewGroup) inflater
-                .inflate(R.layout.fragment_numeric, container, false);
+                .inflate(R.layout.fragment_text_numeric, container, false);
         questionAnswer.setPrompt_time(DateTime.getDateTime());
         setQuestionText(rootView, questionAnswer);
-
-        setTypeMultipleChoiceSelect(rootView, questionAnswer);
+        setEditText(rootView);
         return rootView;
     }
 }

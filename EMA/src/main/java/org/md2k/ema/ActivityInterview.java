@@ -1,25 +1,23 @@
 package org.md2k.ema;
 
-import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v13.app.FragmentStatePagerAdapter;
-import android.support.v4.app.NavUtils;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
-import android.widget.PopupMenu;
+import android.widget.TextView;
 import android.widget.Toast;
 
-import org.md2k.datakitapi.time.DateTime;
 import org.md2k.utilities.Report.Log;
-
-import java.util.ArrayList;
 
 /**
  * Copyright (c) 2015, The University of Memphis, MD2K Center
@@ -49,25 +47,50 @@ import java.util.ArrayList;
  */
 public class ActivityInterview extends ActivityAbstractInterview {
     private static final String TAG = ActivityInterview.class.getSimpleName();
-    private NonSwipeableViewPager mPager=null;
+    private NonSwipeableViewPager mPager = null;
     FragmentBase fragmentBase;
-
     private PagerAdapter mPagerAdapter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        id=getIntent().getStringExtra("id");
+        display_name=getIntent().getStringExtra("display_name");
+        file_name=getIntent().getStringExtra("file_name");
+        timeout=getIntent().getLongExtra("timeout", 0);
+        Log.d(TAG, "id=" + id + " display_name=" + display_name + " file_name=" + file_name + " timeout=" + timeout);
+        setContentView(R.layout.activity_question);
+        if (getActionBar() != null)
+            getActionBar().setDisplayHomeAsUpEnabled(true);
+        initQuestionAnswer();
+        initInterviewState();
+        initView();
         super.onCreate(savedInstanceState);
     }
-    void setupInitialUI(){
-        setContentView(R.layout.activity_interview_general);
-        mPager=null;
-        closeOptionsMenu();
-        mPagerAdapter=null;
-
+    void updateUI() {
+        switch (state) {
+            case AT_START:
+                findViewById(R.id.text_view_status).setVisibility(View.GONE);
+                findViewById(R.id.view_pager).setVisibility(View.VISIBLE);
+                break;
+            case TIMED_OUT:
+                findViewById(R.id.text_view_status).setVisibility(View.VISIBLE);
+                findViewById(R.id.view_pager).setVisibility(View.GONE);
+                ((TextView) findViewById(R.id.text_view_status)).setText("The interview has timed out.");
+                findViewById(R.id.action_previous).setVisibility(View.GONE);
+                findViewById(R.id.action_next).setVisibility(View.GONE);
+                break;
+            case DONE:
+                findViewById(R.id.text_view_status).setVisibility(View.VISIBLE);
+                findViewById(R.id.view_pager).setVisibility(View.GONE);
+                ((TextView) findViewById(R.id.text_view_status)).setText("Interview Completed. Thank you!");
+                findViewById(R.id.action_previous).setVisibility(View.GONE);
+                findViewById(R.id.action_next).setVisibility(View.GONE);
+                break;
+        }
     }
-    void setupInterviewUI(){
-        setContentView(R.layout.activity_question);
-        openOptionsMenu();
+
+    void initView() {
+//        openOptionsMenu();
         // Instantiate a ViewPager and a PagerAdapter.
         mPager = (NonSwipeableViewPager) findViewById(R.id.view_pager);
         mPagerAdapter = new ScreenSlidePagerAdapter(getFragmentManager());
@@ -83,7 +106,6 @@ public class ActivityInterview extends ActivityAbstractInterview {
                 invalidateOptionsMenu();
             }
         });
-        getActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     @Override
@@ -92,15 +114,10 @@ public class ActivityInterview extends ActivityAbstractInterview {
 
         // Add either a "next" or "finish" button to the action bar, depending on which page
         // is currently selected.
-        if(mPager!=null) {
+        if (mPager != null) {
             getMenuInflater().inflate(R.menu.menu_previous_next, menu);
             menu.findItem(R.id.action_previous).setEnabled(mPager.getCurrentItem() > 0);
             MenuItem item = menu.findItem(R.id.action_next);
-/*        MenuItem item = menu.add(Menu.NONE, R.id.action_next, Menu.NONE,
-                (mPager.getCurrentItem() == mPagerAdapter.getCount() - 1)
-                        ? R.string.action_finish
-                        : R.string.action_next);
-*/
             if (mPager.getCurrentItem() == mPagerAdapter.getCount() - 1)
                 item.setTitle("Finish");
             else
@@ -108,7 +125,6 @@ public class ActivityInterview extends ActivityAbstractInterview {
         }
         return super.onCreateOptionsMenu(menu);
     }
-
 
 
     @Override
@@ -134,12 +150,9 @@ public class ActivityInterview extends ActivityAbstractInterview {
                 if (!questionAnswers.questionAnswers.get(mPager.getCurrentItem()).isValid()) {
                     Toast.makeText(getBaseContext(), "Please answer the questionAnswer first", Toast.LENGTH_SHORT).show();
                 } else if (mPager.getCurrentItem() >= questionAnswers.questionAnswers.size() - 1) {
-//                    QuestionManager.getInstance(con)questionManager.questionAnswers.setEndTime(DateTime.getDateTime());
-//                    DataKitHandler.getInstance(this).sendData(new QuestionsJSON(Questions.getInstance(), emaType));
-//                    Questions.getInstance().destroy();
-                    state=DONE;
+                    Log.d(TAG,""+mPager.getCurrentItem()+" "+questionAnswers.questionAnswers.size());
+                    state = DONE;
                     manageState();
-//                    finish();
                 } else if (questionAnswers.questionAnswers.get(mPager.getCurrentItem()).isValid()) {
                     mPager.getAdapter().notifyDataSetChanged();
                     mPager.setCurrentItem(findValidQuestionNext(mPager.getCurrentItem()));
@@ -183,16 +196,16 @@ public class ActivityInterview extends ActivityAbstractInterview {
         @Override
         public Fragment getItem(int position) {
             Log.d(TAG, "getItem(): position=" + position);
-            if(questionAnswers.questionAnswers.get(position).getQuestion_type()==null)
-                fragmentBase = FragmentMultipleChoiceSelect.create(emaType, position);
+            if (questionAnswers.questionAnswers.get(position).getQuestion_type() == null)
+                fragmentBase = FragmentMultipleChoiceSelect.create(position, id, file_name);
 
             else if (questionAnswers.questionAnswers.get(position).getQuestion_type().equals(Constants.MULTIPLE_CHOICE) ||
                     questionAnswers.questionAnswers.get(position).getQuestion_type().equals(Constants.MULTIPLE_SELECT))
-                fragmentBase = FragmentMultipleChoiceSelect.create(emaType, position);
-            else if (questionAnswers.questionAnswers.get(position).getQuestion_type().equals(Constants.NUMERIC))
-                fragmentBase= FragmentNumeric.create(emaType, position);
-            else{
-                fragmentBase = FragmentMultipleChoiceSelect.create(emaType, position);
+                fragmentBase = FragmentMultipleChoiceSelect.create(position, id, file_name);
+            else if (questionAnswers.questionAnswers.get(position).getQuestion_type().equals(Constants.TEXT_NUMERIC))
+                fragmentBase = FragmentTextNumeric.create(position, id, file_name);
+            else {
+                fragmentBase = FragmentMultipleChoiceSelect.create(position, id, file_name);
             }
             return fragmentBase;
         }
@@ -209,4 +222,44 @@ public class ActivityInterview extends ActivityAbstractInterview {
             return POSITION_NONE;
         }
     }
+
+    @Override
+    public void onPause() {
+        createNotification();
+        super.onPause();
+    }
+    @Override
+    public void onResume() {
+        cancelNotification();
+        super.onResume();
+    }
+    public void createNotification() {
+        // Prepare intent which is triggered if the
+        // notification is selected
+        Intent intent = new Intent(this, ActivityInterview.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        PendingIntent pIntent = PendingIntent.getActivity(this, (int) System.currentTimeMillis(), intent, 0);
+
+        // Build notification
+        // Actions are just fake
+        Notification noti = new Notification.Builder(this)
+                .setContentTitle("Interview is available")
+                .setContentText("Please click to resume interview").setSmallIcon(R.drawable.ic_notification_ema)
+                .setContentIntent(pIntent)
+                .setAutoCancel(true)
+                .build();
+        NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        noti.flags |= Notification.FLAG_NO_CLEAR;
+        notificationManager.notify(0, noti);
+    }
+    public void cancelNotification() {
+        NotificationManager nMgr = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        nMgr.cancel(0);
+    }
+    @Override
+    public void onDestroy(){
+        cancelNotification();
+        super.onDestroy();
+    }
 }
+

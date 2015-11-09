@@ -1,37 +1,20 @@
-{
-  "ema_general": {
-    "minimum_time_between_ema": "18 minutes",
-    "maximum_ema": 12
+[
+  {
+    "id":"event_contingent_recording",
+    "display_name":"Event Contingent Recording",
+    "file_name":"event_contingent_recording.json",
+    "timeout":300
   },
-  "ema_notification": [
-    {
-      "beep_type": ["notification","vibrate"],
-      "beep_count":10,
-      "beep_delay":10,
-      "platformType": "PHONE"
-    }
-  ],
-  "ema_timeout": {
-    "start_timeout": 30,
-    "interview_timeout": 420,
-    "user_delay": 600
+  {
+    "id":"random_experience_sampling",
+    "display_name":"Random Experience Sampling",
+    "file_name":"random_experience_sampling.json",
+    "timeout":300
   },
-  "ema_triggertype": [
-    {
-      "name": "RANDOM",
-      "filename": "random_ema.json",
-      "budget": 12,
-      "expected_event": 12,
-      "trigger_delay": 0,
-      "priority": "low"
-    },
-    {
-      "name": "SMOKING",
-      "filename": "smoking_ema.json",
-      "budget": 2,
-      "expected_event": 2,
-      "trigger_delay": 0,
-      "priority": "medium"
-    }
-  ]
-}
+  {
+    "id":"end_of_day_recording",
+    "display_name":"End of Day Recording",
+    "file_name":"end_of_day_recording.json",
+    "timeout":300
+  }
+]

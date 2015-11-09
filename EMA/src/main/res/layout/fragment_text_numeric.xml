@@ -1,0 +1,67 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/content"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_height="match_parent">
+
+    <!-- Dummy content. -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <TextView
+            android:id="@+id/textViewDescription"
+            style="?android:textAppearanceMedium"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:lineSpacingMultiplier="1.2"
+            android:textStyle="bold" />
+
+        <Space
+            android:id="@+id/space"
+            android:layout_width="match_parent"
+            android:layout_height="40px" />
+
+        TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="TAP to write"
+            android:id="@+id/textView2"
+            android:textColor="@color/lightblue_900" />
+
+        <RelativeLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="50dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="Minutes"
+                android:id="@+id/textView"
+                android:layout_gravity="center"
+                android:paddingLeft="20dp"
+                android:gravity="center"
+                android:layout_alignParentRight="true" />
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:inputType="numberDecimal"
+                android:id="@+id/editTextNumber"
+                android:background="@drawable/editbox_border"
+                android:padding="10dp"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentStart="false"
+                android:layout_toLeftOf="@+id/textView" />
+
+
+        </RelativeLayout>
+
+
+    </LinearLayout>
+</LinearLayout>

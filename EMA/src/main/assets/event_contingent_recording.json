@@ -1,0 +1,143 @@
+[
+  {
+    "question_id": 0,
+    "question_type": "multiple_choice",
+    "question_text": "I puffed!",
+    "response_option": [
+      "Yes",
+      "No"
+    ]
+  },
+  {
+    "question_id": 1,
+    "question_type": "text_numeric",
+    "question_text": "Approximately how long ago did you take the first puff from that cigarette?",
+    "response_option": [
+      "0",
+      "120"
+    ]
+  },
+  {
+    "question_id": 2,
+    "question_type": "multiple_choice",
+    "question_text": "Have you received a stress-reduction suggestion on your watch since the last time you recorded anything on the phone?",
+    "response_option": [
+      "Yes",
+      "No"
+    ]
+  },
+  {
+    "question_id": 3,
+    "question_type": "multiple_choice",
+    "question_text": "Did you access any of the stress reduction apps on the phone?",
+    "response_option": [
+      "Yes",
+      "No"
+    ]
+  },
+  {
+    "question_id": 4,
+    "question_type": "multiple_choice",
+    "question_text": "How useful did you find the stress reduction app?",
+    "response_option": [
+      "Not useful",
+      "Somewhat useful",
+      "Moderately useful",
+      "Very useful",
+      "Extremely useful"
+    ],
+    "condition": [
+      "3:Yes"
+    ]
+  },
+  {
+    "question_id": 5,
+    "question_type": "multiple_choice",
+    "question_text": "Did you use any of the stress reduction exercises (with or without the app) since the last time you recorded anything on the phone?",
+    "response_option": [
+      "Yes",
+      "No"
+    ]
+  },
+  {
+    "question_id": 6,
+    "question_type": "multiple_choice",
+    "question_text": "I feel cheerful.",
+    "response_option": [
+      "NO",
+      "no",
+      "yes",
+      "YES"
+    ]
+  },
+  {
+    "question_id": 7,
+    "question_type": "multiple_choice",
+    "question_text": "I feel happy.",
+    "response_option": [
+      "NO",
+      "no",
+      "yes",
+      "YES"
+    ]
+  },
+  {
+    "question_id": 8,
+    "question_type": "multiple_choice",
+    "question_text": "I feel angry/frustrated.",
+    "response_option": [
+      "NO",
+      "no",
+      "yes",
+      "YES"
+    ]
+  },
+  {
+    "question_id": 9,
+    "question_type": "multiple_choice",
+    "question_text": "I feel nervous/stressed.",
+    "response_option": [
+      "NO",
+      "no",
+      "yes",
+      "YES"
+    ]
+  },
+  {
+    "question_id": 10,
+    "question_type": "multiple_choice",
+    "question_text": "I feel sad",
+    "response_option": [
+      "NO",
+      "no",
+      "yes",
+      "YES"
+    ]
+  },
+  {
+    "question_id": 11,
+    "question_type": "multiple_choice",
+    "question_text": "How strong is your urge to smoke right now?",
+    "response_option": [
+      "No urge",
+      "Weak",
+      "Moderate",
+      "Strong",
+      "Severe"
+    ]
+  },
+  {
+    "question_id": 12,
+    "question_type": "multiple_select",
+    "question_text": "Since the last assessment, have you experienced stress in any of the following areas? Click all that apply",
+    "response_option": [
+      "Work/School",
+      "Family Relationships",
+      "Other Relationships",
+      "Housing/Where You Live",
+      "Crime and Legal Matters",
+      "Health",
+      "Miscellaneous/Other"
+    ]
+  }
+]

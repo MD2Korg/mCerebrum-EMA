@@ -31,19 +31,15 @@ import java.util.ArrayList;
  */
 
 public class QuestionAnswers{
-    long promptTime;
     long startTime;
     long endTime;
-    long delayStartTime;
-    long delayStopTime;
-    String emaStatus;
-    String emaType;
+    String status;
+    String id;
     ArrayList<QuestionAnswer> questionAnswers;
-    QuestionAnswers(String emaType){
-        promptTime=-1;
+    QuestionAnswers(String id){
         startTime=-1;
         endTime=-1;
-        this.emaType=emaType;
+        this.id = id;
         questionAnswers=new ArrayList<>();
     }
     void setStartTime(long startTime){
@@ -56,13 +52,6 @@ public class QuestionAnswers{
         questionAnswers.add(questionAnswer);
     }
 
-    public long getPromptTime() {
-        return promptTime;
-    }
-
-    public void setPromptTime(long promptTime) {
-        this.promptTime = promptTime;
-    }
 
     public long getStartTime() {
         return startTime;
@@ -72,36 +61,20 @@ public class QuestionAnswers{
         return endTime;
     }
 
-    public long getDelayStartTime() {
-        return delayStartTime;
+    public String getStatus() {
+        return status;
     }
 
-    public void setDelayStartTime(long delayStartTime) {
-        this.delayStartTime = delayStartTime;
+    public void setStatus(String status) {
+        this.status = status;
     }
 
-    public long getDelayStopTime() {
-        return delayStopTime;
+    public String getId() {
+        return id;
     }
 
-    public void setDelayStopTime(long delayStopTime) {
-        this.delayStopTime = delayStopTime;
-    }
-
-    public String getEmaStatus() {
-        return emaStatus;
-    }
-
-    public void setEmaStatus(String emaStatus) {
-        this.emaStatus = emaStatus;
-    }
-
-    public String getEmaType() {
-        return emaType;
-    }
-
-    public void setEmaType(String emaType) {
-        this.emaType = emaType;
+    public void setId(String id) {
+        this.id = id;
     }
 
     public ArrayList<QuestionAnswer> getQuestionAnswers() {
