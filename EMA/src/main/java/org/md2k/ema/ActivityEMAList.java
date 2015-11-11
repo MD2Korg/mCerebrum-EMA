@@ -41,10 +41,16 @@ public class ActivityEMAList extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_ema_list);
-        addButtons();
-        if (getActionBar() != null)
-            getActionBar().setDisplayHomeAsUpEnabled(true);
+        if(getIntent().hasExtra("id")){
+            startEMA();
+            finish();
+        }
+        else {
+            setContentView(R.layout.activity_ema_list);
+            addButtons();
+            if (getActionBar() != null)
+                getActionBar().setDisplayHomeAsUpEnabled(true);
+        }
     }
     void addButtons() {
         ema_info = new EMA_Info(this);
@@ -68,6 +74,17 @@ public class ActivityEMAList extends Activity {
             });
         }
     }
+    void startEMA(){
+        Intent receivedIntent=getIntent();
+        Intent intent = new Intent(ActivityEMAList.this, ActivityInterview.class);
+        intent.putExtra("id", receivedIntent.getStringExtra("id"));
+        intent.putExtra("name", receivedIntent.getStringExtra("name"));
+        intent.putExtra("display_name", receivedIntent.getStringExtra("display_name"));
+        intent.putExtra("file_name", receivedIntent.getStringExtra("file_name"));
+        intent.putExtra("timeout", receivedIntent.getLongExtra("timeout",0));
+        startActivity(intent);
+    }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

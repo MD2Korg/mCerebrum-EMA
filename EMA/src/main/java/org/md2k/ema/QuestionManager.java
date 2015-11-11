@@ -91,8 +91,6 @@ public class QuestionManager {
     }
     private boolean isExist(String filename) {
         File file = new File(filename);
-        if (file.exists())
-            return true;
-        return false;
+        return file.exists();
     }
 }

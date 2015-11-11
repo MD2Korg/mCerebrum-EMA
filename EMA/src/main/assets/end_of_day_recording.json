@@ -62,76 +62,91 @@
       "frequently"
     ]
   },
-
   {
     "question_id": 5,
-    "question_type": "multiple_choice",
-    "question_text": "I feel cheerful.",
-    "response_option": [
-      "NO",
-      "no",
-      "yes",
-      "YES"
-    ]
+    "question_text": "For the next few questions, please rate how you feel right now."
   },
+
   {
     "question_id": 6,
     "question_type": "multiple_choice",
-    "question_text": "I feel happy.",
+    "question_text": "I feel cheerful.",
     "response_option": [
+      "NO!!!",
       "NO",
       "no",
       "yes",
-      "YES"
+      "YES",
+      "YES!!!"
     ]
   },
   {
     "question_id": 7,
     "question_type": "multiple_choice",
-    "question_text": "I feel angry/frustrated.",
+    "question_text": "I feel happy.",
     "response_option": [
+      "NO!!!",
       "NO",
       "no",
       "yes",
-      "YES"
+      "YES",
+      "YES!!!"
     ]
   },
   {
     "question_id": 8,
     "question_type": "multiple_choice",
-    "question_text": "I feel nervous/stressed.",
+    "question_text": "I feel angry/frustrated.",
     "response_option": [
+      "NO!!!",
       "NO",
       "no",
       "yes",
-      "YES"
+      "YES",
+      "YES!!!"
     ]
   },
   {
     "question_id": 9,
     "question_type": "multiple_choice",
-    "question_text": "I feel sad",
+    "question_text": "I feel nervous/stressed.",
     "response_option": [
+      "NO!!!",
       "NO",
       "no",
       "yes",
-      "YES"
+      "YES",
+      "YES!!!"
     ]
   },
   {
     "question_id": 10,
     "question_type": "multiple_choice",
-    "question_text": "How strong is your urge to smoke right now?",
+    "question_text": "I feel sad",
     "response_option": [
-      "No urge",
-      "Weak",
-      "Moderate",
-      "Strong",
-      "Severe"
+      "NO!!!",
+      "NO",
+      "no",
+      "yes",
+      "YES",
+      "YES!!!"
     ]
   },
   {
     "question_id": 11,
+    "question_type": "multiple_choice",
+    "question_text": "How strong is your urge to smoke right now?",
+    "response_option": [
+      "NO!!!",
+      "NO",
+      "no",
+      "yes",
+      "YES",
+      "YES!!!"
+    ]
+  },
+  {
+    "question_id": 12,
     "question_type": "multiple_select",
     "question_text": "Since the last assessment, have you experienced stress in any of the following areas? Click all that apply",
     "response_option": [
@@ -140,6 +155,7 @@
       "Other Relationships",
       "Housing/Where You Live",
       "Crime and Legal Matters",
+      "Money and Financial Matters",
       "Health",
       "Miscellaneous/Other"
     ]

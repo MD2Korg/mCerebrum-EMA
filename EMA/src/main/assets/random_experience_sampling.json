@@ -71,10 +71,12 @@
     "question_type": "multiple_choice",
     "question_text": "I feel cheerful",
     "response_option": [
+      "NO!!!",
       "NO",
       "no",
       "yes",
-      "YES"
+      "YES",
+      "YES!!!"
     ]
   },
   {
@@ -82,10 +84,12 @@
     "question_type": "multiple_choice",
     "question_text": "I feel happy",
     "response_option": [
+      "NO!!!",
       "NO",
       "no",
       "yes",
-      "YES"
+      "YES",
+      "YES!!!"
     ]
   },
   {
@@ -93,10 +97,12 @@
     "question_type": "multiple_choice",
     "question_text": "I feel angry/frustrated",
     "response_option": [
+      "NO!!!",
       "NO",
       "no",
       "yes",
-      "YES"
+      "YES",
+      "YES!!!"
     ]
   },
   {
@@ -104,10 +110,12 @@
     "question_type": "multiple_choice",
     "question_text": "I feel nervous/stressed",
     "response_option": [
+      "NO!!!",
       "NO",
       "no",
       "yes",
-      "YES"
+      "YES",
+      "YES!!!"
     ]
   },
   {
@@ -115,10 +123,12 @@
     "question_type": "multiple_choice",
     "question_text": "I feel sad",
     "response_option": [
+      "NO!!!",
       "NO",
       "no",
       "yes",
-      "YES"
+      "YES",
+      "YES!!!"
     ]
   },
   {
@@ -143,6 +153,7 @@
       "Other Relationships",
       "Housing/Where You Live",
       "Crime and Legal Matters",
+      "Money and Financial Matters",
       "Health",
       "Miscellaneous/Other"
     ]

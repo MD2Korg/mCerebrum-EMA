@@ -54,6 +54,7 @@ public class ActivityInterview extends ActivityAbstractInterview {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         id=getIntent().getStringExtra("id");
+        name=getIntent().getStringExtra("name");
         display_name=getIntent().getStringExtra("display_name");
         file_name=getIntent().getStringExtra("file_name");
         timeout=getIntent().getLongExtra("timeout", 0);
@@ -181,11 +182,6 @@ public class ActivityInterview extends ActivityAbstractInterview {
             else break;
         }
         return cur;
-    }
-
-
-    @Override
-    public void onBackPressed() {
     }
 
     private class ScreenSlidePagerAdapter extends FragmentStatePagerAdapter {

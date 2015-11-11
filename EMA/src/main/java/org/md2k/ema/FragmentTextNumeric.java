@@ -60,7 +60,7 @@ public class FragmentTextNumeric extends FragmentBase {
      */
     public static FragmentTextNumeric create(int pageNumber, String id, String file_name) {
         FragmentTextNumeric fragment = new FragmentTextNumeric();
-        fragment.setArguments(getArgument(pageNumber,id, file_name));
+        fragment.setArguments(getArgument(pageNumber, id, file_name));
         return fragment;
     }
 
@@ -73,14 +73,17 @@ public class FragmentTextNumeric extends FragmentBase {
         if (editText.getText().toString().equals(Constants.TAP)) {
             editText.setText("");
         }
-        editText.setTextColor(Color.BLACK);
+        editText.setTextColor(getResources().getColor(android.R.color.black));
+        updateNext(false);
     }
 
     void setEditTextNotFocused() {
         if (editText.getText().toString().length() == 0) {
             editText.setText(Constants.TAP);
-            editText.setTextColor(getResources().getColor(R.color.teal_100));
         }
+        if(editText.getText().toString().equals(Constants.TAP))
+            editText.setTextColor(getResources().getColor(R.color.teal_100));
+        else editText.setTextColor(getResources().getColor(android.R.color.black));
     }
     void setEditText(ViewGroup rootView) {
         editText = (EditText) rootView.findViewById(R.id.editTextNumber);
@@ -91,12 +94,14 @@ public class FragmentTextNumeric extends FragmentBase {
                 if ((event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) || (actionId == EditorInfo.IME_ACTION_DONE)) {
                     String response = editText.getText().toString();
                     response = response.trim();
-                    ArrayList<String> responses=new ArrayList<String>();
+                    ArrayList<String> responses= new ArrayList<>();
                     responses.add(response);
                     if (response.length() > 0) {
                         questionAnswer.setResponse(responses);
                     }
+                    else questionAnswer.getResponse().clear();
                 }
+                updateNext(isAnswered());
                 return false;
             }
         });
@@ -117,14 +122,14 @@ public class FragmentTextNumeric extends FragmentBase {
         if(!editText.getText().toString().equals(Constants.TAP) && editText.getText().toString().length()!=0) {
             questionAnswer.getResponse().clear();
             questionAnswer.getResponse().add(editText.getText().toString());
+
         }
         hideKeyboard();
         super.onPause();
     }
 
     public boolean isAnswered() {
-        return questionAnswer.getQuestion_type() == null || !(questionAnswer.getQuestion_type().equals(Constants.MULTIPLE_SELECT) ||
-                questionAnswer.getQuestion_type().equals(Constants.MULTIPLE_CHOICE)) || questionAnswer.getResponse().size() > 0;
+        return questionAnswer.getResponse().size() > 0;
     }
 
     @Override

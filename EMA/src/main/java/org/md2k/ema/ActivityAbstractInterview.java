@@ -8,6 +8,7 @@ import android.widget.TextView;
 
 import org.md2k.datakitapi.time.DateTime;
 import org.md2k.utilities.Report.Log;
+import org.md2k.utilities.datakit.DataKitHandler;
 
 public abstract class ActivityAbstractInterview extends Activity {
     private static final String TAG = ActivityAbstractInterview.class.getSimpleName();
@@ -15,6 +16,7 @@ public abstract class ActivityAbstractInterview extends Activity {
     long timeout;
     String display_name;
     String id;
+    String name;
     String file_name;
     static final int AT_START = 0;
     static final int TIMED_OUT = 1;
