@@ -8,6 +8,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 
+import org.md2k.utilities.Report.Log;
+
 
 /**
  * Copyright (c) 2015, The University of Memphis, MD2K Center
@@ -35,7 +37,8 @@ import android.widget.LinearLayout;
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-public class ActivityEMAList extends Activity {
+public class ActivityMain extends Activity {
+    private static final String TAG = ActivityMain.class.getSimpleName();
     EMA_Info ema_info;
 
     @Override
@@ -46,14 +49,14 @@ public class ActivityEMAList extends Activity {
             finish();
         }
         else {
-            setContentView(R.layout.activity_ema_list);
+            setContentView(R.layout.activity_main);
             addButtons();
             if (getActionBar() != null)
                 getActionBar().setDisplayHomeAsUpEnabled(true);
         }
     }
     void addButtons() {
-        ema_info = new EMA_Info(this);
+        ema_info = new EMA_Info(getApplicationContext());
         for (int i = 0; i < ema_info.size(); i++) {
             Button myButton = new Button(this);
             myButton.setText(ema_info.get(i).display_name);
@@ -64,7 +67,7 @@ public class ActivityEMAList extends Activity {
             myButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Intent intent = new Intent(ActivityEMAList.this, ActivityInterview.class);
+                    Intent intent = new Intent(ActivityMain.this, ActivityInterview.class);
                     intent.putExtra("id", ema_info.get(finalI).id);
                     intent.putExtra("display_name", ema_info.get(finalI).display_name);
                     intent.putExtra("file_name", ema_info.get(finalI).file_name);
@@ -76,7 +79,7 @@ public class ActivityEMAList extends Activity {
     }
     void startEMA(){
         Intent receivedIntent=getIntent();
-        Intent intent = new Intent(ActivityEMAList.this, ActivityInterview.class);
+        Intent intent = new Intent(ActivityMain.this, ActivityInterview.class);
         intent.putExtra("id", receivedIntent.getStringExtra("id"));
         intent.putExtra("name", receivedIntent.getStringExtra("name"));
         intent.putExtra("display_name", receivedIntent.getStringExtra("display_name"));
@@ -94,5 +97,10 @@ public class ActivityEMAList extends Activity {
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+    @Override
+    public void onDestroy(){
+        Log.d(TAG, "onDestroy() ... ActivityMain");
+        super.onDestroy();
     }
 }

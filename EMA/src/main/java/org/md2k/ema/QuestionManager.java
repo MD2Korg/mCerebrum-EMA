@@ -9,6 +9,7 @@ import org.md2k.utilities.Report.Log;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
@@ -46,39 +47,39 @@ import java.util.List;
 public class QuestionManager {
     private static final String TAG = QuestionManager.class.getSimpleName();
     QuestionAnswers questionAnswers;
-    private static QuestionManager instance=null;
-    private static String id =null;
-    public static QuestionManager getInstance(Context context, String id, String file_name){
-        if(instance==null || QuestionManager.id ==null || !QuestionManager.id.equals(id)){
+    private static QuestionManager instance = null;
+    private static String id = null;
+
+    public static QuestionManager getInstance(Context context, String id, String file_name) {
+        if (instance == null || QuestionManager.id == null || !QuestionManager.id.equals(id)) {
             instance = new QuestionManager(context, id, file_name);
         }
         return instance;
     }
-    void clear(){
-        instance=null;
+
+    void clear() {
+        instance = null;
     }
-    private QuestionManager(Context context, String id,String file_name){
-        QuestionManager.id =id;
-        ArrayList<Question> questions=readQuestionsFromFile(context,file_name);
-        questionAnswers=new QuestionAnswers(id);
+
+    private QuestionManager(Context context, String id, String file_name) {
+        QuestionManager.id = id;
+        ArrayList<Question> questions = readQuestionsFromFile(context, file_name);
+        questionAnswers = new QuestionAnswers(id);
         assert questions != null;
-        for(int i=0;i<questions.size();i++){
-            QuestionAnswer questionAnswer=new QuestionAnswer(questions.get(i));
+        for (int i = 0; i < questions.size(); i++) {
+            QuestionAnswer questionAnswer = new QuestionAnswer(questions.get(i));
             questionAnswers.add(questionAnswer);
         }
     }
 
     private ArrayList<Question> readQuestionsFromFile(Context context, String filename) {
+        String dir_filename = Constants.CONFIG_DIRECTORY + context.getPackageName() + File.separator + filename;
+
         ArrayList<Question> questions;
-        Log.d(TAG,"readQuestionFromFile() filename="+filename);
+        Log.d(TAG, "readQuestionFromFile() filename=" + filename);
         BufferedReader br;
         try {
-            if (Constants.FILE_LOCATION == Constants.ASSET) {
-                br = new BufferedReader(new InputStreamReader(context.getAssets().open(filename)));
-            } else {
-                if (!isExist(filename)) throw new FileNotFoundException();
-                br = new BufferedReader(new FileReader(filename));
-            }
+            br = new BufferedReader(new InputStreamReader(new FileInputStream(dir_filename)));
             Gson gson = new Gson();
             Type collectionType = new TypeToken<List<Question>>() {
             }.getType();
@@ -89,6 +90,7 @@ public class QuestionManager {
         }
         return null;
     }
+
     private boolean isExist(String filename) {
         File file = new File(filename);
         return file.exists();

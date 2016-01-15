@@ -1,18 +1,21 @@
 [
   {
-    "id":"event_contingent_recording",
-    "display_name":"Event Contingent Recording",
-    "file_name":"event_contingent_recording.json",
-    "timeout":300
-  },
-  {
     "id":"random_experience_sampling",
+    "name":"random_experience_sampleing",
     "display_name":"Random Experience Sampling",
     "file_name":"random_experience_sampling.json",
     "timeout":300
   },
   {
+    "id":"event_contingent_recording",
+    "name":"event_contingent_recording",
+    "display_name":"Event Contingent Recording",
+    "file_name":"event_contingent_recording.json",
+    "timeout":300
+  },
+  {
     "id":"end_of_day_recording",
+    "name":"end_of_day_recording",
     "display_name":"End of Day Recording",
     "file_name":"end_of_day_recording.json",
     "timeout":300

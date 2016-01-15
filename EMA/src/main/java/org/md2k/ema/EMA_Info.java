@@ -11,6 +11,9 @@ import org.md2k.datakitapi.source.datasource.DataSource;
 import org.md2k.utilities.Report.Log;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Serializable;
@@ -66,16 +69,11 @@ public class EMA_Info {
 
 
     public EMA_Info(Context context) {
+        String filename=Constants.CONFIG_DIRECTORY+context.getPackageName()+ File.separator+Constants.CONFIG_FILENAME;
         this.context = context;
         BufferedReader br;
-        Log.d(TAG, "File location=" + Constants.FILE_LOCATION);
         try {
-            Log.d(TAG, "inside asset...");
-            AssetManager assetManager = context.getAssets();
-            Log.d(TAG, "assetManager=" + assetManager.toString() + " filename=" + Constants.CONFIG_FILENAME);
-            br = new BufferedReader(new InputStreamReader(context.getAssets().open(Constants.CONFIG_FILENAME)));
-            Log.d(TAG, "br=" + br.toString());
-            Log.d(TAG, "before gson=");
+            br = new BufferedReader(new InputStreamReader(new FileInputStream(filename)));
             Gson gson = new Gson();
             Type collectionType = new TypeToken<List<EMA>>() {
             }.getType();

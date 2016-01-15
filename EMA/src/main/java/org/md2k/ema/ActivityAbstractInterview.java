@@ -6,6 +6,17 @@ import android.os.Handler;
 import android.view.View;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+
+import org.md2k.datakitapi.datatype.DataTypeString;
+import org.md2k.datakitapi.messagehandler.OnConnectionListener;
+import org.md2k.datakitapi.source.METADATA;
+import org.md2k.datakitapi.source.datasource.DataSourceBuilder;
+import org.md2k.datakitapi.source.datasource.DataSourceClient;
+import org.md2k.datakitapi.source.datasource.DataSourceType;
+import org.md2k.datakitapi.source.platform.Platform;
+import org.md2k.datakitapi.source.platform.PlatformBuilder;
+import org.md2k.datakitapi.source.platform.PlatformType;
 import org.md2k.datakitapi.time.DateTime;
 import org.md2k.utilities.Report.Log;
 import org.md2k.utilities.datakit.DataKitHandler;
@@ -21,6 +32,7 @@ public abstract class ActivityAbstractInterview extends Activity {
     static final int AT_START = 0;
     static final int TIMED_OUT = 1;
     static final int DONE = 2;
+//    DataKitHandler dataKitHandler;
 
     // handles timing events
     Handler handler;
@@ -35,6 +47,7 @@ public abstract class ActivityAbstractInterview extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         handler = new Handler();
+//        dataKitHandler=DataKitHandler.getInstance(getApplicationContext());
         manageState();
     }
 
@@ -48,18 +61,43 @@ public abstract class ActivityAbstractInterview extends Activity {
                 updateUI();
                 break;
             case TIMED_OUT:
-                handler.postDelayed(stopInterview, 4000);
+                handler.postDelayed(stopInterview, 3000);
                 questionAnswers.setStatus(Constants.EMA_ABANDONED);
                 updateUI();
+//                writeToDataKit();
                 break;
             case DONE:
                 handler.removeCallbacks(timeoutInterview);
                 questionAnswers.setEndTime(DateTime.getDateTime());
                 questionAnswers.setStatus(Constants.EMA_COMPLETED);
-                handler.postDelayed(stopInterview, 4000);
+                handler.postDelayed(stopInterview, 3000);
                 updateUI();
+//                writeToDataKit();
                 break;
         }
+    }
+/*    void writeToDataKit(){
+        Log.d(TAG,"writeToDataKit()...");
+        dataKitHandler.connect(new OnConnectionListener() {
+            @Override
+            public void onConnected() {
+                Gson gson = new Gson();
+                String sample = gson.toJson(questionAnswers);
+                Log.d(TAG,"Sample="+sample);
+                DataSourceClient dataSourceClient = dataKitHandler.register(createDataSourceBuilder());
+                DataTypeString dataTypeString = new DataTypeString(DateTime.getDateTime(), sample);
+                dataKitHandler.insert(dataSourceClient, dataTypeString);
+                dataKitHandler.disconnect();
+            }
+        });
+    }
+*/    DataSourceBuilder createDataSourceBuilder() {
+        Platform platform = new PlatformBuilder().setType(PlatformType.PHONE).setMetadata(METADATA.NAME, "Phone").build();
+        DataSourceBuilder dataSourceBuilder = new DataSourceBuilder().setType(DataSourceType.SURVEY).setPlatform(platform);
+        dataSourceBuilder = dataSourceBuilder.setMetadata(METADATA.NAME, "Survey");
+        dataSourceBuilder = dataSourceBuilder.setMetadata(METADATA.DESCRIPTION, "EMA question");
+        dataSourceBuilder = dataSourceBuilder.setMetadata(METADATA.DATA_TYPE, DataTypeString.class.getName());
+        return dataSourceBuilder;
     }
 
     void initQuestionAnswer() {
@@ -88,4 +126,11 @@ public abstract class ActivityAbstractInterview extends Activity {
             finish();
         }
     };
+
+    @Override
+    public void onDestroy(){
+        Log.d(TAG, "onDestroy() ... ActivityAbstractInterview");
+        super.onDestroy();
+    }
+
 }

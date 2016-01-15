@@ -255,7 +255,9 @@ public class ActivityInterview extends ActivityAbstractInterview {
     @Override
     public void onDestroy(){
         cancelNotification();
+        Log.d(TAG,"onDestroy()...ActivityInterview");
         super.onDestroy();
     }
+
 }
 
