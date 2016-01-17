@@ -51,8 +51,6 @@ public class ActivityMain extends Activity {
         else {
             setContentView(R.layout.activity_main);
             addButtons();
-            if (getActionBar() != null)
-                getActionBar().setDisplayHomeAsUpEnabled(true);
         }
     }
     void addButtons() {

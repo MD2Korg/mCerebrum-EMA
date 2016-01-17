@@ -60,8 +60,6 @@ public class ActivityInterview extends ActivityAbstractInterview {
         timeout=getIntent().getLongExtra("timeout", 0);
         Log.d(TAG, "id=" + id + " display_name=" + display_name + " file_name=" + file_name + " timeout=" + timeout);
         setContentView(R.layout.activity_question);
-        if (getActionBar() != null)
-            getActionBar().setDisplayHomeAsUpEnabled(true);
         initQuestionAnswer();
         initInterviewState();
         initView();
@@ -257,6 +255,9 @@ public class ActivityInterview extends ActivityAbstractInterview {
         cancelNotification();
         Log.d(TAG,"onDestroy()...ActivityInterview");
         super.onDestroy();
+    }
+    @Override
+    public void onBackPressed() {
     }
 
 }

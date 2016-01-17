@@ -67,32 +67,34 @@ public class FragmentMultipleChoiceSelect extends FragmentBase {
     }
 
     void setTypeMultipleChoiceSelect(ViewGroup rootView, final QuestionAnswer questionAnswer) {
-        Log.d(TAG, "setTypeMultipleChoiceSelect() questionAnswer=" + questionAnswer.getQuestion_id() + " " + questionAnswer.getResponse_option());
+        Log.d(TAG, "setTypeMultipleChoiceSelect() questionAnswer=" + questionAnswer.getQuestion_text() + "......" + questionAnswer.getQuestion_id() + " " + questionAnswer.getResponse_option());
         final ListView listView = (ListView) rootView.findViewById(R.id.listView_options);
-        if(questionAnswer.isType(Constants.MULTIPLE_CHOICE))
+        if (questionAnswer.isType(Constants.MULTIPLE_CHOICE))
             listView.setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
-        else listView.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
-        Log.d(TAG,questionAnswer.getQuestion_id()+" "+questionAnswer.getResponse_option().size());
-        String options[]= new String[questionAnswer.getResponse_option().size()];
-        for(int i=0;i<questionAnswer.getResponse_option().size();i++) {
-            options[i] = questionAnswer.getResponse_option().get(i);
-            Log.d(TAG,options[i]);
-        }
-        ArrayAdapter<String> adapter;
-        if(questionAnswer.isType(Constants.MULTIPLE_CHOICE))
-            adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_single_choice,options);
         else
-            adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_multiple_choice,options);
+            listView.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
+        Log.d(TAG, questionAnswer.getQuestion_id() + " " + questionAnswer.getResponse_option().size());
+        String options[] = new String[questionAnswer.getResponse_option().size()];
+        for (int i = 0; i < questionAnswer.getResponse_option().size(); i++) {
+            options[i] = questionAnswer.getResponse_option().get(i);
+            Log.d(TAG, options[i]);
+        }
+
+        ArrayAdapter<String> adapter;
+        if (questionAnswer.isType(Constants.MULTIPLE_CHOICE))
+            adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_single_choice, options);
+        else
+            adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_multiple_choice, options);
         listView.setAdapter(adapter);
-        for(int i=0;i<questionAnswer.getResponse_option().size();i++)
-            if(questionAnswer.isResponseExist(questionAnswer.getResponse_option().get(i)))
-                listView.setItemChecked(i,true);
-        if(questionAnswer.isValid()) updateNext(true);
+        for (int i = 0; i < questionAnswer.getResponse_option().size(); i++)
+            if (questionAnswer.isResponseExist(questionAnswer.getResponse_option().get(i)))
+                listView.setItemChecked(i, true);
+        if (questionAnswer.isValid()) updateNext(true);
         else updateNext(false);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long l) {
-                ArrayList<String> response=new ArrayList<>();
+                ArrayList<String> response = new ArrayList<>();
                 int len = listView.getCount();
                 SparseBooleanArray checked = listView.getCheckedItemPositions();
                 for (int i = 0; i < len; i++)
@@ -101,7 +103,7 @@ public class FragmentMultipleChoiceSelect extends FragmentBase {
                         response.add(item);
                     }
                 questionAnswer.setResponse(response);
-                if(questionAnswer.isValid())
+                if (questionAnswer.isValid())
                     updateNext(true);
                 else updateNext(false);
 
@@ -120,52 +122,6 @@ public class FragmentMultipleChoiceSelect extends FragmentBase {
         updateNext(isAnswered());
     }
 
-/*    CompoundButton.OnCheckedChangeListener setOnCheckedListenerMultipleSelect(final QuestionAnswer questionAnswer, final ArrayList<ToggleButton> toggleButtons) {
-        return new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (!isChecked)
-                    questionAnswer.getResponse().remove(buttonView.getText().toString());
-                else if (buttonView.getText().equals("None of the above")) {
-                    for (int i = 0; i < toggleButtons.size(); i++) {
-                        if (!toggleButtons.get(i).getText().equals(buttonView.getText()))
-                            toggleButtons.get(i).setChecked(false);
-                    }
-                    questionAnswer.getResponse().clear();
-                    questionAnswer.getResponse().add(buttonView.getText().toString());
-                } else {
-                    for (int i = 0; i < toggleButtons.size(); i++)
-                        if (toggleButtons.get(i).getText().equals("None of the above")) {
-                            toggleButtons.get(i).setChecked(false);
-                            questionAnswer.getResponse().remove(toggleButtons.get(i).getText().toString());
-                        }
-                    questionAnswer.getResponse().add(buttonView.getText().toString());
-                }
-                updateNext(isAnswered());
-            }
-        };
-    }
-
-    CompoundButton.OnCheckedChangeListener setOnCheckedListenerMultipleChoice(final QuestionAnswer questionAnswer, final ArrayList<ToggleButton> toggleButtons) {
-        return new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (!isChecked)
-                    questionAnswer.getResponse().remove(buttonView.getText().toString());
-                else {
-                    for (int i = 0; i < toggleButtons.size(); i++) {
-                        if (!toggleButtons.get(i).getText().equals(buttonView.getText()))
-                            toggleButtons.get(i).setChecked(false);
-                    }
-                    questionAnswer.getResponse().clear();
-                    questionAnswer.getResponse().add(buttonView.getText().toString());
-                }
-                updateNext(isAnswered());
-            }
-        };
-    }
-*/
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -175,25 +131,12 @@ public class FragmentMultipleChoiceSelect extends FragmentBase {
         questionAnswer.setPrompt_time(DateTime.getDateTime());
         setQuestionText(rootView, questionAnswer);
 
-        if (questionAnswer.isType(Constants.MULTIPLE_CHOICE) || questionAnswer.isType(Constants.MULTIPLE_SELECT)){
+        if (questionAnswer.isType(Constants.MULTIPLE_CHOICE) || questionAnswer.isType(Constants.MULTIPLE_SELECT)) {
             setTypeMultipleChoiceSelect(rootView, questionAnswer);
-        }
-        else{
+        } else {
+            rootView.findViewById(R.id.textView_please_select).setVisibility(View.GONE);
+
         }
         return rootView;
     }
-
-/*    private ToggleButton addToggleButtons(final QuestionAnswer questionAnswer, int response_id) {
-        ToggleButton toggleButton = new ToggleButton(this.getActivity());
-        String option = questionAnswer.getResponse_option().get(response_id);
-        Log.d(TAG, "addToggleButtons() option=" + option);
-        toggleButton.setTextOn(option);
-        toggleButton.setTextOff(option);
-        toggleButton.setText(option);
-        if (questionAnswer.isResponseExist(option))
-            toggleButton.setChecked(true);
-        else toggleButton.setChecked(false);
-        return toggleButton;
-    }
-*/
 }

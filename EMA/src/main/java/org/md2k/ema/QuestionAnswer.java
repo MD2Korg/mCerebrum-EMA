@@ -35,7 +35,6 @@ import java.util.ArrayList;
  */
 
 public class QuestionAnswer extends Question implements Serializable {
-    private static final String TAG = QuestionAnswer.class.getSimpleName();
     private ArrayList<String> response;
     private long prompt_time;
     boolean hasResponseSelected(String response){
@@ -88,9 +87,6 @@ public class QuestionAnswer extends Question implements Serializable {
         return false;
     }
     boolean isValid() {
-        Log.d(TAG,"isValid: question_type="+question_type+" selected="+ response);
-        if(response !=null)
-            Log.d(TAG,"isValid: "+ response.toString());
         if (question_type == null) return true;
         if (question_type.equals(Constants.MULTIPLE_CHOICE)){
             if(response ==null) return false;

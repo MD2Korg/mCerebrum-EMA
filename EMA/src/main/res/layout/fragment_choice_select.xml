@@ -16,14 +16,22 @@
             style="?android:textAppearanceMedium"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:lineSpacingMultiplier="1.2"
-            android:textStyle="bold" />
+            android:lineSpacingMultiplier="1.2" />
 
         <Space
             android:id="@+id/space"
             android:layout_width="match_parent"
             android:layout_height="40px" />
 
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="(Please select)"
+            android:id="@+id/textView_please_select"
+            android:textStyle="italic"
+            android:textColor="@color/lightblue_A400" />
 
         <ListView
             android:id="@+id/listView_options"
