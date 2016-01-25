@@ -3,11 +3,14 @@ package org.md2k.ema;
 import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 
+import org.md2k.datakitapi.DataKitAPI;
 import org.md2k.datakitapi.datatype.DataTypeString;
 import org.md2k.datakitapi.messagehandler.OnConnectionListener;
+import org.md2k.datakitapi.messagehandler.OnExceptionListener;
 import org.md2k.datakitapi.source.METADATA;
 import org.md2k.datakitapi.source.datasource.DataSourceBuilder;
 import org.md2k.datakitapi.source.datasource.DataSourceClient;
@@ -15,10 +18,10 @@ import org.md2k.datakitapi.source.datasource.DataSourceType;
 import org.md2k.datakitapi.source.platform.Platform;
 import org.md2k.datakitapi.source.platform.PlatformBuilder;
 import org.md2k.datakitapi.source.platform.PlatformType;
+import org.md2k.datakitapi.status.Status;
 import org.md2k.datakitapi.time.DateTime;
 import org.md2k.utilities.Report.Log;
 import org.md2k.utilities.UI.AlertDialogs;
-import org.md2k.utilities.datakit.DataKitHandler;
 
 public abstract class ActivityAbstractInterview extends Activity {
     private static final String TAG = ActivityAbstractInterview.class.getSimpleName();
@@ -31,7 +34,7 @@ public abstract class ActivityAbstractInterview extends Activity {
     static final int AT_START = 0;
     static final int TIMED_OUT = 1;
     static final int DONE = 2;
-    DataKitHandler dataKitHandler;
+    DataKitAPI dataKitAPI;
 
     Handler handler;
 
@@ -45,15 +48,19 @@ public abstract class ActivityAbstractInterview extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         handler = new Handler();
-        dataKitHandler = DataKitHandler.getInstance(getApplicationContext());
-        if (dataKitHandler.connect(new OnConnectionListener() {
+        dataKitAPI = DataKitAPI.getInstance(getApplicationContext());
+        dataKitAPI.connect(new OnConnectionListener() {
             @Override
             public void onConnected() {
             }
-        }) == false) {
-            AlertDialogs.showAlertDialogDataKit(this);
-            finish();
-        }
+        }, new OnExceptionListener() {
+            @Override
+            public void onException(Status status) {
+                android.util.Log.d(TAG, "onException...");
+                Toast.makeText(ActivityAbstractInterview.this, "EMA Stopped. DataKit Error: " + status.getStatusMessage(), Toast.LENGTH_LONG).show();
+                finish();
+            }
+        });
         manageState();
     }
 
@@ -88,10 +95,10 @@ public abstract class ActivityAbstractInterview extends Activity {
         Gson gson = new Gson();
         String sample = gson.toJson(questionAnswers);
         Log.d(TAG, "Sample=" + sample);
-        DataSourceClient dataSourceClient = dataKitHandler.register(createDataSourceBuilder());
+        DataSourceClient dataSourceClient = dataKitAPI.register(createDataSourceBuilder());
         DataTypeString dataTypeString = new DataTypeString(DateTime.getDateTime(), sample);
-        dataKitHandler.insert(dataSourceClient, dataTypeString);
-        dataKitHandler.disconnect();
+        dataKitAPI.insert(dataSourceClient, dataTypeString);
+        dataKitAPI.disconnect();
     }
 
     DataSourceBuilder createDataSourceBuilder() {
@@ -133,7 +140,7 @@ public abstract class ActivityAbstractInterview extends Activity {
     @Override
     public void onDestroy() {
         Log.d(TAG, "onDestroy() ... ActivityAbstractInterview");
-        if (dataKitHandler.isConnected()) dataKitHandler.disconnect();
+        if (dataKitAPI.isConnected()) dataKitAPI.disconnect();
         super.onDestroy();
     }
 }

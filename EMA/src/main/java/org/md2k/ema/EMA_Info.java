@@ -60,6 +60,7 @@ public class EMA_Info {
     }
 
     int size() {
+        if(emas==null) return -1;
         return emas.size();
     }
 
@@ -79,7 +80,7 @@ public class EMA_Info {
             }.getType();
             emas = gson.fromJson(br, collectionType);
         } catch (IOException e) {
-            e.printStackTrace();
+            emas=null;
         }
     }
 }

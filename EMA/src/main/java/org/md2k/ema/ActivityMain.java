@@ -7,6 +7,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import org.md2k.utilities.Report.Log;
 
@@ -55,6 +56,10 @@ public class ActivityMain extends Activity {
     }
     void addButtons() {
         ema_info = new EMA_Info(getApplicationContext());
+        if(ema_info.size()==-1){
+            Toast.makeText(this,"ERROR: EMA configuration file is not available. Could not run...",Toast.LENGTH_LONG).show();
+            finish();
+        }
         for (int i = 0; i < ema_info.size(); i++) {
             Button myButton = new Button(this);
             myButton.setText(ema_info.get(i).display_name);
