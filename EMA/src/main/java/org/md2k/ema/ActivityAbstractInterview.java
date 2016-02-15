@@ -75,12 +75,14 @@ public abstract class ActivityAbstractInterview extends Activity {
                 break;
             case TIMED_OUT:
                 handler.postDelayed(stopInterview, 3000);
+                questionAnswers.setEndTime(DateTime.getDateTime());
                 questionAnswers.setStatus(Constants.ABANDONED_BY_TIMEOUT);
                 updateUI();
                 writeToDataKit();
                 break;
             case ABANDONED_BY_USER:
                 handler.removeCallbacks(timeoutInterview);
+                questionAnswers.setEndTime(DateTime.getDateTime());
                 questionAnswers.setStatus(Constants.EMA_ABANDONED_BY_USER);
                 handler.postDelayed(stopInterview, 3000);
                 updateUI();
