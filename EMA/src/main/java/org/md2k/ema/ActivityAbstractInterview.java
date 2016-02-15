@@ -21,7 +21,6 @@ import org.md2k.datakitapi.source.platform.PlatformType;
 import org.md2k.datakitapi.status.Status;
 import org.md2k.datakitapi.time.DateTime;
 import org.md2k.utilities.Report.Log;
-import org.md2k.utilities.UI.AlertDialogs;
 
 public abstract class ActivityAbstractInterview extends Activity {
     private static final String TAG = ActivityAbstractInterview.class.getSimpleName();
@@ -34,6 +33,7 @@ public abstract class ActivityAbstractInterview extends Activity {
     static final int AT_START = 0;
     static final int TIMED_OUT = 1;
     static final int DONE = 2;
+    static final int ABANDONED_BY_USER=3;
     DataKitAPI dataKitAPI;
 
     Handler handler;
@@ -75,7 +75,14 @@ public abstract class ActivityAbstractInterview extends Activity {
                 break;
             case TIMED_OUT:
                 handler.postDelayed(stopInterview, 3000);
-                questionAnswers.setStatus(Constants.EMA_ABANDONED);
+                questionAnswers.setStatus(Constants.ABANDONED_BY_TIMEOUT);
+                updateUI();
+                writeToDataKit();
+                break;
+            case ABANDONED_BY_USER:
+                handler.removeCallbacks(timeoutInterview);
+                questionAnswers.setStatus(Constants.EMA_ABANDONED_BY_USER);
+                handler.postDelayed(stopInterview, 3000);
                 updateUI();
                 writeToDataKit();
                 break;

@@ -1,7 +1,8 @@
 package org.md2k.ema;
 
 
-import java.io.Serializable;
+import android.os.Parcel;
+import android.os.Parcelable;
 import java.util.ArrayList;
 
 
@@ -32,7 +33,7 @@ import java.util.ArrayList;
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-public class Question implements Serializable {
+public class Question implements Parcelable {
     private static final String TAG = Question.class.getSimpleName();
     protected int question_id;
     protected String question_type;
@@ -47,6 +48,27 @@ public class Question implements Serializable {
         this.response_option = question_responses;
         this.condition = condition;
     }
+
+    protected Question(Parcel in) {
+        question_id = in.readInt();
+        question_type = in.readString();
+        question_text = in.readString();
+        response_option = in.createStringArrayList();
+        condition = in.createStringArrayList();
+    }
+
+    public static final Creator<Question> CREATOR = new Creator<Question>() {
+        @Override
+        public Question createFromParcel(Parcel in) {
+            return new Question(in);
+        }
+
+        @Override
+        public Question[] newArray(int size) {
+            return new Question[size];
+        }
+    };
+
     public int getQuestion_id() {
         return question_id;
     }
@@ -90,5 +112,18 @@ public class Question implements Serializable {
         this.condition = condition;
     }
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(question_id);
+        dest.writeString(question_type);
+        dest.writeString(question_text);
+        dest.writeStringList(response_option);
+        dest.writeStringList(condition);
+    }
 }
 

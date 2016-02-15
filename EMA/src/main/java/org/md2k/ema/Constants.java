@@ -40,6 +40,7 @@ public class Constants {
     public static final String TEXT_NUMERIC ="text_numeric";
 
     public static final String EMA_COMPLETED="COMPLETED";
-    public static final String EMA_ABANDONED="ABANDONED";
+    public static final String ABANDONED_BY_TIMEOUT ="ABANDONED_BY_TIMEOUT";
     public static final String EMA_MISSED = "MISSED";
+    public static final String EMA_ABANDONED_BY_USER="ABANDONED_BY_USER";
 }

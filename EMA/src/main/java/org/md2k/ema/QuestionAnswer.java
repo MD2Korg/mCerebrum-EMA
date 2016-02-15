@@ -1,9 +1,9 @@
 package org.md2k.ema;
 
 
-import org.md2k.utilities.Report.Log;
+import android.os.Parcel;
+import android.os.Parcelable;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 
 
@@ -34,9 +34,40 @@ import java.util.ArrayList;
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-public class QuestionAnswer extends Question implements Serializable {
+public class QuestionAnswer extends Question implements Parcelable {
     private ArrayList<String> response;
     private long prompt_time;
+
+    protected QuestionAnswer(Parcel in) {
+        super(in);
+        response = in.createStringArrayList();
+        prompt_time = in.readLong();
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        super.writeToParcel(dest, flags);
+        dest.writeStringList(response);
+        dest.writeLong(prompt_time);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    public static final Creator<QuestionAnswer> CREATOR = new Creator<QuestionAnswer>() {
+        @Override
+        public QuestionAnswer createFromParcel(Parcel in) {
+            return new QuestionAnswer(in);
+        }
+
+        @Override
+        public QuestionAnswer[] newArray(int size) {
+            return new QuestionAnswer[size];
+        }
+    };
+
     boolean hasResponseSelected(String response){
         if(this.response ==null) return false;
         for(int i=0;i< this.response.size();i++)

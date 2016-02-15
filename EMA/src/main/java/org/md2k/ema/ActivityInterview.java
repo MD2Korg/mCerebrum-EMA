@@ -1,11 +1,13 @@
 package org.md2k.ema;
 
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v13.app.FragmentStatePagerAdapter;
@@ -14,10 +16,13 @@ import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import org.md2k.utilities.Report.Log;
+
+import java.util.UUID;
 
 /**
  * Copyright (c) 2015, The University of Memphis, MD2K Center
@@ -74,14 +79,21 @@ public class ActivityInterview extends ActivityAbstractInterview {
             case TIMED_OUT:
                 findViewById(R.id.text_view_status).setVisibility(View.VISIBLE);
                 findViewById(R.id.view_pager).setVisibility(View.GONE);
-                ((TextView) findViewById(R.id.text_view_status)).setText("The interview has timed out.");
+                ((TextView) findViewById(R.id.text_view_status)).setText("The survey has timed out.");
+                findViewById(R.id.action_previous).setVisibility(View.GONE);
+                findViewById(R.id.action_next).setVisibility(View.GONE);
+                break;
+            case ABANDONED_BY_USER:
+                findViewById(R.id.text_view_status).setVisibility(View.VISIBLE);
+                findViewById(R.id.view_pager).setVisibility(View.GONE);
+                ((TextView) findViewById(R.id.text_view_status)).setText("You have chosen to not to answer this survey");
                 findViewById(R.id.action_previous).setVisibility(View.GONE);
                 findViewById(R.id.action_next).setVisibility(View.GONE);
                 break;
             case DONE:
                 findViewById(R.id.text_view_status).setVisibility(View.VISIBLE);
                 findViewById(R.id.view_pager).setVisibility(View.GONE);
-                ((TextView) findViewById(R.id.text_view_status)).setText("Interview Completed. Thank you!");
+                ((TextView) findViewById(R.id.text_view_status)).setText("Survey Completed. Thank you!");
                 findViewById(R.id.action_previous).setVisibility(View.GONE);
                 findViewById(R.id.action_next).setVisibility(View.GONE);
                 break;
@@ -237,8 +249,8 @@ public class ActivityInterview extends ActivityAbstractInterview {
         // Build notification
         // Actions are just fake
         Notification noti = new Notification.Builder(this)
-                .setContentTitle("Interview is available")
-                .setContentText("Please click to resume interview").setSmallIcon(R.drawable.ic_notification_ema)
+                .setContentTitle("Survey is available")
+                .setContentText("Please click to resume...").setSmallIcon(R.drawable.ic_notification_ema)
                 .setContentIntent(pIntent)
                 .setAutoCancel(true)
                 .build();
@@ -258,6 +270,30 @@ public class ActivityInterview extends ActivityAbstractInterview {
     }
     @Override
     public void onBackPressed() {
+        showAlertDialog();
+
+    }
+    void showAlertDialog() {
+        AlertDialog alertDialog = new AlertDialog.Builder(this)
+                .setTitle("Quit?")
+                .setIcon(R.drawable.ic_error_red_50dp)
+                .setMessage("Do you want to quit from this survey? Survey will be marked as \"Abandoned\" ")
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        state = ABANDONED_BY_USER;
+                        manageState();
+
+                    }
+                })
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                    }
+                })
+                .create();
+
+        alertDialog.show();
     }
 
 }

@@ -9,8 +9,8 @@ android {
         applicationId "org.md2k.ema"
         minSdkVersion 19
         targetSdkVersion 23
-        versionCode 5
-        versionName '0.1.4'
+        versionCode 6
+        versionName '0.2.0'
     }
     buildTypes {
         release {
