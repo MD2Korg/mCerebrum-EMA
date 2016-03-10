@@ -11,12 +11,12 @@
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        tools:replace="android:theme"
-        android:theme="@style/AppThemeLightBlueLight" >
+        android:theme="@style/AppThemeLightBlueLight"
+        tools:replace="android:theme">
         <activity
             android:name=".ActivityMain"
-            android:screenOrientation="portrait"
-            android:label="@string/app_name" >
+            android:label="@string/app_name"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -24,12 +24,16 @@
         </activity>
         <activity
             android:name=".ActivityInterview"
-            android:screenOrientation="portrait"
             android:label="@string/app_name"
+            android:screenOrientation="portrait"
             android:uiOptions="splitActionBarWhenNarrow" >
             />
         </activity>
 
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="1cad146ed866fa3d49c3bc8376ff52af7d9970da" />
     </application>
 
+    <uses-permission android:name="android.permission.INTERNET" />
 </manifest>

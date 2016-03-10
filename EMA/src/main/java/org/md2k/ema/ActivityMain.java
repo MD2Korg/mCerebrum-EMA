@@ -9,7 +9,11 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
+
 import org.md2k.utilities.Report.Log;
+
+import io.fabric.sdk.android.Fabric;
 
 
 /**
@@ -45,6 +49,7 @@ public class ActivityMain extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Fabric.with(this, new Crashlytics());
         if(getIntent().hasExtra("id")){
             startEMA();
             finish();
