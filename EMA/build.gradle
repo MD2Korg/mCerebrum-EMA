@@ -26,8 +26,6 @@ android {
         targetSdkVersion 23
         versionCode 6
         versionName '0.2.0'
-        // Enabling multidex support.
-        multiDexEnabled true
     }
     buildTypes {
         release {
@@ -50,7 +48,6 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile project(':datakitapi')
     compile project(':utilities')
-    compile 'com.android.support:multidex:1.0.0'
     compile 'com.android.support:support-v4:23.0.0'
     compile 'com.android.support:support-v13:23.0.0'
     compile 'com.google.code.gson:gson:2.3.1'
