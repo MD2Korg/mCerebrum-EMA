@@ -1,6 +1,7 @@
 package org.md2k.ema;
 
 import android.app.Activity;
+import android.content.ComponentName;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -49,7 +50,8 @@ public class ActivityMain extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Fabric.with(this, new Crashlytics());
+       // Fabric.with(this, new Crashlytics());
+
         if(getIntent().hasExtra("id")){
             startEMA();
             finish();

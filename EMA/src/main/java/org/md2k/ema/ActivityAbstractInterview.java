@@ -1,8 +1,11 @@
 package org.md2k.ema;
 
 import android.app.Activity;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.KeyEvent;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -31,14 +34,16 @@ public abstract class ActivityAbstractInterview extends Activity {
     String name;
     String file_name;
     static final int AT_START = 0;
-    static final int TIMED_OUT = 1;
-    static final int DONE = 2;
-    static final int ABANDONED_BY_USER=3;
-    DataKitAPI dataKitAPI;
-
+    static final int DONE = 1;
+    static final int ABANDONED_BY_USER=2;
+    static final int TIMEOUT=3;
+    static final int MISSED=4;
+    long lastResponseTime=-1;
     Handler handler;
 
     QuestionAnswers questionAnswers;
+    private MyBroadcastReceiver myReceiver;
+    IntentFilter intentFilter;
 
     abstract void updateUI();
 
@@ -48,20 +53,25 @@ public abstract class ActivityAbstractInterview extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         handler = new Handler();
-        dataKitAPI = DataKitAPI.getInstance(getApplicationContext());
-        dataKitAPI.connect(new OnConnectionListener() {
+        manageState();
+        intentFilter= new IntentFilter("org.md2k.ema.operation");
+        myReceiver = new MyBroadcastReceiver(new Callback() {
             @Override
-            public void onConnected() {
+            public void onTimeOut() {
+                state=TIMEOUT;
+                manageState();
             }
-        }, new OnExceptionListener() {
+
             @Override
-            public void onException(Status status) {
-                android.util.Log.d(TAG, "onException...");
-                Toast.makeText(ActivityAbstractInterview.this, "EMA Stopped. DataKit Error: " + status.getStatusMessage(), Toast.LENGTH_LONG).show();
-                finish();
+            public void onMissed() {
+                state=MISSED;
+                manageState();
             }
         });
-        manageState();
+        if (intentFilter != null) {
+            registerReceiver(myReceiver, intentFilter);
+        }
+
     }
 
     void manageState() {
@@ -69,54 +79,56 @@ public abstract class ActivityAbstractInterview extends Activity {
         switch (state) {
             case AT_START:
                 questionAnswers.setStartTime(curTime);
-                handler.removeCallbacks(timeoutInterview);
-                handler.postDelayed(timeoutInterview, timeout * 1000);
                 updateUI();
                 break;
-            case TIMED_OUT:
-                handler.postDelayed(stopInterview, 3000);
-                questionAnswers.setEndTime(DateTime.getDateTime());
+            case TIMEOUT:
                 questionAnswers.setStatus(Constants.ABANDONED_BY_TIMEOUT);
+                questionAnswers.setEndTime(DateTime.getDateTime());
+                handler.postDelayed(stopInterview, 2000);
                 updateUI();
-                writeToDataKit();
+                sendData();
                 break;
+            case MISSED:
+                questionAnswers.setStatus(Constants.EMA_MISSED);
+                questionAnswers.setEndTime(DateTime.getDateTime());
+                handler.postDelayed(stopInterview, 2000);
+                updateUI();
+                sendData();
+                break;
+
             case ABANDONED_BY_USER:
-                handler.removeCallbacks(timeoutInterview);
                 questionAnswers.setEndTime(DateTime.getDateTime());
                 questionAnswers.setStatus(Constants.EMA_ABANDONED_BY_USER);
-                handler.postDelayed(stopInterview, 3000);
+                handler.postDelayed(stopInterview, 2000);
                 updateUI();
-                writeToDataKit();
+                sendData();
                 break;
             case DONE:
-                handler.removeCallbacks(timeoutInterview);
                 questionAnswers.setEndTime(DateTime.getDateTime());
                 questionAnswers.setStatus(Constants.EMA_COMPLETED);
-                handler.postDelayed(stopInterview, 3000);
+                handler.postDelayed(stopInterview, 2000);
                 updateUI();
-                writeToDataKit();
+                sendData();
                 break;
         }
     }
-
-    void writeToDataKit() {
-        Log.d(TAG, "writeToDataKit()...");
+    void sendData(){
         Gson gson = new Gson();
         String sample = gson.toJson(questionAnswers);
-        Log.d(TAG, "Sample=" + sample);
-        DataSourceClient dataSourceClient = dataKitAPI.register(createDataSourceBuilder());
-        DataTypeString dataTypeString = new DataTypeString(DateTime.getDateTime(), sample);
-        dataKitAPI.insert(dataSourceClient, dataTypeString);
-        dataKitAPI.disconnect();
+        Intent intent=new Intent();
+        intent.setAction("org.md2k.ema_scheduler.response");
+        intent.putExtra("type","question_answer");
+        intent.putExtra("value",sample);
+        intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
+        sendBroadcast(intent);
     }
-
-    DataSourceBuilder createDataSourceBuilder() {
-        Platform platform = new PlatformBuilder().setType(PlatformType.PHONE).setMetadata(METADATA.NAME, "Phone").build();
-        DataSourceBuilder dataSourceBuilder = new DataSourceBuilder().setType(DataSourceType.SURVEY).setPlatform(platform);
-        dataSourceBuilder = dataSourceBuilder.setMetadata(METADATA.NAME, "Survey");
-        dataSourceBuilder = dataSourceBuilder.setMetadata(METADATA.DESCRIPTION, "EMA question");
-        dataSourceBuilder = dataSourceBuilder.setMetadata(METADATA.DATA_TYPE, DataTypeString.class.getName());
-        return dataSourceBuilder;
+    void sendLastResponseTime(){
+        Intent intent=new Intent();
+        intent.setAction("org.md2k.ema_scheduler.response");
+        intent.putExtra("type","last_response_time");
+        intent.putExtra("value",lastResponseTime);
+        intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
+        sendBroadcast(intent);
     }
 
     void initQuestionAnswer() {
@@ -129,17 +141,6 @@ public abstract class ActivityAbstractInterview extends Activity {
     }
 
 
-    /*
-     * This runnable is used to run the prompting behavior of the application
-	 */
-
-    private Runnable timeoutInterview = new Runnable() {
-        public void run() {
-            handler.removeCallbacks(timeoutInterview);
-            state = TIMED_OUT;
-            manageState();
-        }
-    };
     private Runnable stopInterview = new Runnable() {
         public void run() {
             finish();
@@ -149,7 +150,8 @@ public abstract class ActivityAbstractInterview extends Activity {
     @Override
     public void onDestroy() {
         Log.d(TAG, "onDestroy() ... ActivityAbstractInterview");
-        if (dataKitAPI.isConnected()) dataKitAPI.disconnect();
+        if(myReceiver != null)
+            unregisterReceiver(myReceiver);
         super.onDestroy();
     }
 }
