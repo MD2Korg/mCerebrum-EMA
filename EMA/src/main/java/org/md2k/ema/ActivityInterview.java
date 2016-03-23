@@ -6,8 +6,6 @@ import android.app.FragmentManager;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.content.ComponentName;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -17,14 +15,11 @@ import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import org.md2k.datakitapi.time.DateTime;
 import org.md2k.utilities.Report.Log;
-
-import java.util.UUID;
 
 /**
  * Copyright (c) 2015, The University of Memphis, MD2K Center
@@ -79,28 +74,28 @@ public class ActivityInterview extends ActivityAbstractInterview {
                 findViewById(R.id.view_pager).setVisibility(View.VISIBLE);
                 break;
             case ABANDONED_BY_USER:
-                findViewById(R.id.text_view_status).setVisibility(View.VISIBLE);
+                findViewById(R.id.text_view_status).setVisibility(View.GONE);
                 findViewById(R.id.view_pager).setVisibility(View.GONE);
                 ((TextView) findViewById(R.id.text_view_status)).setText("You have chosen to not to answer this survey");
                 findViewById(R.id.action_previous).setVisibility(View.GONE);
                 findViewById(R.id.action_next).setVisibility(View.GONE);
                 break;
             case TIMEOUT:
-                findViewById(R.id.text_view_status).setVisibility(View.VISIBLE);
+                findViewById(R.id.text_view_status).setVisibility(View.GONE);
                 findViewById(R.id.view_pager).setVisibility(View.GONE);
                 ((TextView) findViewById(R.id.text_view_status)).setText("Time out");
                 findViewById(R.id.action_previous).setVisibility(View.GONE);
                 findViewById(R.id.action_next).setVisibility(View.GONE);
                 break;
             case MISSED:
-                findViewById(R.id.text_view_status).setVisibility(View.VISIBLE);
+                findViewById(R.id.text_view_status).setVisibility(View.GONE);
                 findViewById(R.id.view_pager).setVisibility(View.GONE);
                 ((TextView) findViewById(R.id.text_view_status)).setText("Missed");
                 findViewById(R.id.action_previous).setVisibility(View.GONE);
                 findViewById(R.id.action_next).setVisibility(View.GONE);
                 break;
             case DONE:
-                findViewById(R.id.text_view_status).setVisibility(View.VISIBLE);
+                findViewById(R.id.text_view_status).setVisibility(View.GONE);
                 findViewById(R.id.view_pager).setVisibility(View.GONE);
                 ((TextView) findViewById(R.id.text_view_status)).setText("Survey Completed. Thank you!");
                 findViewById(R.id.action_previous).setVisibility(View.GONE);
@@ -149,19 +144,23 @@ public class ActivityInterview extends ActivityAbstractInterview {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        long lastResponseTime;
+        String message;
         switch (item.getItemId()) {
             // Respond to the action bar's Up/Home button
             case android.R.id.home:
                 break;
             case R.id.action_previous:
                 lastResponseTime= DateTime.getDateTime();
-                sendLastResponseTime();
+                message="button=previous, question_id="+String.valueOf(mPager.getCurrentItem());
+                sendLastResponseTime(lastResponseTime, message);
                 mPager.getAdapter().notifyDataSetChanged();
                 mPager.setCurrentItem(findValidQuestionPrevious(mPager.getCurrentItem()));
                 break;
             case R.id.action_next:
                 lastResponseTime= DateTime.getDateTime();
-                sendLastResponseTime();
+                message="button=next, question_id="+String.valueOf(mPager.getCurrentItem());
+                sendLastResponseTime(lastResponseTime, message);
                 if (!questionAnswers.questionAnswers.get(mPager.getCurrentItem()).isValid()) {
                     Toast.makeText(getBaseContext(), "Please answer the question first", Toast.LENGTH_SHORT).show();
                 } else if (mPager.getCurrentItem() >= questionAnswers.questionAnswers.size() - 1) {

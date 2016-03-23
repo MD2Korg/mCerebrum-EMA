@@ -41,10 +41,11 @@ public class MyBroadcastReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        String type=intent.getStringExtra("type");
-        if(type.equals("timeout")){
+        String type=intent.getStringExtra("TYPE");
+        Log.d(TAG,"onReceive...type="+type);
+        if(type.equals("TIMEOUT")){
             callback.onTimeOut();
-        }else if(type.equals("missed")){
+        }else if(type.equals("MISSED")){
             callback.onMissed();
         }
     }

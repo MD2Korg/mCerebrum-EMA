@@ -2,13 +2,9 @@ package org.md2k.ema;
 
 
 import android.content.Context;
-import android.content.res.AssetManager;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-
-import org.md2k.datakitapi.source.datasource.DataSource;
-import org.md2k.utilities.Report.Log;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -16,8 +12,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Copyright (c) 2015, The University of Memphis, MD2K Center
@@ -47,23 +41,17 @@ import java.util.List;
  */
 public class EMA_Info {
     private static final String TAG = EMA_Info.class.getSimpleName();
-    private ArrayList<EMA> emas;
+    private Application[] applications;
     Context context;
 
-    class EMA {
-        String id;
-        String display_name;
-        String file_name;
-        long timeout;
-    }
 
     int size() {
-        if(emas==null) return -1;
-        return emas.size();
+        if(applications ==null) return -1;
+        return applications.length;
     }
 
-    EMA get(int i) {
-        return emas.get(i);
+    Application get(int i) {
+        return applications[i];
     }
 
 
@@ -74,11 +62,11 @@ public class EMA_Info {
         try {
             br = new BufferedReader(new InputStreamReader(new FileInputStream(filename)));
             Gson gson = new Gson();
-            Type collectionType = new TypeToken<List<EMA>>() {
+            Type collectionType = new TypeToken<Application[]>() {
             }.getType();
-            emas = gson.fromJson(br, collectionType);
+            applications = gson.fromJson(br, collectionType);
         } catch (IOException e) {
-            emas=null;
+            applications =null;
         }
     }
 }

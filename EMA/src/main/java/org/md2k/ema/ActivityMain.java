@@ -1,7 +1,6 @@
 package org.md2k.ema;
 
 import android.app.Activity;
-import android.content.ComponentName;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -10,11 +9,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import com.crashlytics.android.Crashlytics;
-
 import org.md2k.utilities.Report.Log;
-
-import io.fabric.sdk.android.Fabric;
 
 
 /**
@@ -69,7 +64,7 @@ public class ActivityMain extends Activity {
         }
         for (int i = 0; i < ema_info.size(); i++) {
             Button myButton = new Button(this);
-            myButton.setText(ema_info.get(i).display_name);
+            myButton.setText(ema_info.get(i).name);
             LinearLayout ll = (LinearLayout) findViewById(R.id.linear_layout_buttons);
             LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
             ll.addView(myButton, lp);
@@ -79,7 +74,7 @@ public class ActivityMain extends Activity {
                 public void onClick(View view) {
                     Intent intent = new Intent(ActivityMain.this, ActivityInterview.class);
                     intent.putExtra("id", ema_info.get(finalI).id);
-                    intent.putExtra("display_name", ema_info.get(finalI).display_name);
+                    intent.putExtra("name", ema_info.get(finalI).name);
                     intent.putExtra("file_name", ema_info.get(finalI).file_name);
                     intent.putExtra("timeout", ema_info.get(finalI).timeout);
                     startActivity(intent);
@@ -92,7 +87,6 @@ public class ActivityMain extends Activity {
         Intent intent = new Intent(ActivityMain.this, ActivityInterview.class);
         intent.putExtra("id", receivedIntent.getStringExtra("id"));
         intent.putExtra("name", receivedIntent.getStringExtra("name"));
-        intent.putExtra("display_name", receivedIntent.getStringExtra("display_name"));
         intent.putExtra("file_name", receivedIntent.getStringExtra("file_name"));
         intent.putExtra("timeout", receivedIntent.getLongExtra("timeout",0));
         startActivity(intent);
