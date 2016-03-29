@@ -12,26 +12,39 @@
         android:padding="16dp">
 
         <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="Question:"
+            android:id="@+id/textView2"
+            android:textStyle="italic"
+            android:textColor="@color/lightblue_900"
+            android:paddingBottom="10dp" />
+
+        <TextView
             android:id="@+id/textViewDescription"
             style="?android:textAppearanceMedium"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:lineSpacingMultiplier="1.2" />
+            android:lineSpacingMultiplier="1.2"
+            android:textColor="@color/lightblue_A700"
+            android:textStyle="bold" />
 
-        <Space
-            android:id="@+id/space"
+
+        <LinearLayout
+            android:id="@+id/linearLayout"
             android:layout_width="match_parent"
-            android:layout_height="40px" />
-
+            android:orientation="vertical"
+            android:layout_height="20dp" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="(Please select)"
+            android:text="Answer:"
             android:id="@+id/textView_please_select"
             android:textStyle="italic"
-            android:textColor="@color/lightblue_A400" />
+            android:textColor="@color/lightblue_900" />
 
         <ListView
             android:id="@+id/listView_options"

@@ -113,7 +113,14 @@ public class QuestionAnswer extends Question implements Parcelable {
         for(int i=0;i<condition.size();i++) {
             String[] separated = condition.get(i).split(":");
             int qid = Integer.valueOf(separated[0]);
-            if (questions.get(qid).hasResponseSelected(separated[1])) return true;
+            String part;
+            if(separated[1].startsWith("~")) {
+                part=separated[1].substring(1);
+                if (!questions.get(qid).hasResponseSelected(part)) return true;
+            }else{
+                part=separated[1];
+                if (questions.get(qid).hasResponseSelected(part)) return true;
+            }
         }
         return false;
     }

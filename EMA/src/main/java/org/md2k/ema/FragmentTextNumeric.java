@@ -1,6 +1,5 @@
 package org.md2k.ema;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -10,14 +9,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
-import android.widget.NumberPicker;
 import android.widget.TextView;
 
 import org.md2k.datakitapi.time.DateTime;
 import org.md2k.utilities.Report.Log;
 
 import java.util.ArrayList;
-
 
 
 /**
@@ -81,10 +78,11 @@ public class FragmentTextNumeric extends FragmentBase {
         if (editText.getText().toString().length() == 0) {
             editText.setText(Constants.TAP);
         }
-        if(editText.getText().toString().equals(Constants.TAP))
+        if (editText.getText().toString().equals(Constants.TAP))
             editText.setTextColor(getResources().getColor(R.color.teal_100));
         else editText.setTextColor(getResources().getColor(android.R.color.black));
     }
+
     void setEditText(ViewGroup rootView) {
         editText = (EditText) rootView.findViewById(R.id.editTextNumber);
         setEditTextNotFocused();
@@ -94,12 +92,11 @@ public class FragmentTextNumeric extends FragmentBase {
                 if ((event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) || (actionId == EditorInfo.IME_ACTION_DONE)) {
                     String response = editText.getText().toString();
                     response = response.trim();
-                    ArrayList<String> responses= new ArrayList<>();
+                    ArrayList<String> responses = new ArrayList<>();
                     responses.add(response);
                     if (response.length() > 0) {
                         questionAnswer.setResponse(responses);
-                    }
-                    else questionAnswer.getResponse().clear();
+                    } else questionAnswer.getResponse().clear();
                 }
                 updateNext(isAnswered());
                 return false;
@@ -118,8 +115,8 @@ public class FragmentTextNumeric extends FragmentBase {
     }
 
     @Override
-    public void onPause(){
-        if(!editText.getText().toString().equals(Constants.TAP) && editText.getText().toString().length()!=0) {
+    public void onPause() {
+        if (!editText.getText().toString().equals(Constants.TAP) && editText.getText().toString().length() != 0) {
             questionAnswer.getResponse().clear();
             questionAnswer.getResponse().add(editText.getText().toString());
 
@@ -129,7 +126,27 @@ public class FragmentTextNumeric extends FragmentBase {
     }
 
     public boolean isAnswered() {
-        return questionAnswer.getResponse().size() > 0;
+        int lowerLimit = 0, higherLimit = 0;
+        boolean lv = false, rv = false;
+        if (questionAnswer.getResponse_option().size() > 0) {
+            lowerLimit = Integer.parseInt(questionAnswer.getResponse_option().get(0));
+            lv = true;
+        }
+        if (questionAnswer.getResponse_option().size() > 1) {
+            higherLimit = Integer.parseInt(questionAnswer.getResponse_option().get(1));
+            rv = true;
+        }
+        if (questionAnswer.getResponse().size() > 0) {
+            try {
+                int num = Integer.parseInt(questionAnswer.getResponse().get(0));
+                if (lv && num < lowerLimit) return false;
+                else if (rv && num > higherLimit) return false;
+                else return true;
+            }catch(Exception e){
+                return false;
+            }
+        } else return false;
+
     }
 
     @Override

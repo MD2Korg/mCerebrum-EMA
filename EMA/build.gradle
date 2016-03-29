@@ -24,8 +24,8 @@ android {
         applicationId "org.md2k.ema"
         minSdkVersion 19
         targetSdkVersion 23
-        versionCode 6
-        versionName '0.2.0'
+        versionCode 8
+        versionName '0.2.2'
     }
     buildTypes {
         release {
@@ -44,6 +44,8 @@ android {
     }
     lintOptions {
         abortOnError false
+    }
+    productFlavors {
     }
 }
 
