@@ -70,6 +70,7 @@ public class QuestionAnswer extends Question implements Parcelable {
 
     boolean hasResponseSelected(String response){
         if(this.response ==null) return false;
+        if(this.response.size()==0) return false;
         for(int i=0;i< this.response.size();i++)
             if(this.response.get(i).equals(response)) return true;
         return false;
@@ -116,12 +117,15 @@ public class QuestionAnswer extends Question implements Parcelable {
             String part;
             if(separated[1].startsWith("~")) {
                 part=separated[1].substring(1);
+                if(questions.get(qid).response==null || questions.get(qid).response.size()==0) return false;
                 if (!questions.get(qid).hasResponseSelected(part)) return true;
             }else{
                 part=separated[1];
                 if (questions.get(qid).hasResponseSelected(part)) return true;
             }
         }
+        prompt_time=-1;
+        response.clear();
         return false;
     }
     boolean isValid() {
@@ -135,6 +139,11 @@ public class QuestionAnswer extends Question implements Parcelable {
             if(response ==null) return false;
             else if(response.size()>0) return true;
             else return false;
+        }
+        if(question_type.equals(Constants.TEXT_NUMERIC)){
+            if(response==null) return false;
+            if(response.size()>0 && response.get(0).length()!=0) return  true;
+            return false;
         }
         return true;
     }

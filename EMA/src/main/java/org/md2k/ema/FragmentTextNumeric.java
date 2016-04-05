@@ -1,15 +1,15 @@
 package org.md2k.ema;
 
 import android.os.Bundle;
-import android.view.KeyEvent;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
-import android.widget.TextView;
+import android.widget.Toast;
 
 import org.md2k.datakitapi.time.DateTime;
 import org.md2k.utilities.Report.Log;
@@ -86,9 +86,51 @@ public class FragmentTextNumeric extends FragmentBase {
     void setEditText(ViewGroup rootView) {
         editText = (EditText) rootView.findViewById(R.id.editTextNumber);
         setEditTextNotFocused();
+        editText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                String response = editText.getText().toString();
+                response = response.trim();
+                ArrayList<String> responses = new ArrayList<>();
+                responses.add(response);
+                if (response.length() > 0) {
+                    questionAnswer.setResponse(responses);
+                } else questionAnswer.getResponse().clear();
+
+                updateNext(isAnswered());
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+/*        editText.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                String response = editText.getText().toString();
+                response = response.trim();
+                ArrayList<String> responses = new ArrayList<>();
+                responses.add(response);
+                if (response.length() > 0) {
+                    questionAnswer.setResponse(responses);
+                } else questionAnswer.getResponse().clear();
+
+            updateNext(isAnswered());
+
+            return false;
+        }
+    });
+/*
         editText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                Log.d(TAG,"onEditorAction()..");
                 if ((event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) || (actionId == EditorInfo.IME_ACTION_DONE)) {
                     String response = editText.getText().toString();
                     response = response.trim();
@@ -102,6 +144,7 @@ public class FragmentTextNumeric extends FragmentBase {
                 return false;
             }
         });
+*/
         editText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean b) {
@@ -126,6 +169,7 @@ public class FragmentTextNumeric extends FragmentBase {
     }
 
     public boolean isAnswered() {
+        Log.d(TAG,"isAnswered..."+questionAnswer.getResponse().size());
         int lowerLimit = 0, higherLimit = 0;
         boolean lv = false, rv = false;
         if (questionAnswer.getResponse_option().size() > 0) {
@@ -137,16 +181,26 @@ public class FragmentTextNumeric extends FragmentBase {
             rv = true;
         }
         if (questionAnswer.getResponse().size() > 0) {
+            Log.d(TAG,"isAnswered..."+questionAnswer.getResponse().get(0));
             try {
                 int num = Integer.parseInt(questionAnswer.getResponse().get(0));
-                if (lv && num < lowerLimit) return false;
-                else if (rv && num > higherLimit) return false;
-                else return true;
+                if (lv && num < lowerLimit) {
+                    Toast.makeText(getActivity(),"Value must be in between "+lowerLimit+" and "+ higherLimit,Toast.LENGTH_SHORT).show();
+                    return false;
+                }
+                if (rv && num > higherLimit){
+                    Toast.makeText(getActivity(),"Value must be in between "+lowerLimit+" and "+ higherLimit,Toast.LENGTH_SHORT).show();
+                    return false;
+                }
+                return true;
             }catch(Exception e){
+                Toast.makeText(getActivity(),"Value must be in between "+lowerLimit+" and "+ higherLimit,Toast.LENGTH_SHORT).show();
                 return false;
             }
-        } else return false;
-
+        } else {
+//            Toast.makeText(getActivity(),"Value must be in between "+lowerLimit+" and "+ higherLimit,Toast.LENGTH_SHORT).show();
+            return false;
+        }
     }
 
     @Override

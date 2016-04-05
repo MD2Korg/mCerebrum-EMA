@@ -51,6 +51,7 @@ import java.util.ArrayList;
  */
 public class FragmentMultipleChoiceSelect extends FragmentBase {
     private static final String TAG = FragmentMultipleChoiceSelect.class.getSimpleName();
+    public static final String ITEM_UNSELECT_OTHER = "<UNSELECT_OTHER>";
 
     /**
      * Factory method for this fragment class. Constructs a new fragment for the given page number.
@@ -77,6 +78,9 @@ public class FragmentMultipleChoiceSelect extends FragmentBase {
         String options[] = new String[questionAnswer.getResponse_option().size()];
         for (int i = 0; i < questionAnswer.getResponse_option().size(); i++) {
             options[i] = questionAnswer.getResponse_option().get(i);
+            if (questionAnswer.getResponse_option().get(i).contains(ITEM_UNSELECT_OTHER)) {
+                options[i] = questionAnswer.getResponse_option().get(i).replaceAll(ITEM_UNSELECT_OTHER, "");
+            }
             Log.d(TAG, options[i]);
         }
 
@@ -97,11 +101,23 @@ public class FragmentMultipleChoiceSelect extends FragmentBase {
                 ArrayList<String> response = new ArrayList<>();
                 int len = listView.getCount();
                 SparseBooleanArray checked = listView.getCheckedItemPositions();
-                for (int i = 0; i < len; i++)
-                    if (checked.get(i)) {
-                        String item = (String) listView.getItemAtPosition(i);
-                        response.add(item);
-                    }
+                if (questionAnswer.getResponse_option().get(position).contains(ITEM_UNSELECT_OTHER)) {
+                    for (int i = 0; i < len; i++)
+                        if (i != position)
+                            listView.setItemChecked(i, false);
+                    if (listView.isItemChecked(position))
+                        response.add((String) listView.getItemAtPosition(position));
+                } else {
+                    for (int i = 0; i < len; i++)
+                        if (checked.get(i)) {
+                            if (questionAnswer.getResponse_option().get(i).contains(ITEM_UNSELECT_OTHER)) {
+                                listView.setItemChecked(i, false);
+                            } else {
+                                String item = (String) listView.getItemAtPosition(i);
+                                response.add(item);
+                            }
+                        }
+                }
                 questionAnswer.setResponse(response);
                 if (questionAnswer.isValid())
                     updateNext(true);
