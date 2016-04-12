@@ -12,7 +12,6 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import org.md2k.datakitapi.time.DateTime;
-import org.md2k.utilities.Report.Log;
 
 import java.util.ArrayList;
 
@@ -98,7 +97,7 @@ public class FragmentTextNumeric extends FragmentBase {
                 response = response.trim();
                 ArrayList<String> responses = new ArrayList<>();
                 responses.add(response);
-                if (response.length() > 0) {
+                if (!response.equals(Constants.TAP) && response.length() != 0) {
                     questionAnswer.setResponse(responses);
                 } else questionAnswer.getResponse().clear();
 
@@ -111,44 +110,9 @@ public class FragmentTextNumeric extends FragmentBase {
 
             }
         });
-/*        editText.setOnKeyListener(new View.OnKeyListener() {
-            @Override
-            public boolean onKey(View v, int keyCode, KeyEvent event) {
-                String response = editText.getText().toString();
-                response = response.trim();
-                ArrayList<String> responses = new ArrayList<>();
-                responses.add(response);
-                if (response.length() > 0) {
-                    questionAnswer.setResponse(responses);
-                } else questionAnswer.getResponse().clear();
-
-            updateNext(isAnswered());
-
-            return false;
-        }
-    });
-/*
-        editText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                Log.d(TAG,"onEditorAction()..");
-                if ((event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) || (actionId == EditorInfo.IME_ACTION_DONE)) {
-                    String response = editText.getText().toString();
-                    response = response.trim();
-                    ArrayList<String> responses = new ArrayList<>();
-                    responses.add(response);
-                    if (response.length() > 0) {
-                        questionAnswer.setResponse(responses);
-                    } else questionAnswer.getResponse().clear();
-                }
-                updateNext(isAnswered());
-                return false;
-            }
-        });
-*/
         editText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean b) {
-                Log.d(TAG, "Focus=" + b);
                 if (b)
                     setEditTextFocused();
                 else setEditTextNotFocused();
@@ -159,17 +123,15 @@ public class FragmentTextNumeric extends FragmentBase {
 
     @Override
     public void onPause() {
+        questionAnswer.getResponse().clear();
         if (!editText.getText().toString().equals(Constants.TAP) && editText.getText().toString().length() != 0) {
-            questionAnswer.getResponse().clear();
             questionAnswer.getResponse().add(editText.getText().toString());
-
         }
         hideKeyboard();
         super.onPause();
     }
 
     public boolean isAnswered() {
-        Log.d(TAG,"isAnswered..."+questionAnswer.getResponse().size());
         int lowerLimit = 0, higherLimit = 0;
         boolean lv = false, rv = false;
         if (questionAnswer.getResponse_option().size() > 0) {
@@ -181,7 +143,6 @@ public class FragmentTextNumeric extends FragmentBase {
             rv = true;
         }
         if (questionAnswer.getResponse().size() > 0) {
-            Log.d(TAG,"isAnswered..."+questionAnswer.getResponse().get(0));
             try {
                 int num = Integer.parseInt(questionAnswer.getResponse().get(0));
                 if (lv && num < lowerLimit) {
@@ -212,7 +173,6 @@ public class FragmentTextNumeric extends FragmentBase {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        Log.d(TAG, "onCreateView() mPageNumber=" + mPageNumber);
         final ViewGroup rootView = (ViewGroup) inflater
                 .inflate(R.layout.fragment_text_numeric, container, false);
         questionAnswer.setPrompt_time(DateTime.getDateTime());
