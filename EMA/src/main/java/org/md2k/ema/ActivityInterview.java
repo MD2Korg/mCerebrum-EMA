@@ -273,7 +273,7 @@ public class ActivityInterview extends ActivityAbstractInterview {
     }
     @Override
     public void onBackPressed() {
-        showAlertDialog();
+//        showAlertDialog();
 
     }
     void showAlertDialog() {
