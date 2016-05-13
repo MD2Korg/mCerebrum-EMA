@@ -4,6 +4,8 @@ package org.md2k.ema;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import org.md2k.datakitapi.time.DateTime;
+
 import java.util.ArrayList;
 
 
@@ -37,11 +39,13 @@ import java.util.ArrayList;
 public class QuestionAnswer extends Question implements Parcelable {
     private ArrayList<String> response;
     private long prompt_time;
+    private long finish_time;
 
     protected QuestionAnswer(Parcel in) {
         super(in);
         response = in.createStringArrayList();
         prompt_time = in.readLong();
+        finish_time=in.readLong();
     }
 
     @Override
@@ -49,6 +53,7 @@ public class QuestionAnswer extends Question implements Parcelable {
         super.writeToParcel(dest, flags);
         dest.writeStringList(response);
         dest.writeLong(prompt_time);
+        dest.writeLong(finish_time);
     }
 
     @Override
@@ -80,6 +85,7 @@ public class QuestionAnswer extends Question implements Parcelable {
         super(question.getQuestion_id(),question.getQuestion_text(), question.getQuestion_type(), question.getResponse_option(),question.getCondition());
         this.response = new ArrayList<>();
         prompt_time=-1;
+        finish_time=-1;
     }
 
 
@@ -89,6 +95,7 @@ public class QuestionAnswer extends Question implements Parcelable {
 
     public void setResponse(ArrayList<String> response) {
         this.response = response;
+        this.finish_time=DateTime.getDateTime();
     }
 
     public long getPrompt_time() {
@@ -104,6 +111,15 @@ public class QuestionAnswer extends Question implements Parcelable {
             if (response.get(i).equals(option)) return true;
         return false;
     }
+
+    public long getFinish_time() {
+        return finish_time;
+    }
+
+    public void setFinish_time(long finish_time) {
+        this.finish_time = finish_time;
+    }
+
     void addResponse(String option) {
         if(response ==null) response=new ArrayList<>();
         response.add(option);
@@ -125,6 +141,7 @@ public class QuestionAnswer extends Question implements Parcelable {
             }
         }
         prompt_time=-1;
+        finish_time=-1;
         response.clear();
         return false;
     }

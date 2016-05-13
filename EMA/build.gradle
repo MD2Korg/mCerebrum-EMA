@@ -24,8 +24,8 @@ android {
         applicationId "org.md2k.ema"
         minSdkVersion 19
         targetSdkVersion 23
-        versionCode 10
-        versionName '0.2.4'
+        versionCode 11
+        versionName '0.2.5'
     }
     buildTypes {
         release {
@@ -50,7 +50,7 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile fileTree(include: ['*.jar'], dir: 'libs')
     compile project(':datakitapi')
     compile project(':utilities')
     compile 'com.android.support:support-v4:23.0.0'
