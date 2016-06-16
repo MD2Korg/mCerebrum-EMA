@@ -1,12 +1,10 @@
 package org.md2k.ema;
 
-import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v13.app.FragmentStatePagerAdapter;
@@ -55,11 +53,11 @@ public class ActivityInterview extends ActivityAbstractInterview {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        id=getIntent().getStringExtra("id");
-        name=getIntent().getStringExtra("name");
-        display_name=getIntent().getStringExtra("display_name");
-        file_name=getIntent().getStringExtra("file_name");
-        timeout=getIntent().getLongExtra("timeout", 0);
+        id = getIntent().getStringExtra("id");
+        name = getIntent().getStringExtra("name");
+        display_name = getIntent().getStringExtra("display_name");
+        file_name = getIntent().getStringExtra("file_name");
+        timeout = getIntent().getLongExtra("timeout", 0);
         Log.d(TAG, "id=" + id + " display_name=" + display_name + " file_name=" + file_name + " timeout=" + timeout);
         setContentView(R.layout.activity_question);
         initQuestionAnswer();
@@ -67,6 +65,7 @@ public class ActivityInterview extends ActivityAbstractInterview {
         initView();
         super.onCreate(savedInstanceState);
     }
+
     void updateUI() {
         switch (state) {
             case AT_START:
@@ -151,20 +150,20 @@ public class ActivityInterview extends ActivityAbstractInterview {
             case android.R.id.home:
                 break;
             case R.id.action_previous:
-                lastResponseTime= DateTime.getDateTime();
-                message="button=previous, question_id="+String.valueOf(mPager.getCurrentItem());
+                lastResponseTime = DateTime.getDateTime();
+                message = "button=previous, question_id=" + String.valueOf(mPager.getCurrentItem());
                 sendLastResponseTime(lastResponseTime, message);
                 mPager.getAdapter().notifyDataSetChanged();
                 mPager.setCurrentItem(findValidQuestionPrevious(mPager.getCurrentItem()));
                 break;
             case R.id.action_next:
-                lastResponseTime= DateTime.getDateTime();
-                message="button=next, question_id="+String.valueOf(mPager.getCurrentItem());
+                lastResponseTime = DateTime.getDateTime();
+                message = "button=next, question_id=" + String.valueOf(mPager.getCurrentItem());
                 sendLastResponseTime(lastResponseTime, message);
                 if (!questionAnswers.questionAnswers.get(mPager.getCurrentItem()).isValid()) {
                     Toast.makeText(getBaseContext(), "Please answer the question first", Toast.LENGTH_SHORT).show();
                 } else if (mPager.getCurrentItem() >= questionAnswers.questionAnswers.size() - 1) {
-                    Log.d(TAG,""+mPager.getCurrentItem()+" "+questionAnswers.questionAnswers.size());
+                    Log.d(TAG, "" + mPager.getCurrentItem() + " " + questionAnswers.questionAnswers.size());
                     state = DONE;
                     manageState();
                 } else if (questionAnswers.questionAnswers.get(mPager.getCurrentItem()).isValid()) {
@@ -237,11 +236,13 @@ public class ActivityInterview extends ActivityAbstractInterview {
         createNotification();
         super.onPause();
     }
+
     @Override
     public void onResume() {
         cancelNotification();
         super.onResume();
     }
+
     public void createNotification() {
         // Prepare intent which is triggered if the
         // notification is selected
@@ -261,43 +262,22 @@ public class ActivityInterview extends ActivityAbstractInterview {
         noti.flags |= Notification.FLAG_NO_CLEAR;
         notificationManager.notify(0, noti);
     }
+
     public void cancelNotification() {
         NotificationManager nMgr = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         nMgr.cancel(0);
     }
+
     @Override
-    public void onDestroy(){
+    public void onDestroy() {
         cancelNotification();
-        Log.d(TAG,"onDestroy()...ActivityInterview");
+        Log.d(TAG, "onDestroy()...ActivityInterview");
         super.onDestroy();
     }
+
     @Override
     public void onBackPressed() {
-//        showAlertDialog();
 
     }
-    void showAlertDialog() {
-        AlertDialog alertDialog = new AlertDialog.Builder(this)
-                .setTitle("Quit?")
-                .setIcon(R.drawable.ic_error_red_50dp)
-                .setMessage("Do you want to quit from this survey? Survey will be marked as \"Abandoned\" ")
-                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        state = ABANDONED_BY_USER;
-                        manageState();
-
-                    }
-                })
-                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                    }
-                })
-                .create();
-
-        alertDialog.show();
-    }
-
 }
 
