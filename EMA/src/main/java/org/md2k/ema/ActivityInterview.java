@@ -63,6 +63,10 @@ public class ActivityInterview extends ActivityAbstractInterview {
         initQuestionAnswer();
         initInterviewState();
         initView();
+        if(questionAnswers.questionAnswers.get(0).getPrompt_time()<=0) {
+            questionAnswers.questionAnswers.get(0).setPrompt_time(DateTime.getDateTime());
+            Log.d(TAG,"curPage=0 setprompttime");
+        }
         super.onCreate(savedInstanceState);
     }
 
@@ -145,7 +149,7 @@ public class ActivityInterview extends ActivityAbstractInterview {
     public boolean onOptionsItemSelected(MenuItem item) {
         long lastResponseTime;
         String message;
-        switch (item.getItemId()) {
+            switch (item.getItemId()) {
             // Respond to the action bar's Up/Home button
             case android.R.id.home:
                 break;
@@ -154,7 +158,12 @@ public class ActivityInterview extends ActivityAbstractInterview {
                 message = "button=previous, question_id=" + String.valueOf(mPager.getCurrentItem());
                 sendLastResponseTime(lastResponseTime, message);
                 mPager.getAdapter().notifyDataSetChanged();
-                mPager.setCurrentItem(findValidQuestionPrevious(mPager.getCurrentItem()));
+                int curQuestion=findValidQuestionPrevious(mPager.getCurrentItem());
+                mPager.setCurrentItem(curQuestion);
+                if(questionAnswers.questionAnswers.get(curQuestion).getPrompt_time()<=0) {
+                    questionAnswers.questionAnswers.get(curQuestion).setPrompt_time(DateTime.getDateTime());
+                    Log.d(TAG,"curPage="+curQuestion+" setprompttime");
+                }
                 break;
             case R.id.action_next:
                 lastResponseTime = DateTime.getDateTime();
@@ -168,7 +177,13 @@ public class ActivityInterview extends ActivityAbstractInterview {
                     manageState();
                 } else if (questionAnswers.questionAnswers.get(mPager.getCurrentItem()).isValid()) {
                     mPager.getAdapter().notifyDataSetChanged();
-                    mPager.setCurrentItem(findValidQuestionNext(mPager.getCurrentItem()));
+                    questionAnswers.questionAnswers.get(mPager.getCurrentItem()).setFinish_time(DateTime.getDateTime());
+                    curQuestion=findValidQuestionNext(mPager.getCurrentItem());
+                    mPager.setCurrentItem(curQuestion);
+                    if(questionAnswers.questionAnswers.get(curQuestion).getPrompt_time()<=0) {
+                        questionAnswers.questionAnswers.get(curQuestion).setPrompt_time(DateTime.getDateTime());
+                        Log.d(TAG,"curPage="+curQuestion+" setprompttime");
+                    }
                 }
                 break;
         }

@@ -63,7 +63,9 @@
                 android:background="@drawable/editbox_border"
                 android:padding="10dp"
                 android:layout_alignParentTop="true"
-                android:layout_alignParentStart="false" />
+                android:layout_alignParentStart="false"
+                android:focusable="true"
+                android:focusableInTouchMode="true" />
 
 
         </RelativeLayout>

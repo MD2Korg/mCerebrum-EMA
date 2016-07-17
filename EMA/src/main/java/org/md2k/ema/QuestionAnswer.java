@@ -4,8 +4,6 @@ package org.md2k.ema;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import org.md2k.datakitapi.time.DateTime;
-
 import java.util.ArrayList;
 
 
@@ -95,7 +93,6 @@ public class QuestionAnswer extends Question implements Parcelable {
 
     public void setResponse(ArrayList<String> response) {
         this.response = response;
-        this.finish_time=DateTime.getDateTime();
     }
 
     public long getPrompt_time() {
@@ -125,7 +122,7 @@ public class QuestionAnswer extends Question implements Parcelable {
         response.add(option);
     }
 
-    boolean isValidCondition(ArrayList<QuestionAnswer> questions) {
+    boolean isValidCondition(ArrayList<QuestionAnswer> questionAnswers) {
         if (condition == null) return true;
         for(int i=0;i<condition.size();i++) {
             String[] separated = condition.get(i).split(":");
@@ -133,11 +130,16 @@ public class QuestionAnswer extends Question implements Parcelable {
             String part;
             if(separated[1].startsWith("~")) {
                 part=separated[1].substring(1);
-                if(questions.get(qid).response==null || questions.get(qid).response.size()==0) return false;
-                if (!questions.get(qid).hasResponseSelected(part)) return true;
+                if(questionAnswers.get(qid).response==null || questionAnswers.get(qid).response.size()==0) {
+                    prompt_time=-1;
+                    finish_time=-1;
+                    response.clear();
+                    return false;
+                }
+                if (!questionAnswers.get(qid).hasResponseSelected(part)) return true;
             }else{
                 part=separated[1];
-                if (questions.get(qid).hasResponseSelected(part)) return true;
+                if (questionAnswers.get(qid).hasResponseSelected(part)) return true;
             }
         }
         prompt_time=-1;

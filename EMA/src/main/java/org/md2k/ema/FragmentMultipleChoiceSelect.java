@@ -11,8 +11,8 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
-import org.md2k.datakitapi.time.DateTime;
 import org.md2k.utilities.Report.Log;
 
 import java.util.ArrayList;
@@ -52,6 +52,9 @@ import java.util.ArrayList;
 public class FragmentMultipleChoiceSelect extends FragmentBase {
     private static final String TAG = FragmentMultipleChoiceSelect.class.getSimpleName();
     public static final String ITEM_UNSELECT_OTHER = "<UNSELECT_OTHER>";
+    ListView listView;
+    TextView textViewPleaseSelect;
+    ArrayAdapter<String> adapter;
 
     /**
      * Factory method for this fragment class. Constructs a new fragment for the given page number.
@@ -67,9 +70,8 @@ public class FragmentMultipleChoiceSelect extends FragmentBase {
         super.onCreate(savedInstanceState);
     }
 
-    void setTypeMultipleChoiceSelect(ViewGroup rootView, final QuestionAnswer questionAnswer) {
+    void setTypeMultipleChoiceSelect() {
         Log.d(TAG, "setTypeMultipleChoiceSelect() questionAnswer=" + questionAnswer.getQuestion_text() + "......" + questionAnswer.getQuestion_id() + " " + questionAnswer.getResponse_option());
-        final ListView listView = (ListView) rootView.findViewById(R.id.listView_options);
         if (questionAnswer.isType(Constants.MULTIPLE_CHOICE))
             listView.setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
         else
@@ -84,15 +86,17 @@ public class FragmentMultipleChoiceSelect extends FragmentBase {
             Log.d(TAG, options[i]);
         }
 
-        ArrayAdapter<String> adapter;
         if (questionAnswer.isType(Constants.MULTIPLE_CHOICE))
             adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_single_choice, options);
         else
             adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_multiple_choice, options);
         listView.setAdapter(adapter);
+        adapter.notifyDataSetChanged();
+
         for (int i = 0; i < questionAnswer.getResponse_option().size(); i++)
             if (questionAnswer.isResponseExist(questionAnswer.getResponse_option().get(i)))
                 listView.setItemChecked(i, true);
+        else listView.setItemChecked(i, false);
         if (questionAnswer.isValid()) updateNext(true);
         else updateNext(false);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -144,15 +148,20 @@ public class FragmentMultipleChoiceSelect extends FragmentBase {
         Log.d(TAG, "onCreateView() mPageNumber=" + mPageNumber);
         final ViewGroup rootView = (ViewGroup) inflater
                 .inflate(R.layout.fragment_choice_select, container, false);
-        questionAnswer.setPrompt_time(DateTime.getDateTime());
+        listView = (ListView) rootView.findViewById(R.id.listView_options);
+        textViewPleaseSelect= (TextView) rootView.findViewById(R.id.textView_please_select);
         setQuestionText(rootView, questionAnswer);
-
-        if (questionAnswer.isType(Constants.MULTIPLE_CHOICE) || questionAnswer.isType(Constants.MULTIPLE_SELECT)) {
-            setTypeMultipleChoiceSelect(rootView, questionAnswer);
-        } else {
-            rootView.findViewById(R.id.textView_please_select).setVisibility(View.GONE);
-
-        }
+        updateView();
         return rootView;
     }
+    public void updateView(){
+        Log.d(TAG,"updateView()...");
+        if (questionAnswer.isType(Constants.MULTIPLE_CHOICE) || questionAnswer.isType(Constants.MULTIPLE_SELECT)) {
+            setTypeMultipleChoiceSelect();
+        } else {
+            textViewPleaseSelect.setVisibility(View.GONE);
+        }
+
+    }
+
 }
