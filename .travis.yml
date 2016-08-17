@@ -1,14 +1,11 @@
 language: android
-
 before_cache:
 - rm -f $HOME/.gradle/caches/modules-2/modules-2.lock
-
 cache:
   directories:
   - "$HOME/.gradle/caches/"
   - "$HOME/.gradle/wrapper/"
   - "$HOME/.m2/"
-
 android:
   components:
   - platform-tools
@@ -17,28 +14,32 @@ android:
   - android-23
   - extra-android-support
   - extra-android-m2repository
-
-
 before_install:
+- openssl aes-256-cbc -K $encrypted_e99d2a27555f_key -iv $encrypted_e99d2a27555f_iv -in EMA/release-key.keystore.enc -out EMA/release-key.keystore -d
 - git clone https://github.com/MD2Korg/mCerebrum-Utilities.git /home/travis/build/MD2Korg/mCerebrum-Utilities
 - git clone https://github.com/MD2Korg/mCerebrum-DataKitAPI.git /home/travis/build/MD2Korg/mCerebrum-DataKitAPI
-
-# before_script:
-#   - echo no | android create avd --force -n test -t android-21 --abi armeabi-v7a
-#   - emulator -avd test -no-skin -no-audio -no-window &
-#   - android-wait-for-emulator
-#   - adb shell input keyevent 82 &
-
-#env:
-#  global:
-#    - ADB_INSTALL_TIMEOUT=8
-
 script:
-  - ./gradlew build test
-
+- "./gradlew build test"
 notifications:
   slack:
     secure: drSaLEsi+xlUePocfcDTLO9S/5XSBsnR6h7OzPhU4xsO+mBjH3qb93Qe4Jwzz9IZQ0UFzDcmu7ObHOksd6fDgvnIcmznowuABs7QFSF5dodF3eXuF/NJc5J3SqptrOZhlPhGQJcan8siBpLw5z+UBal9ORQPJ8e0SN2bxvRH30GzOlaBOrS0w9hGmtoIY/c8ZIjxGn7BK+b7qL6pNqD4tTg3BImh4Q8Q0icjlT/Pe4kq9pJuYP+Ph4B6THE5PY6W5kmaPSZT2wk72tbNa+1f0lxkO106+Fi4X/qEf6BNQ/2ufUi8cGyjYhu8ZRfGEQVwmwtk0goZvPRyxzHx94tc0/utmW+ZvEEdXOTfs1cE84xGvsYOmoMaMacJC0DPSRTJ269LnmUlTYZoZPyEaqEJp0vFLnS7ZwYcYBzEQ/coS1zKOEWX5a29ijvCOxeFGWF9NcEvaGfpoP/RiLJXjguKfrQLQiek+xkzmubSRWpP9LFoqtXwVMxle/zi/99Ry02nvmEUSK3BbAM57LBnrT+0lYDC/ocxTpQ3Gvd52qFoZBzb8Fshu2+3UYCSCHROkOdHtBmBvRKE4LiTz8/6xtzeL1n+1RSrbN13tbk01gkNIHagSLWUildtFkvok2pJXawslE88ZhRzOOK8ViWFenbhca6sPfvBebXccTJKnzi4GQc=
-    on_success: change  # options: [always|never|change] default: always
-    on_failure: always  # options: [always|never|change] default: always
-    on_start: false     # default: false
+    on_success: change
+    on_failure: always
+    on_start: false
+env:
+  global:
+  - secure: PRQQIYl+nNurlnfK32A81qN+aI8CTmE2sWsG6gtAfs+zvRbCFaMEGZxUPWbrQCgz2nVhhteqAbtAJbhep4P3bkQMRW67DexO0FeXzzsjKKLUmwKF6A6uh90Qdhv0jgsArQBBOyBwiRA0/rw7qH9HocVMwHrpfnNeVXJkrKqyuP73Ts99LvFICpeLEM7PqEZ4buCgRuD2Tyxx+wXzc0oUG3/ZKNKMMCwhtxQYyAB1X4u5XnZRvGMjG9jF1Qmq74HvV+rxdOUnpSQqcL5LumorxGRw7nwLFHzsb+GwMho2gyxLcpsKp67e8F4Ze7mau4q0NMmX6HEmtZuICckOSHbp3r6nPcPeOlItp1ILeG/xm14y9CVuIqcGRmmXdKuBJGQ1bmfQmw0BxoCBtmrtz0b76vkyzYHi8WjINxEt58eRoYGvhW64tLQ70x4IcPvK7+97H7RPqQpaB4QgTt753uZ9ntSixw+QYH/7P2nxFd2IDBfARUUun6CNiCbb23qvYobH+MJT2srlvzh3s5xdO3j7VFqFn5kPghpflA9p7JtpshrifjTIaohlvVZgO6jeXgQpptAS9I2lwTDs5Hq3Lp8FraVBxQVFG3S3RlWYrJRtDQtbNOksXFjae33RjaTJwEvvKZRZUyaiIjcHJ7rAqDgJQl4JsVqMb/vAeiZs5N/xs3Q=
+  - secure: cvBvcitou5YMKPmQt5JLrkaRX9kkY8EW65dfep1LVGrW6xBLQS1J9MqXmeJjLIyqibYfnS9tshpWQai3l0dyyn2CnXt2Vk5BRoWx/kA8af2oHF+y8gs4ffHyJm62YgHY0NA6E7fao3g1eLOAC12ZkEcI/BzTijmAUfTctvPXnSDV3h6LtxpyEgGFeM9K2x0KVyYCeVdP7j2CSe/FtaAK+rZLKGJqThygJxqEn3rAt5qZa3aK+vRQ5hsj2sZMmZJI9Did93UXa/MHV+pelXY+s8j+P7eVBvMU3JDRaCTGIGwEnJWg+qxyxaQuceqcpAYDir3TGJUjlKgPO9GDPY5f4/cTQk+a95CAW3NTuZL66x21MyrIJ5Dus1tZvSXqUYLzPADwUq+TLLYAuH6Jit1iWz+CmnsjnEILQRmvxHlLNQP80gsOeclbUsxNOJoizc2WpMd4bi4xOfQopU4FOQuhdzeO2MVu4HymYy+aMFmKK83fzoR96rDFvS8q8m/fN5UXVvt8/nybqQehWLVqIwmT/oiVT//V+bHpdkX/hO+I2YjWnBj1lnDiOyY3b/IVGcD/SHxaSWQaU1Oz/cGuaTVcMKQ8lAopo4xsCtjBVjbhv6zIXIIrMugLVL9xcXZ45fg3x9fYYvOf/NNZ1Ly3sghJAdN45g8hQ/nxLjrlNx5+/zo=
+  - secure: uNiJSmYTc9BEJgFh1addBcuyqWxBsmQtLeiO3L7ophqtylu5yTnSuiUk+mXGIi/ZE3TzxZt/9If7kl3Mt+Jgpvb6eCD48DD/pFl/TCpr5iC+9rEYIoFlLM2OjlKzOKh4l65YMXEpxzljNA6nHiOmVoTKVVJK5mwZxzg8vxOMGMtVaaXldoNqVFHglEBgSJWF2tYeNSeR/FzvnJ1/4voU+RH6ETw4JtPIsZ7MangP8dfjHuxx2zX+ubTCLtcqQssDADJMDaZyo4gCuwqOrYc2+BYNwhTEymeZVOnYakJNicX7GfWoeB0TmE1kqcLNHFH3zdgEO/gN5k0nqgrHfpgW4ZG/S5BuHhC1fbxYPYQq/zzD0qoCfQKlPd0TXI7rITRQPLOlZqUIo09uJwlmjRrhC2CiVpVN8SoRroDPtr5l2D3ALd65BHXBo/xpwZKAJJQUgJ/5Kii2FdJl2L6z4hZTTX+j7vmuSKdZEhEAVQOY8ep5QAu9Ja1dFAEM7KfO2/2RE5+IL9GwqF3zpFmkBY0QLwP86MjcFTCUVe8IFAhlTTc1Ixxs1dKzWAJRUnYlf54WzJq1d+85DzqOnPji/8v0Y/UcwOkJTmlnaH4G7IGbbANnYKrQchEKjttuS6FlBhGANWbmWjKJTpTYbASwvSUCdkl7hK6fSt1/aWX8DumZKr4=
+  - secure: IcvGW+BYIVrb98dNKScn1GRfaZ/M1V4SQON5eNu2X+bRJ1oKIaTlQh2wvfwaUGCYmAJBD1+GVnXj2jKEUNkQaakHMye48BUN2clzyRypyfOtYnrsjkyscOXiAkMGdqjpob3JAO7xqJLyh64OMaaa6pZZJcPWkTDvpfgRSRyBaSzGJqqLdC7X6UZ6Wl95zfE/689GTHFncoISjCaScH07YGWv3QyNV1XAvKsHjh49nr0pn075KbAyEZZVVBEGY/ZCJoaKirvdPztNw3oZCK1mWR5ktsJMeFv+YNmNg+R4NI8/wIdyK1NhsdV+WNfFNbGLg7mLtuKiROTg4Eb9SENdUzhLiGIhUbEE0u2pb/liklmjlIvL+IPSVzvtm0WMmKknz+meTpLnoMD2dAKo3GUz6Uo0BJpLY4LR5/6RLjizWwgQCKh2kZsMtZvQL6eeUmjEIOv7JKHYzZsw0B3NolJwXbPfxv7qIH2+50eJbErIvSTATmOfZy5uk6WS28eBCA4xL3+pOcsbn5NUmEsakg9MIjZIfuzPZrZhVWS4yP1uPeyVND6D18Ok2JqhRJBW7dSIMgmQqi1ky0Dmt5svUiYaJQt8BxbajMzSm+si2lPmBI5r8pefwnHhzjvXRJjWaDaeusYJgbkRmvmiCbjiHM647lAmM/hhHkSY3brvpo6A7e0=
+  - secure: U54tUeJaYNRW4MUUVHSgbWZVfAiDKrTg5ut51yfSsOJXBxo/WA1cq843uw3AqaM5FSHVc0HQVfxVVh4X0/8oG+9GWrWEqw4w3006iOQ6i98gYuJmwYKjwIC8a7NWWzzca9z9wLpqHzB801EbZ4Vywb6YBXCTjHdCDgWmzxTeQT9KBOOrYb0ycZCaCtwQH39PSzS5rYFJBGdg+lndZVwnjOUYIDYswBoKgDwAfGZM29nE4C03idGZfKJZuX9LiHp0RkX9LRDAtMLgBCXQEEsFQR14eb/D3xAoEPigc0fEZ1LCmoKwuUI1ZXQwMfdOj8L5Kh4acNlO+6PXP6BQO5kb3gV2d+CIs2mSwxX36bzVwPKJS40WRLu1AXO1o9+Nc4FjpfDcVpucXevwzQe2IAsDkZ/Go1ljINb1No+BEJSS5q1NlvDNUFAiLsQ4Dllx6qfo64nu5Y86ygxYDpPz8FXrBcd4uBioXO/G6ViqSTKNWs++Zr2zkpzy7lraDDA5hoT6LDYo9UkyHQXJmas4hgZy2aKcwKO9USpAvmyhjArhKVxQiTrpLOoGeaN1uOH37QIgm52fpoBTsJhhY69A9xHA8x+lBKCMuN6cJdOGRUzBNZSraO6cV0fEWmJQjUlR0+K/OT8IUqcu8AiDn1QbZ/lBpImPZ5+dEdiswy2s7/rR88I=
+deploy:
+  file_glob: true
+  provider: releases
+  api_key:
+    secure: E9qnF8GuvWF2jDUMiFwOdGxKpyfvYzys/adUX2inWuDWkfs/qgOGAdn5hLqb+s/O08ziEFTc9/6KV0Ip4j9qwrwnzxVQn0p347thdjDhPagjy98nJ3sXF+JLni5Vr3JVNJc16GBfWxfHQoxB0+g+2kGPVT2DzfHGLOEgQ+3858Z/PcTuXO3cwG+sfsdVltHZHVdFOo9p003poBP/qFLCckMvsBkNHbVxiKiLdubh8yMSZyRHT3uvUo4Vnj5Ps8bqLdrCH5m1sawKpr40Ckb1TX3qlFzWuHUIKwHeOwVu0arMnZqTTCCu7C5/+expyOsETL+kcjOdujX8e+PV0SQM1rDm6pT15YJVwATYSp+zVaSdpCktXs2mO7i2YokRK84pOBzBovj77JMKE02hl8blrFlWQkoh09+qPN7AFonMysHKb/TrlbCtYKbB+rjyrrHP+CJiETmEWZiVE4phwAGnSmMMEXvqrBAjV9Zc5gJ5w4oekAC5oCPiYxKtBhHyxQRQDMFhgGIyyQ93ZWiocIlpP44NsnDfAS9g8LJttJMeCz+yU3wpHwjZmgpBj+r2DxbLNY9is6pit4bbi90aJFf6nNvEFX2me2/rQgxEW/VQNDutLedpWPevcE0bQF2l7MsspSoYp455VXBQDaugO71/YxT+dwGxVzg+s7FgMgxtG40=
+  file: EMA/build/outputs/apk/EMA*.*.*.apk
+  on:
+    repo: MD2Korg/mCerebrum-EMA
+    tags: true
+  skip_cleanup: true
