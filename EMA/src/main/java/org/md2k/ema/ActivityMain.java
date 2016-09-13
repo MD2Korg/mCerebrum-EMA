@@ -11,7 +11,9 @@ import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 
+import org.md2k.datakitapi.messagehandler.ResultCallback;
 import org.md2k.utilities.Report.Log;
+import org.md2k.utilities.permission.PermissionInfo;
 
 import io.fabric.sdk.android.Fabric;
 
@@ -45,13 +47,26 @@ import io.fabric.sdk.android.Fabric;
 public class ActivityMain extends Activity {
     private static final String TAG = ActivityMain.class.getSimpleName();
     EMA_Info ema_info;
+    boolean isPermission = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Fabric.with(this, new Crashlytics());
        // Fabric.with(this, new Crashlytics());
+        PermissionInfo permissionInfo = new PermissionInfo();
+        permissionInfo.getPermissions(this, new ResultCallback<Boolean>() {
+            @Override
+            public void onResult(Boolean result) {
+                isPermission = result;
+                if (result)
+                    load();
+                else finish();
+            }
+        });
+    }
 
+    void load() {
         if(getIntent().hasExtra("id")){
             startEMA();
             finish();

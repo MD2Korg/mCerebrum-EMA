@@ -16,8 +16,10 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.md2k.datakitapi.messagehandler.ResultCallback;
 import org.md2k.datakitapi.time.DateTime;
 import org.md2k.utilities.Report.Log;
+import org.md2k.utilities.permission.PermissionInfo;
 
 /**
  * Copyright (c) 2015, The University of Memphis, MD2K Center
@@ -47,12 +49,27 @@ import org.md2k.utilities.Report.Log;
  */
 public class ActivityInterview extends ActivityAbstractInterview {
     private static final String TAG = ActivityInterview.class.getSimpleName();
-    private NonSwipeableViewPager mPager = null;
     FragmentBase fragmentBase;
+    boolean isPermission = false;
+    private NonSwipeableViewPager mPager = null;
     private PagerAdapter mPagerAdapter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        PermissionInfo permissionInfo = new PermissionInfo();
+        permissionInfo.getPermissions(this, new ResultCallback<Boolean>() {
+            @Override
+            public void onResult(Boolean result) {
+                isPermission = result;
+                if (result)
+                    load();
+                else finish();
+            }
+        });
+        super.onCreate(savedInstanceState);
+    }
+
+    void load() {
         id = getIntent().getStringExtra("id");
         name = getIntent().getStringExtra("name");
         display_name = getIntent().getStringExtra("display_name");
@@ -67,7 +84,6 @@ public class ActivityInterview extends ActivityAbstractInterview {
             questionAnswers.questionAnswers.get(0).setPrompt_time(DateTime.getDateTime());
             Log.d(TAG,"curPage=0 setprompttime");
         }
-        super.onCreate(savedInstanceState);
     }
 
     void updateUI() {
@@ -211,41 +227,6 @@ public class ActivityInterview extends ActivityAbstractInterview {
         return cur;
     }
 
-    private class ScreenSlidePagerAdapter extends FragmentStatePagerAdapter {
-        public ScreenSlidePagerAdapter(FragmentManager fm) {
-            super(fm);
-        }
-
-        @Override
-        public Fragment getItem(int position) {
-            Log.d(TAG, "getItem(): position=" + position);
-            if (questionAnswers.questionAnswers.get(position).getQuestion_type() == null)
-                fragmentBase = FragmentMultipleChoiceSelect.create(position, id, file_name);
-
-            else if (questionAnswers.questionAnswers.get(position).getQuestion_type().equals(Constants.MULTIPLE_CHOICE) ||
-                    questionAnswers.questionAnswers.get(position).getQuestion_type().equals(Constants.MULTIPLE_SELECT))
-                fragmentBase = FragmentMultipleChoiceSelect.create(position, id, file_name);
-            else if (questionAnswers.questionAnswers.get(position).getQuestion_type().equals(Constants.TEXT_NUMERIC))
-                fragmentBase = FragmentTextNumeric.create(position, id, file_name);
-            else {
-                fragmentBase = FragmentMultipleChoiceSelect.create(position, id, file_name);
-            }
-            return fragmentBase;
-        }
-
-        @Override
-        public int getCount() {
-            if (questionAnswers != null)
-                return questionAnswers.questionAnswers.size();
-            else return 0;
-        }
-
-        @Override
-        public int getItemPosition(Object object) {
-            return POSITION_NONE;
-        }
-    }
-
     @Override
     public void onPause() {
         createNotification();
@@ -293,6 +274,41 @@ public class ActivityInterview extends ActivityAbstractInterview {
     @Override
     public void onBackPressed() {
 
+    }
+
+    private class ScreenSlidePagerAdapter extends FragmentStatePagerAdapter {
+        public ScreenSlidePagerAdapter(FragmentManager fm) {
+            super(fm);
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            Log.d(TAG, "getItem(): position=" + position);
+            if (questionAnswers.questionAnswers.get(position).getQuestion_type() == null)
+                fragmentBase = FragmentMultipleChoiceSelect.create(position, id, file_name);
+
+            else if (questionAnswers.questionAnswers.get(position).getQuestion_type().equals(Constants.MULTIPLE_CHOICE) ||
+                    questionAnswers.questionAnswers.get(position).getQuestion_type().equals(Constants.MULTIPLE_SELECT))
+                fragmentBase = FragmentMultipleChoiceSelect.create(position, id, file_name);
+            else if (questionAnswers.questionAnswers.get(position).getQuestion_type().equals(Constants.TEXT_NUMERIC))
+                fragmentBase = FragmentTextNumeric.create(position, id, file_name);
+            else {
+                fragmentBase = FragmentMultipleChoiceSelect.create(position, id, file_name);
+            }
+            return fragmentBase;
+        }
+
+        @Override
+        public int getCount() {
+            if (questionAnswers != null)
+                return questionAnswers.questionAnswers.size();
+            else return 0;
+        }
+
+        @Override
+        public int getItemPosition(Object object) {
+            return POSITION_NONE;
+        }
     }
 }
 
