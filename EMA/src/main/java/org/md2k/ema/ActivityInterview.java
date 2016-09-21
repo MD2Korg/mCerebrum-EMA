@@ -13,6 +13,7 @@ import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -56,6 +57,7 @@ public class ActivityInterview extends ActivityAbstractInterview {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         PermissionInfo permissionInfo = new PermissionInfo();
         permissionInfo.getPermissions(this, new ResultCallback<Boolean>() {
             @Override
