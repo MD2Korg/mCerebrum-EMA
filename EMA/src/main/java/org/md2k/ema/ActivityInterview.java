@@ -80,6 +80,11 @@ public class ActivityInterview extends ActivityAbstractInterview {
         Log.d(TAG, "id=" + id + " display_name=" + display_name + " file_name=" + file_name + " timeout=" + timeout);
         setContentView(R.layout.activity_question);
         initQuestionAnswer();
+        if(questionAnswers==null || questionAnswers.questionAnswers==null || questionAnswers.questionAnswers.size()==0) {
+            Toast.makeText(this, "Can't load file content", Toast.LENGTH_LONG).show();
+            finish();
+            return;
+        }
         initInterviewState();
         initView();
         if(questionAnswers.questionAnswers.get(0).getPrompt_time()<=0) {
@@ -252,7 +257,7 @@ public class ActivityInterview extends ActivityAbstractInterview {
         // Actions are just fake
         Notification noti = new Notification.Builder(this)
                 .setContentTitle("Survey is available")
-                .setContentText("Please click to resume...").setSmallIcon(R.drawable.ic_notification_ema)
+                .setContentText("Please click to resume...").setSmallIcon(R.drawable.ic_archive_teal_48dp)
                 .setContentIntent(pIntent)
                 .setAutoCancel(true)
                 .build();
@@ -294,6 +299,13 @@ public class ActivityInterview extends ActivityAbstractInterview {
                 fragmentBase = FragmentMultipleChoiceSelect.create(position, id, file_name);
             else if (questionAnswers.questionAnswers.get(position).getQuestion_type().equals(Constants.TEXT_NUMERIC))
                 fragmentBase = FragmentTextNumeric.create(position, id, file_name);
+            else if (questionAnswers.questionAnswers.get(position).getQuestion_type().equals(Constants.HOUR_MINUTE))
+                fragmentBase = FragmentHourMinute.create(position, id, file_name);
+            else if (questionAnswers.questionAnswers.get(position).getQuestion_type().equals(Constants.HOUR_MINUTE_AMPM))
+                fragmentBase = FragmentHourMinuteAMPM.create(position, id, file_name);
+            else if (questionAnswers.questionAnswers.get(position).getQuestion_type().equals(Constants.MINUTE_SECOND))
+                fragmentBase = FragmentMinuteSecond.create(position, id, file_name);
+
             else {
                 fragmentBase = FragmentMultipleChoiceSelect.create(position, id, file_name);
             }

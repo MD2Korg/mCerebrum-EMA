@@ -65,8 +65,7 @@ public class QuestionManager {
         QuestionManager.id = id;
         ArrayList<Question> questions = readQuestionsFromFile(context, file_name);
         questionAnswers = new QuestionAnswers(id);
-        assert questions != null;
-        for (int i = 0; i < questions.size(); i++) {
+        for (int i = 0; questions!=null && i < questions.size(); i++) {
             QuestionAnswer questionAnswer = new QuestionAnswer(questions.get(i));
             questionAnswers.add(questionAnswer);
         }

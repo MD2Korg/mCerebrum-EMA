@@ -38,6 +38,9 @@ public class Constants {
     public static final String MULTIPLE_SELECT="multiple_select";
     public static final String TEXT="text";
     public static final String TEXT_NUMERIC ="text_numeric";
+    public static final String HOUR_MINUTE="hour_minute";
+    public static final String MINUTE_SECOND="minute_second";
+    public static final String HOUR_MINUTE_AMPM="hour_minute_ampm";
 
     public static final String EMA_COMPLETED="COMPLETED";
     public static final String ABANDONED_BY_TIMEOUT ="ABANDONED_BY_TIMEOUT";
