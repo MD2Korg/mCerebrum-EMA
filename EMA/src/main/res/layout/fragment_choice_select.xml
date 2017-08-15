@@ -16,7 +16,7 @@
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:text="Question:"
-            android:id="@+id/textView2"
+            android:id="@+id/textView_header"
             android:textStyle="italic"
             android:textColor="@color/lightblue_900"
             android:paddingBottom="10dp" />

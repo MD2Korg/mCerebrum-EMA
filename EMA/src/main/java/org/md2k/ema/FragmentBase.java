@@ -2,6 +2,7 @@ package org.md2k.ema;
 
 import android.app.Fragment;
 import android.os.Bundle;
+import android.text.Html;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -87,7 +88,11 @@ public class FragmentBase extends Fragment {
 
     void setQuestionText(ViewGroup rootView, Question question) {
         String question_text = question.getQuestion_text();
-        ((TextView) rootView.findViewById(R.id.textViewDescription)).setText(question_text);
+        ((TextView) rootView.findViewById(R.id.textViewDescription)).setText(Html.fromHtml(question_text));
+        if(question.getQuestion_type()==null)
+            ((TextView) rootView.findViewById(R.id.textView_header)).setText("Notification:");
+        else
+            ((TextView) rootView.findViewById(R.id.textView_header)).setText("Question:");
     }
 
     public void updateNext(boolean answered) {
