@@ -1,0 +1,45 @@
+[
+  {
+    "question_id": 0,
+    "question_text": "For the next few questions, please rate how you feel right now."
+  },
+  {
+    "question_id": 1,
+    "question_type": "multiple_choice",
+    "question_text": "I feel cheerful",
+    "response_option": [
+      "NO!!!",
+      "NO",
+      "no",
+      "yes",
+      "YES",
+      "YES!!!"
+    ]
+  },
+  {
+    "question_id": 2,
+    "question_type": "multiple_choice",
+    "question_text": "I feel happy",
+    "response_option": [
+      "NO!!!",
+      "NO",
+      "no",
+      "yes",
+      "YES",
+      "YES!!!"
+    ]
+  },
+  {
+    "question_id": 3,
+    "question_type": "multiple_choice",
+    "question_text": "I feel angry/frustrated",
+    "response_option": [
+      "NO!!!",
+      "NO",
+      "no",
+      "yes",
+      "YES",
+      "YES!!!"
+    ]
+  }
+]

@@ -31,8 +31,8 @@ import android.os.Environment;
  */
 public class Constants {
     public static final String TAP = "(Please 'TAP' here to type)";
-    public static final String CONFIG_DIRECTORY= Environment.getExternalStorageDirectory().getAbsolutePath() + "/mCerebrum/";
-    public static final String CONFIG_FILENAME = "config_ema.json";
+    public static final String CONFIG_DIRECTORY= Environment.getExternalStorageDirectory().getAbsolutePath() + "/mCerebrum/org.md2k.ema/";
+    public static final String CONFIG_FILENAME = "config.json";
 
     public static final String MULTIPLE_CHOICE="multiple_choice";
     public static final String MULTIPLE_SELECT="multiple_select";
@@ -43,7 +43,7 @@ public class Constants {
     public static final String HOUR_MINUTE_AMPM="hour_minute_ampm";
 
     public static final String EMA_COMPLETED="COMPLETED";
-    public static final String ABANDONED_BY_TIMEOUT ="ABANDONED_BY_TIMEOUT";
+    public static final String EMA_ABANDONED_BY_TIMEOUT ="ABANDONED_BY_TIMEOUT";
     public static final String EMA_MISSED = "MISSED";
     public static final String EMA_ABANDONED_BY_USER="ABANDONED_BY_USER";
 }

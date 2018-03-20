@@ -1,8 +1,9 @@
-package org.md2k.ema;
+package org.md2k.ema.fragment;
 
 import android.app.Fragment;
 import android.os.Bundle;
 import android.text.Html;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -11,7 +12,11 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 
-import org.md2k.utilities.Report.Log;
+import org.md2k.ema.ActivityInterview;
+import org.md2k.ema.R;
+import org.md2k.ema.data.Question;
+
+import java.util.ArrayList;
 
 
 /**
@@ -49,29 +54,23 @@ public class FragmentBase extends Fragment {
     /**
      * The argument key for the page number this fragment represents.
      */
-    public static final String ARG_PAGE = "page";
-    public static final String ARG_ID = "id";
-    public static final String ARG_FILENAME = "file_name";
+    public static final String ARG_QUESTION_ID = "question_id";
 
     private static final String TAG = FragmentBase.class.getSimpleName();
     Menu menu = null;
 
     /**
-     * The fragment's page number, which is set to the argument value for {@link #ARG_PAGE}.
+     * The fragment's page number, which is set to the argument value for {@link #ARG_QUESTION_ID}.
      */
-    protected int mPageNumber;
-    protected String id;
-    protected String file_name;
-    QuestionAnswer questionAnswer = null;
+    protected int questionId;
+    Question question = null;
 
     /**
      * Factory method for this fragment class. Constructs a new fragment for the given page number.
      */
-    protected static Bundle getArgument(int pageNumber, String id,String file_name) {
+    protected static Bundle getArgument(int pageNumber) {
         Bundle args = new Bundle();
-        args.putInt(ARG_PAGE, pageNumber);
-        args.putString(ARG_ID, id);
-        args.putString(ARG_FILENAME,file_name);
+        args.putInt(ARG_QUESTION_ID, pageNumber);
         return args;
     }
 
@@ -79,10 +78,8 @@ public class FragmentBase extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         Log.d(TAG, "FragmentBase-> onCreate()");
         super.onCreate(savedInstanceState);
-        mPageNumber = getArguments().getInt(ARG_PAGE);
-        id = getArguments().getString(ARG_ID);
-        file_name=getArguments().getString(ARG_FILENAME);
-        questionAnswer = QuestionManager.getInstance(getActivity(),id,file_name).questionAnswers.questionAnswers.get(mPageNumber);
+        questionId = getArguments().getInt(ARG_QUESTION_ID);
+        question = ((ActivityInterview) getActivity()).ema.getQuestions().get(questionId);
         setHasOptionsMenu(true);
     }
 

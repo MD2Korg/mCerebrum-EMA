@@ -1,4 +1,4 @@
-package org.md2k.ema;
+package org.md2k.ema.data;
 
 import java.util.ArrayList;
 
@@ -30,35 +30,34 @@ import java.util.ArrayList;
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-public class QuestionAnswers{
-    long startTime;
-    long endTime;
-    String status;
-    String id;
-    ArrayList<QuestionAnswer> questionAnswers;
-    QuestionAnswers(String id){
-        startTime=-1;
-        endTime=-1;
-        this.id = id;
-        questionAnswers=new ArrayList<>();
+public class EMA {
+    private String id;
+    private String type;
+    private String title;
+    private String summary;
+    private String description;
+    private long start_time;
+    private long end_time;
+    private String status;
+    private ArrayList<Question> questions;
+    public EMA(String id, String type, String title, String summary, String description, ArrayList<Question> questions){
+        this.id=id;
+        this.type=type;
+        this.title = title;
+        this.summary= summary;
+        this.description=description;
+        this.questions=questions;
+        start_time =-1;
+        end_time =-1;
+        status="NOT_ANSWERED";
+        for(int i=0;questions!=null && i<questions.size();i++)
+            questions.get(i).setResponse(new ArrayList<String>());
     }
-    void setStartTime(long startTime){
-        this.startTime=startTime;
+    public void setStart_time(long start_time){
+        this.start_time = start_time;
     }
-    void setEndTime(long endTime){
-        this.endTime=endTime;
-    }
-    void add(QuestionAnswer questionAnswer){
-        questionAnswers.add(questionAnswer);
-    }
-
-
-    public long getStartTime() {
-        return startTime;
-    }
-
-    public long getEndTime() {
-        return endTime;
+    public void setEnd_time(long end_time){
+        this.end_time = end_time;
     }
 
     public String getStatus() {
@@ -73,15 +72,33 @@ public class QuestionAnswers{
         return id;
     }
 
+    public String getType() {
+        return type;
+    }
+
     public void setId(String id) {
         this.id = id;
     }
 
-    public ArrayList<QuestionAnswer> getQuestionAnswers() {
-        return questionAnswers;
+    public ArrayList<Question> getQuestions() {
+        return questions;
     }
-
-    public void setQuestionAnswers(ArrayList<QuestionAnswer> questionAnswers) {
-        this.questionAnswers = questionAnswers;
+    public int findValidQuestionNext(int cur) {
+        cur++;
+        while (cur < questions.size()) {
+            if (!questions.get(cur).isValidCondition(questions))
+                cur++;
+            else break;
+        }
+        return cur;
+    }
+    public int findValidQuestionPrevious(int cur) {
+        cur--;
+        while (cur >= 0) {
+            if (!questions.get(cur).isValidCondition(questions))
+                cur--;
+            else break;
+        }
+        return cur;
     }
 }

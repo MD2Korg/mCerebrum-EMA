@@ -1,6 +1,7 @@
-package org.md2k.ema;
+package org.md2k.ema.fragment;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -13,7 +14,8 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import org.md2k.utilities.Report.Log;
+import org.md2k.ema.Constants;
+import org.md2k.ema.R;
 
 import java.util.ArrayList;
 
@@ -45,10 +47,6 @@ import java.util.ArrayList;
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/**
- * A fragment representing a single step in a wizard. The fragment shows a dummy title indicating
- * the page number, along with some dummy text.
- */
 public class FragmentMultipleChoiceSelect extends FragmentBase {
     private static final String TAG = FragmentMultipleChoiceSelect.class.getSimpleName();
     public static final String ITEM_UNSELECT_OTHER = "<UNSELECT_OTHER>";
@@ -56,12 +54,9 @@ public class FragmentMultipleChoiceSelect extends FragmentBase {
     TextView textViewPleaseSelect;
     ArrayAdapter<String> adapter;
 
-    /**
-     * Factory method for this fragment class. Constructs a new fragment for the given page number.
-     */
-    public static FragmentMultipleChoiceSelect create(int pageNumber, String id, String file_name) {
+    public static FragmentMultipleChoiceSelect create(int pageNumber) {
         FragmentMultipleChoiceSelect fragment = new FragmentMultipleChoiceSelect();
-        fragment.setArguments(getArgument(pageNumber, id, file_name));
+        fragment.setArguments(getArgument(pageNumber));
         return fragment;
     }
 
@@ -71,33 +66,31 @@ public class FragmentMultipleChoiceSelect extends FragmentBase {
     }
 
     void setTypeMultipleChoiceSelect() {
-        Log.d(TAG, "setTypeMultipleChoiceSelect() questionAnswer=" + questionAnswer.getQuestion_text() + "......" + questionAnswer.getQuestion_id() + " " + questionAnswer.getResponse_option());
-        if (questionAnswer.isType(Constants.MULTIPLE_CHOICE))
+        if (question.isType(Constants.MULTIPLE_CHOICE))
             listView.setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
         else
             listView.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
-        Log.d(TAG, questionAnswer.getQuestion_id() + " " + questionAnswer.getResponse_option().size());
-        String options[] = new String[questionAnswer.getResponse_option().size()];
-        for (int i = 0; i < questionAnswer.getResponse_option().size(); i++) {
-            options[i] = questionAnswer.getResponse_option().get(i);
-            if (questionAnswer.getResponse_option().get(i).contains(ITEM_UNSELECT_OTHER)) {
-                options[i] = questionAnswer.getResponse_option().get(i).replaceAll(ITEM_UNSELECT_OTHER, "");
+        String options[] = new String[question.getResponse_option().size()];
+        for (int i = 0; i < question.getResponse_option().size(); i++) {
+            options[i] = question.getResponse_option().get(i);
+            if (question.getResponse_option().get(i).contains(ITEM_UNSELECT_OTHER)) {
+                options[i] = question.getResponse_option().get(i).replaceAll(ITEM_UNSELECT_OTHER, "");
             }
             Log.d(TAG, options[i]);
         }
 
-        if (questionAnswer.isType(Constants.MULTIPLE_CHOICE))
+        if (question.isType(Constants.MULTIPLE_CHOICE))
             adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_single_choice, options);
         else
             adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_multiple_choice, options);
         listView.setAdapter(adapter);
         adapter.notifyDataSetChanged();
 
-        for (int i = 0; i < questionAnswer.getResponse_option().size(); i++)
-            if (questionAnswer.isResponseExist(questionAnswer.getResponse_option().get(i)))
+        for (int i = 0; i < question.getResponse_option().size(); i++)
+            if (question.isResponseExist(question.getResponse_option().get(i)))
                 listView.setItemChecked(i, true);
         else listView.setItemChecked(i, false);
-        if (questionAnswer.isValid()) updateNext(true);
+        if (question.isValid()) updateNext(true);
         else updateNext(false);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -105,7 +98,7 @@ public class FragmentMultipleChoiceSelect extends FragmentBase {
                 ArrayList<String> response = new ArrayList<>();
                 int len = listView.getCount();
                 SparseBooleanArray checked = listView.getCheckedItemPositions();
-                if (questionAnswer.getResponse_option().get(position).contains(ITEM_UNSELECT_OTHER)) {
+                if (question.getResponse_option().get(position).contains(ITEM_UNSELECT_OTHER)) {
                     for (int i = 0; i < len; i++)
                         if (i != position)
                             listView.setItemChecked(i, false);
@@ -114,7 +107,7 @@ public class FragmentMultipleChoiceSelect extends FragmentBase {
                 } else {
                     for (int i = 0; i < len; i++)
                         if (checked.get(i)) {
-                            if (questionAnswer.getResponse_option().get(i).contains(ITEM_UNSELECT_OTHER)) {
+                            if (question.getResponse_option().get(i).contains(ITEM_UNSELECT_OTHER)) {
                                 listView.setItemChecked(i, false);
                             } else {
                                 String item = (String) listView.getItemAtPosition(i);
@@ -122,8 +115,8 @@ public class FragmentMultipleChoiceSelect extends FragmentBase {
                             }
                         }
                 }
-                questionAnswer.setResponse(response);
-                if (questionAnswer.isValid())
+                question.setResponse(response);
+                if (question.isValid())
                     updateNext(true);
                 else updateNext(false);
 
@@ -132,8 +125,8 @@ public class FragmentMultipleChoiceSelect extends FragmentBase {
     }
 
     public boolean isAnswered() {
-        return questionAnswer.getQuestion_type() == null || !(questionAnswer.getQuestion_type().equals(Constants.MULTIPLE_SELECT) ||
-                questionAnswer.getQuestion_type().equals(Constants.MULTIPLE_CHOICE)) || questionAnswer.getResponse().size() > 0;
+        return question.getQuestion_type() == null || !(question.getQuestion_type().equals(Constants.MULTIPLE_SELECT) ||
+                question.getQuestion_type().equals(Constants.MULTIPLE_CHOICE)) || question.getResponse().size() > 0;
     }
 
     @Override
@@ -145,18 +138,17 @@ public class FragmentMultipleChoiceSelect extends FragmentBase {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        Log.d(TAG, "onCreateView() mPageNumber=" + mPageNumber);
         final ViewGroup rootView = (ViewGroup) inflater
                 .inflate(R.layout.fragment_choice_select, container, false);
         listView = (ListView) rootView.findViewById(R.id.listView_options);
         textViewPleaseSelect= (TextView) rootView.findViewById(R.id.textView_please_select);
-        setQuestionText(rootView, questionAnswer);
+        setQuestionText(rootView, question);
         updateView();
         return rootView;
     }
     public void updateView(){
         Log.d(TAG,"updateView()...");
-        if (questionAnswer.isType(Constants.MULTIPLE_CHOICE) || questionAnswer.isType(Constants.MULTIPLE_SELECT)) {
+        if (question.isType(Constants.MULTIPLE_CHOICE) || question.isType(Constants.MULTIPLE_SELECT)) {
             setTypeMultipleChoiceSelect();
         } else {
             textViewPleaseSelect.setVisibility(View.GONE);

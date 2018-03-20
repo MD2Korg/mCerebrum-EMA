@@ -1,13 +1,6 @@
 package org.md2k.ema;
-
-import android.content.Context;
-import android.support.v4.view.ViewPager;
-import android.util.AttributeSet;
-import android.view.MotionEvent;
-
-
-/**
- * Copyright (c) 2015, The University of Memphis, MD2K Center
+/*
+ * Copyright (c) 2016, The University of Memphis, MD2K Center
  * - Syed Monowar Hossain <monowar.hossain@gmail.com>
  * All rights reserved.
  *
@@ -32,25 +25,22 @@ import android.view.MotionEvent;
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-public class NonSwipeableViewPager extends ViewPager {
 
-    public NonSwipeableViewPager(Context context) {
-        super(context);
-    }
+import android.content.Context;
+import android.content.Intent;
 
-    public NonSwipeableViewPager(Context context, AttributeSet attrs) {
-        super(context, attrs);
-    }
+import org.md2k.mcerebrum.commons.permission.ActivityPermission;
+import org.md2k.mcerebrum.commons.permission.Permission;
+import org.md2k.mcerebrum.core.access.MCerebrum;
+import org.md2k.mcerebrum.core.access.MCerebrumInfo;
 
+public class MyMCerebrumInit extends MCerebrumInfo {
     @Override
-    public boolean onInterceptTouchEvent(MotionEvent event) {
-        // Never allow swiping to switch between pages
-        return false;
-    }
-
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        // Never allow swiping to switch between pages
-        return false;
+    public void update(final Context context){
+        if(!Permission.hasPermission(context)){
+            Intent intent = new Intent(context, ActivityPermission.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            context.startActivity(intent);
+        }
     }
 }

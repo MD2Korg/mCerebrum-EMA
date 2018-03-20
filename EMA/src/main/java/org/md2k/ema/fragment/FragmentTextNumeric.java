@@ -1,4 +1,4 @@
-package org.md2k.ema;
+package org.md2k.ema.fragment;
 
 import android.os.Bundle;
 import android.text.Editable;
@@ -11,7 +11,8 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import org.md2k.datakitapi.time.DateTime;
+import org.md2k.ema.Constants;
+import org.md2k.ema.R;
 
 import java.util.ArrayList;
 
@@ -42,21 +43,11 @@ import java.util.ArrayList;
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
-/**
- * A fragment representing a single step in a wizard. The fragment shows a dummy title indicating
- * the page number, along with some dummy text.
- */
 public class FragmentTextNumeric extends FragmentBase {
-    private static final String TAG = FragmentTextNumeric.class.getSimpleName();
     EditText editText;
-
-    /**
-     * Factory method for this fragment class. Constructs a new fragment for the given page number.
-     */
-    public static FragmentTextNumeric create(int pageNumber, String id, String file_name) {
+    public static FragmentTextNumeric create(int pageNumber) {
         FragmentTextNumeric fragment = new FragmentTextNumeric();
-        fragment.setArguments(getArgument(pageNumber, id, file_name));
+        fragment.setArguments(getArgument(pageNumber));
         return fragment;
     }
 
@@ -98,8 +89,8 @@ public class FragmentTextNumeric extends FragmentBase {
                 ArrayList<String> responses = new ArrayList<>();
                 responses.add(response);
                 if (!response.equals(Constants.TAP) && response.length() != 0) {
-                    questionAnswer.setResponse(responses);
-                } else questionAnswer.getResponse().clear();
+                    question.setResponse(responses);
+                } else question.getResponse().clear();
 
                 updateNext(isAnswered());
 
@@ -130,17 +121,17 @@ public class FragmentTextNumeric extends FragmentBase {
     public boolean isAnswered() {
         int lowerLimit = 0, higherLimit = 0;
         boolean lv = false, rv = false;
-        if (questionAnswer.getResponse_option().size() > 0) {
-            lowerLimit = Integer.parseInt(questionAnswer.getResponse_option().get(0));
+        if (question.getResponse_option().size() > 0) {
+            lowerLimit = Integer.parseInt(question.getResponse_option().get(0));
             lv = true;
         }
-        if (questionAnswer.getResponse_option().size() > 1) {
-            higherLimit = Integer.parseInt(questionAnswer.getResponse_option().get(1));
+        if (question.getResponse_option().size() > 1) {
+            higherLimit = Integer.parseInt(question.getResponse_option().get(1));
             rv = true;
         }
-        if (questionAnswer.getResponse().size() > 0) {
+        if (question.getResponse().size() > 0) {
             try {
-                int num = Integer.parseInt(questionAnswer.getResponse().get(0));
+                int num = Integer.parseInt(question.getResponse().get(0));
                 if (lv && num < lowerLimit) {
                     Toast.makeText(getActivity(),"Value must be in between "+lowerLimit+" and "+ higherLimit,Toast.LENGTH_SHORT).show();
                     return false;
@@ -171,8 +162,7 @@ public class FragmentTextNumeric extends FragmentBase {
                              Bundle savedInstanceState) {
         final ViewGroup rootView = (ViewGroup) inflater
                 .inflate(R.layout.fragment_text_numeric, container, false);
-        questionAnswer.setPrompt_time(DateTime.getDateTime());
-        setQuestionText(rootView, questionAnswer);
+        setQuestionText(rootView, question);
         setEditText(rootView);
         return rootView;
     }

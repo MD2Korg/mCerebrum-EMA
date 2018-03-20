@@ -1,6 +1,7 @@
 package org.md2k.ema;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -9,13 +10,14 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import com.crashlytics.android.Crashlytics;
+import org.md2k.ema.data.EMAInfo;
+import org.md2k.mcerebrum.commons.permission.Permission;
+import org.md2k.mcerebrum.commons.permission.PermissionCallback;
 
-import org.md2k.datakitapi.messagehandler.ResultCallback;
-import org.md2k.utilities.Report.Log;
-import org.md2k.utilities.permission.PermissionInfo;
-
-import io.fabric.sdk.android.Fabric;
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
 
 
 /**
@@ -45,70 +47,108 @@ import io.fabric.sdk.android.Fabric;
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 public class ActivityMain extends Activity {
-    private static final String TAG = ActivityMain.class.getSimpleName();
-    EMA_Info ema_info;
-    boolean isPermission = false;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Fabric.with(this, new Crashlytics());
-       // Fabric.with(this, new Crashlytics());
-        PermissionInfo permissionInfo = new PermissionInfo();
-        permissionInfo.getPermissions(this, new ResultCallback<Boolean>() {
+        Permission.requestPermission(this, new PermissionCallback() {
             @Override
-            public void onResult(Boolean result) {
-                isPermission = result;
-                if (result)
+            public void OnResponse(boolean isGranted) {
+                if (!isGranted) {
+                    Toast.makeText(getApplicationContext(), "EMA app ... !PERMISSION DENIED !!! Could not continue...", Toast.LENGTH_SHORT).show();
+                    finish();
+                } else {
                     load();
-                else finish();
+                }
             }
         });
     }
 
     void load() {
-        if(getIntent().hasExtra("id")){
-            startEMA();
+        if (getIntent().hasExtra("id") || getIntent().hasExtra("type")) {
+            startEMAUsingIntent();
             finish();
-        }
-        else {
-            setContentView(R.layout.activity_main);
-            addButtons();
+        } else {
+            showUIAndButtons();
         }
     }
-    void addButtons() {
-        ema_info = new EMA_Info(getApplicationContext());
-        if(ema_info.size()==-1){
-            Toast.makeText(this,"ERROR: EMA configuration file is not available. Could not run...",Toast.LENGTH_LONG).show();
-            finish();
+    private void startEMAUsingIntent(){
+        String id = getIntent().getStringExtra("id");
+        String type = getIntent().getStringExtra("type");
+        String title = getIntent().getStringExtra("title");
+        String summary = getIntent().getStringExtra("summary");
+        String description = getIntent().getStringExtra("description");
+        String question = getIntent().getStringExtra("question");
+        if(question==null) {
+            String filename = getIntent().getStringExtra("filename");
+            if(filename==null)
+                question = getQuestion(id, type);
+            else question = getQuestion(filename);
         }
-        for (int i = 0; i < ema_info.size(); i++) {
-            Button myButton = new Button(this);
-            myButton.setText(ema_info.get(i).name);
+        startEMA(id, type, title, summary, description, question);
+    }
+    private String getQuestion(String id, String type){
+        final EMAInfo[] emas = EMAInfo.getEMAs(this);
+        for (EMAInfo ema : emas) {
+            if (ema.isEqual(id, type))
+                return ema.getQuestion(this);
+        }
+        return null;
+    }
+    public String getQuestion(String filename) {
+        StringBuilder text = new StringBuilder();
+        String f=Constants.CONFIG_DIRECTORY+filename;
+        BufferedReader br=null;
+        try {
+            String line;
+            br = new BufferedReader(new InputStreamReader(new FileInputStream(f)));
+            while ((line = br.readLine()) != null) {
+                text.append(line);
+                text.append('\n');
+            }
+            br.close();
+        } catch (IOException ignored) {
+
+        }finally {
+            if(br!=null) try {
+                br.close();
+            } catch (IOException ignored) {
+
+            }
+        }
+        return text.toString();
+    }
+
+    void showUIAndButtons() {
+        final EMAInfo[] emas = EMAInfo.getEMAs(this);
+        setContentView(R.layout.activity_main);
+        for (EMAInfo ema : emas) {
+            Button myButton = createButton(ema);
             LinearLayout ll = (LinearLayout) findViewById(R.id.linear_layout_buttons);
             LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
             ll.addView(myButton, lp);
-            final int finalI = i;
-            myButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Intent intent = new Intent(ActivityMain.this, ActivityInterview.class);
-                    intent.putExtra("id", ema_info.get(finalI).id);
-                    intent.putExtra("name", ema_info.get(finalI).name);
-                    intent.putExtra("file_name", ema_info.get(finalI).file_name);
-                    intent.putExtra("timeout", ema_info.get(finalI).timeout);
-                    startActivity(intent);
-                }
-            });
         }
     }
-    void startEMA(){
-        Intent receivedIntent=getIntent();
+
+    private Button createButton(final EMAInfo ema) {
+        Button myButton = new Button(this);
+        myButton.setText(ema.getTitle());
+        myButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startEMA(ema.getId(), ema.getType(), ema.getTitle(), ema.getSummary(), ema.getDescription(), ema.getQuestion(ActivityMain.this));
+            }
+        });
+        return myButton;
+    }
+
+    private void startEMA(String id, String type, String title, String summary, String description, String question) {
         Intent intent = new Intent(ActivityMain.this, ActivityInterview.class);
-        intent.putExtra("id", receivedIntent.getStringExtra("id"));
-        intent.putExtra("name", receivedIntent.getStringExtra("name"));
-        intent.putExtra("file_name", receivedIntent.getStringExtra("file_name"));
-        intent.putExtra("timeout", receivedIntent.getLongExtra("timeout",0));
+        intent.putExtra("id", id);
+        intent.putExtra("type", type);
+        intent.putExtra("title", title);
+        intent.putExtra("summary", summary);
+        intent.putExtra("description", description);
+        intent.putExtra("question", question);
         startActivity(intent);
     }
 
@@ -121,10 +161,5 @@ public class ActivityMain extends Activity {
                 return true;
         }
         return super.onOptionsItemSelected(item);
-    }
-    @Override
-    public void onDestroy(){
-        Log.d(TAG, "onDestroy() ... ActivityMain");
-        super.onDestroy();
     }
 }

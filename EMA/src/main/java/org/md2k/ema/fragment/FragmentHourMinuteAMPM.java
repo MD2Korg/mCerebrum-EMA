@@ -1,4 +1,4 @@
-package org.md2k.ema;
+package org.md2k.ema.fragment;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -6,16 +6,12 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.NumberPicker;
 import android.widget.TimePicker;
 
-import org.md2k.datakitapi.time.DateTime;
+import org.md2k.ema.R;
 
 import java.util.ArrayList;
 import java.util.Locale;
-
-import static org.md2k.ema.R.id.numberPickerHour;
-import static org.md2k.ema.R.id.numberPickerMinute;
 
 
 /**
@@ -45,20 +41,12 @@ import static org.md2k.ema.R.id.numberPickerMinute;
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/**
- * A fragment representing a single step in a wizard. The fragment shows a dummy title indicating
- * the page number, along with some dummy text.
- */
 public class FragmentHourMinuteAMPM extends FragmentBase {
     private static final String TAG = FragmentHourMinuteAMPM.class.getSimpleName();
     TimePicker timePicker;
-//    NumberPicker numberPickerHour, numberPickerMinute;
-    /**
-     * Factory method for this fragment class. Constructs a new fragment for the given page number.
-     */
-    public static FragmentHourMinuteAMPM create(int pageNumber, String id, String file_name) {
+    public static FragmentHourMinuteAMPM create(int pageNumber) {
         FragmentHourMinuteAMPM fragment = new FragmentHourMinuteAMPM();
-        fragment.setArguments(getArgument(pageNumber, id, file_name));
+        fragment.setArguments(getArgument(pageNumber));
         return fragment;
     }
 
@@ -69,12 +57,12 @@ public class FragmentHourMinuteAMPM extends FragmentBase {
 
     void setHourMinute(ViewGroup rootView) {
         timePicker= (TimePicker) rootView.findViewById(R.id.timePicker);
-        if(questionAnswer.getResponse()==null || questionAnswer.getResponse().size()==0) {
+        if(question.getResponse()==null || question.getResponse().size()==0) {
             ArrayList<String> s = new ArrayList<>();
             s.add("00:00:00");
-            questionAnswer.setResponse(s);
+            question.setResponse(s);
         }
-        String s=questionAnswer.getResponse().get(0);
+        String s=question.getResponse().get(0);
         String split[]=s.split(":");
         int hour=Integer.valueOf(split[0]);
         int min=Integer.valueOf(split[1]);
@@ -87,7 +75,7 @@ public class FragmentHourMinuteAMPM extends FragmentBase {
             public void onTimeChanged(TimePicker view, int hourOfDay, int minute) {
                 ArrayList<String> s=new ArrayList<>();
                 s.add(String.format(Locale.US, "%02d:%02d:00",hourOfDay, minute));
-                questionAnswer.setResponse(s);
+                question.setResponse(s);
                 updateNext(true);
             }
         });
@@ -105,8 +93,7 @@ public class FragmentHourMinuteAMPM extends FragmentBase {
                              Bundle savedInstanceState) {
         final ViewGroup rootView = (ViewGroup) inflater
                 .inflate(R.layout.fragment_hour_minute_ampm, container, false);
-        questionAnswer.setPrompt_time(DateTime.getDateTime());
-        setQuestionText(rootView, questionAnswer);
+        setQuestionText(rootView, question);
         setHourMinute(rootView);
         return rootView;
     }

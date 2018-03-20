@@ -1,4 +1,4 @@
-package org.md2k.ema;
+package org.md2k.ema.fragment;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -8,7 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.NumberPicker;
 
-import org.md2k.datakitapi.time.DateTime;
+import org.md2k.ema.R;
 
 import java.util.ArrayList;
 import java.util.Locale;
@@ -51,9 +51,9 @@ public class FragmentMinuteSecond extends FragmentBase {
     /**
      * Factory method for this fragment class. Constructs a new fragment for the given page number.
      */
-    public static FragmentMinuteSecond create(int pageNumber, String id, String file_name) {
+    public static FragmentMinuteSecond create(int pageNumber) {
         FragmentMinuteSecond fragment = new FragmentMinuteSecond();
-        fragment.setArguments(getArgument(pageNumber, id, file_name));
+        fragment.setArguments(getArgument(pageNumber));
         return fragment;
     }
 
@@ -69,12 +69,12 @@ public class FragmentMinuteSecond extends FragmentBase {
         numberPickerSecond = (NumberPicker) rootView.findViewById(R.id.numberPickerSecond);
         numberPickerSecond.setMaxValue(59);
         numberPickerSecond.setMinValue(0);
-        if(questionAnswer.getResponse()==null || questionAnswer.getResponse().size()==0) {
+        if(question.getResponse()==null || question.getResponse().size()==0) {
             ArrayList<String> s = new ArrayList<>();
             s.add("00:00:00");
-            questionAnswer.setResponse(s);
+            question.setResponse(s);
         }
-        String s=questionAnswer.getResponse().get(0);
+        String s=question.getResponse().get(0);
         String split[]=s.split(":");
         int min=Integer.valueOf(split[1]);
         int sec=Integer.valueOf(split[2]);
@@ -86,7 +86,7 @@ public class FragmentMinuteSecond extends FragmentBase {
             public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
                 ArrayList<String> s=new ArrayList<>();
                 s.add(String.format(Locale.US, "00:%02d:%02d", numberPickerMinute.getValue(), numberPickerSecond.getValue()));
-                questionAnswer.setResponse(s);
+                question.setResponse(s);
                 updateNext(true);
             }
         });
@@ -95,7 +95,7 @@ public class FragmentMinuteSecond extends FragmentBase {
             public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
                 ArrayList<String> s=new ArrayList<>();
                 s.add(String.format(Locale.US, "00:%02d:%02d", numberPickerMinute.getValue(), numberPickerSecond.getValue()));
-                questionAnswer.setResponse(s);
+                question.setResponse(s);
                 updateNext(true);
             }
         });
@@ -113,8 +113,7 @@ public class FragmentMinuteSecond extends FragmentBase {
                              Bundle savedInstanceState) {
         final ViewGroup rootView = (ViewGroup) inflater
                 .inflate(R.layout.fragment_minute_second, container, false);
-        questionAnswer.setPrompt_time(DateTime.getDateTime());
-        setQuestionText(rootView, questionAnswer);
+        setQuestionText(rootView, question);
         setMinuteSecond(rootView);
         return rootView;
     }
