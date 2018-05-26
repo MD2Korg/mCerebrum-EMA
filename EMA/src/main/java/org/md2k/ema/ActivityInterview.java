@@ -142,10 +142,10 @@ public class ActivityInterview extends ActivityAbstractInterview {
     public void onBackPressed() {
         MaterialDialog.Builder md = new MaterialDialog.Builder(this)
                 .title("Cancel Survey")
-                .content("Do you want to cancel?")
+                .content("Do you want to cancel survey?")
                 .cancelable(false)
                 .positiveText("Yes")
-                .negativeText("Cancel")
+                .negativeText("No")
                 .onPositive(new MaterialDialog.SingleButtonCallback() {
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
