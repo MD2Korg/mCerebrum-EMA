@@ -1,7 +1,6 @@
-package org.md2k.ema.notification;
 /*
- * Copyright (c) 2016, The University of Memphis, MD2K Center
- * - Syed Monowar Hossain <monowar.hossain@gmail.com>
+ * Copyright (c) 2018, The University of Memphis, MD2K Center of Excellence
+ *
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,6 +25,8 @@ package org.md2k.ema.notification;
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+package org.md2k.ema.notification;
+
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -36,16 +37,19 @@ import org.md2k.ema.R;
 
 import static android.content.Context.NOTIFICATION_SERVICE;
 
+/**
+ * Provides methods for creating and canceling notifications.
+ */
 public class Notification {
+    /**
+     * Creates a notification
+     * @param context Android context
+     */
     public static void createNotification(Context context) {
-        // Prepare intent which is triggered if the
-        // notification is selected
         Intent intent = new Intent(context, ActivityInterview.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
         PendingIntent pIntent = PendingIntent.getActivity(context, (int) System.currentTimeMillis(), intent, 0);
 
-        // Build notification
-        // Actions are just fake
         android.app.Notification noti = new android.app.Notification.Builder(context)
                 .setContentTitle("Survey is available")
                 .setContentText("Please click to resume...").setSmallIcon(R.mipmap.ic_launcher)
@@ -57,6 +61,10 @@ public class Notification {
         notificationManager.notify(0, noti);
     }
 
+    /**
+     * Cancels a notification made by this class.
+     * @param context Android context
+     */
     public static void cancelNotification(Context context) {
         NotificationManager nMgr = (NotificationManager) context.getSystemService(NOTIFICATION_SERVICE);
         nMgr.cancel(0);
