@@ -1,11 +1,6 @@
-package org.md2k.ema.data;
-
-import java.util.ArrayList;
-
-
-/**
- * Copyright (c) 2015, The University of Memphis, MD2K Center
- * - Syed Monowar Hossain <monowar.hossain@gmail.com>
+/*
+ * Copyright (c) 2018, The University of Memphis, MD2K Center of Excellence
+ *
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -30,6 +25,13 @@ import java.util.ArrayList;
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+package org.md2k.ema.data;
+
+import java.util.ArrayList;
+
+/**
+ * Provides methods for administrating the EMA survey.
+ */
 public class EMA {
     private String id;
     private String type;
@@ -40,49 +42,99 @@ public class EMA {
     private long end_time;
     private String status;
     private ArrayList<Question> questions;
+
+    /**
+     * Constructor
+     * @param id Id of the EMA.
+     * @param type Type of EMA.
+     * @param title Title of the EMA.
+     * @param summary Summary of the EMA.
+     * @param description Description of the EMA.
+     * @param questions Arraylist of questions for the EMA.
+     */
     public EMA(String id, String type, String title, String summary, String description, ArrayList<Question> questions){
-        this.id=id;
-        this.type=type;
+        this.id = id;
+        this.type = type;
         this.title = title;
-        this.summary= summary;
-        this.description=description;
-        this.questions=questions;
-        start_time =-1;
-        end_time =-1;
-        status="NOT_ANSWERED";
-        for(int i=0;questions!=null && i<questions.size();i++)
+        this.summary = summary;
+        this.description = description;
+        this.questions = questions;
+        start_time = -1;
+        end_time = -1;
+        status = "NOT_ANSWERED";
+        for(int i = 0; questions != null && i < questions.size(); i++)
             questions.get(i).setResponse(new ArrayList<String>());
     }
+
+    /**
+     * Sets the time the survey was started.
+     * @param start_time Time the survey was started.
+     */
     public void setStart_time(long start_time){
         this.start_time = start_time;
     }
+
+    /**
+     * Sets the time the survey ended.
+     * @param end_time Time the survey ended.
+     */
     public void setEnd_time(long end_time){
         this.end_time = end_time;
     }
 
+    /**
+     * Returns the status.
+     * @return The status.
+     */
     public String getStatus() {
         return status;
     }
 
+    /**
+     * Sets the status.
+     * @param status The new status.
+     */
     public void setStatus(String status) {
         this.status = status;
     }
 
+    /**
+     * Returns the id.
+     * @return The id.
+     */
     public String getId() {
         return id;
     }
 
+    /**
+     * Returns the type.
+     * @return The type.
+     */
     public String getType() {
         return type;
     }
 
+    /**
+     * Sets the id.
+     * @param id The id.
+     */
     public void setId(String id) {
         this.id = id;
     }
 
+    /**
+     * Returns the arraylist of questions.
+     * @return The arraylist of questions.
+     */
     public ArrayList<Question> getQuestions() {
         return questions;
     }
+
+    /**
+     * Returns the index of the next valid question.
+     * @param cur Index of the current question.
+     * @return The index of the next valid question.
+     */
     public int findValidQuestionNext(int cur) {
         cur++;
         while (cur < questions.size()) {
@@ -92,6 +144,12 @@ public class EMA {
         }
         return cur;
     }
+
+    /**
+     * Returns the index of the previous valid question.
+     * @param cur Index of the current question.
+     * @return The index of the previous valid question.
+     */
     public int findValidQuestionPrevious(int cur) {
         cur--;
         while (cur >= 0) {
