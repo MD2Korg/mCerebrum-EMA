@@ -1,3 +1,30 @@
+/*
+ * Copyright (c) 2018, The University of Memphis, MD2K Center of Excellence
+ *
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ * * Redistributions of source code must retain the above copyright notice, this
+ * list of conditions and the following disclaimer.
+ *
+ * * Redistributions in binary form must reproduce the above copyright notice,
+ * this list of conditions and the following disclaimer in the documentation
+ * and/or other materials provided with the distribution.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+
 package org.md2k.ema;
 
 import android.app.Fragment;
@@ -27,30 +54,7 @@ import org.md2k.ema.fragment.NonSwipeableViewPager;
 import org.md2k.ema.notification.Notification;
 
 /**
- * Copyright (c) 2015, The University of Memphis, MD2K Center
- * - Syed Monowar Hossain <monowar.hossain@gmail.com>
- * All rights reserved.
- * <p/>
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
- * <p/>
- * * Redistributions of source code must retain the above copyright notice, this
- * list of conditions and the following disclaimer.
- * <p/>
- * * Redistributions in binary form must reproduce the above copyright notice,
- * this list of conditions and the following disclaimer in the documentation
- * and/or other materials provided with the distribution.
- * <p/>
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
- * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
- * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
- * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * Activity that administers the EMA interview/survey.
  */
 public class ActivityInterview extends ActivityAbstractInterview {
     private static final String TAG = ActivityInterview.class.getSimpleName();
@@ -58,6 +62,10 @@ public class ActivityInterview extends ActivityAbstractInterview {
     private NonSwipeableViewPager mPager = null;
     private PagerAdapter mPagerAdapter;
 
+    /**
+     * Initializes the <code>NonSwipableViewPager</code> and <code>PagerAdapter</code>.
+     * @param savedInstanceState Previous state of this activity, if it existed.
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,6 +74,10 @@ public class ActivityInterview extends ActivityAbstractInterview {
         mPagerAdapter = new ScreenSlidePagerAdapter(getFragmentManager());
         mPager.setAdapter(mPagerAdapter);
         mPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
+            /**
+             * Calls <code>invalidateOptionsMenu()</code>.
+             * @param position Position index.
+             */
             @Override
             public void onPageSelected(int position) {
                 invalidateOptionsMenu();
@@ -73,6 +85,11 @@ public class ActivityInterview extends ActivityAbstractInterview {
         });
     }
 
+    /**
+     * Inflate the menu; this adds items to the action bar if it is present.
+     * @param menu Options menu
+     * @return Always returns true.
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         if (mPager != null) {
@@ -87,7 +104,11 @@ public class ActivityInterview extends ActivityAbstractInterview {
         return super.onCreateOptionsMenu(menu);
     }
 
-
+    /**
+     * Provides actions for menu items.
+     * @param item Menu item that was selected.
+     * @return Whether the action was successful.
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -119,12 +140,18 @@ public class ActivityInterview extends ActivityAbstractInterview {
     }
 
 
+    /**
+     * Creates a notification.
+     */
     @Override
     public void onPause() {
         Notification.createNotification(this);
         super.onPause();
     }
 
+    /**
+     * Cancels all notifications.
+     */
     @Override
     public void onResume() {
         Notification.cancelNotification(this);
@@ -132,12 +159,18 @@ public class ActivityInterview extends ActivityAbstractInterview {
     }
 
 
+    /**
+     * Cancels all notifications.
+     */
     @Override
     public void onDestroy() {
         Notification.cancelNotification(this);
         super.onDestroy();
     }
 
+    /**
+     * Prompts the user about whether to cancel the EMA or not.
+     */
     @Override
     public void onBackPressed() {
         MaterialDialog.Builder md = new MaterialDialog.Builder(this)
@@ -147,24 +180,44 @@ public class ActivityInterview extends ActivityAbstractInterview {
                 .positiveText("Yes")
                 .negativeText("Cancel")
                 .onPositive(new MaterialDialog.SingleButtonCallback() {
+                    /**
+                     * Calls <code>emaEnd()</code> when the positive responce is clicked.
+                     * @param dialog Dialog clicked.
+                     * @param which Dialog action clicked.
+                     */
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                         emaEnd(Constants.EMA_ABANDONED_BY_USER);
                     }
                 }).onNegative(new MaterialDialog.SingleButtonCallback() {
+                    /**
+                     * Does nothing when the negative response is clicked.
+                     * @param dialog Dialog clicked.
+                     * @param which Dialog action clicked.
+                     */
                     @Override
-                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-
-                    }
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {}
                 });
         md.show();
     }
 
+    /**
+     * Nested class for chaging the <code>ViewPage</code>.
+     */
     private class ScreenSlidePagerAdapter extends FragmentStatePagerAdapter {
+        /**
+         * Constructor
+         * @param fm Fragment manager
+         */
         ScreenSlidePagerAdapter(FragmentManager fm) {
             super(fm);
         }
 
+        /**
+         * Returns the <code>Fragment</code> for the given <code>position</code>.
+         * @param position Position index
+         * @return The <code>Fragment</code> for the given <code>position</code>.
+         */
         @Override
         public Fragment getItem(int position) {
             Log.d(TAG, "getItem(): position=" + position);
@@ -194,6 +247,10 @@ public class ActivityInterview extends ActivityAbstractInterview {
             return fragmentBase;
         }
 
+        /**
+         * Returns how many questions are in the EMA.
+         * @return How many questions are in the EMA.
+         */
         @Override
         public int getCount() {
             if (ema != null)
@@ -201,6 +258,11 @@ public class ActivityInterview extends ActivityAbstractInterview {
             else return 0;
         }
 
+        /**
+         * Returns <code>POSITION_NONE</code>.
+         * @param object Object to get the position for.
+         * @return <code>POSITION_NONE</code>.
+         */
         @Override
         public int getItemPosition(Object object) {
             return POSITION_NONE;
