@@ -47,7 +47,7 @@ import org.md2k.ema.R;
 import java.util.ArrayList;
 
 /**
- * UI fragment for multiple choice surveys.
+ * UI fragment for multiple choice questions.
  */
 public class FragmentMultipleChoiceSelect extends FragmentBase {
     private static final String TAG = FragmentMultipleChoiceSelect.class.getSimpleName();
