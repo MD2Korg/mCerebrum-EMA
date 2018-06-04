@@ -47,7 +47,9 @@ public class FragmentMinuteSecond extends FragmentBase {
     private static final String TAG = FragmentMinuteSecond.class.getSimpleName();
     NumberPicker numberPickerMinute, numberPickerSecond;
     /**
-     * Factory method for this fragment class. Constructs a new fragment for the given page number.
+     * Creates a new <code>FragmentMinuteSecond</code> with the given page number.
+     * @param pageNumber Page number for the new fragment.
+     * @return A new <code>FragmentMinuteSecond</code> with the given page number.
      */
     public static FragmentMinuteSecond create(int pageNumber) {
         FragmentMinuteSecond fragment = new FragmentMinuteSecond();
