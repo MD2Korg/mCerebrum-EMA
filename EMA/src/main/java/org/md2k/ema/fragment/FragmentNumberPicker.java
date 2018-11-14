@@ -7,6 +7,7 @@ import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.NumberPicker;
+import android.widget.TextView;
 
 import org.md2k.ema.R;
 
@@ -41,10 +42,10 @@ import java.util.Locale;
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-public class FragmentHourMinute extends FragmentBase {
-    NumberPicker numberPickerHour, numberPickerMinute;
-    public static FragmentHourMinute create(int pageNumber) {
-        FragmentHourMinute fragment = new FragmentHourMinute();
+public class FragmentNumberPicker extends FragmentBase {
+    NumberPicker numberPicker;
+    public static FragmentNumberPicker create(int pageNumber) {
+        FragmentNumberPicker fragment = new FragmentNumberPicker();
         fragment.setArguments(getArgument(pageNumber));
         return fragment;
     }
@@ -55,52 +56,32 @@ public class FragmentHourMinute extends FragmentBase {
     }
 
     void setHourMinute(ViewGroup rootView) {
-        numberPickerHour= (NumberPicker) rootView.findViewById(R.id.numberPickerHour);
-        numberPickerHour.setMaxValue(23);
-        numberPickerHour.setMinValue(0);
-        numberPickerHour.setFormatter(new NumberPicker.Formatter() {
-            @Override
-            public String format(int value) {
-                return String.format(Locale.getDefault(), "%02d",value);
-            }
-        });
-        numberPickerMinute = (NumberPicker) rootView.findViewById(R.id.numberPickerMinute);
-        numberPickerMinute.setMaxValue(59);
-        numberPickerMinute.setMinValue(0);
-        numberPickerMinute.setFormatter(new NumberPicker.Formatter() {
-            @Override
-            public String format(int value) {
-                return String.format(Locale.getDefault(), "%02d",value);
-            }
-        });
-
+        int index=0;
+        numberPicker = (NumberPicker) rootView.findViewById(R.id.number_picker);
+        if(question.getResponse_option().size()==3) {
+            TextView t = (TextView) rootView.findViewById(R.id.textView_numberpicker);
+            t.setText(question.getResponse_option().get(0));
+            index = 1;
+        }
+        int minValue = Integer.parseInt(question.getResponse_option().get(index));
+        int maxValue = Integer.parseInt(question.getResponse_option().get(index+1));
+        numberPicker.setMaxValue(maxValue);
+        numberPicker.setMinValue(minValue);
         if(question.getResponse()==null || question.getResponse().size()==0) {
             ArrayList<String> s = new ArrayList<>();
-            s.add("00:00:00");
+            s.add(String.valueOf(minValue));
             question.setResponse(s);
         }
         String s=question.getResponse().get(0);
-        String split[]=s.split(":");
-        int hour=Integer.valueOf(split[0]);
-        int min=Integer.valueOf(split[1]);
-        numberPickerHour.setValue(hour);
-        numberPickerMinute.setValue(min);
+        int value=Integer.parseInt(s);
+        numberPicker.setValue(value);
         updateNext(true);
 
-        numberPickerHour.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
+        numberPicker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
             @Override
             public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
                 ArrayList<String> s=new ArrayList<>();
-                s.add(String.format(Locale.US, "%02d:%02d:00",numberPickerHour.getValue(), numberPickerMinute.getValue()));
-                question.setResponse(s);
-                updateNext(true);
-            }
-        });
-        numberPickerMinute.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
-            @Override
-            public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
-                ArrayList<String> s=new ArrayList<>();
-                s.add(String.format(Locale.US, "%02d:%02d:00",numberPickerHour.getValue(), numberPickerMinute.getValue()));
+                s.add(String.format(Locale.getDefault(), "%d",numberPicker.getValue()));
                 question.setResponse(s);
                 updateNext(true);
             }
@@ -118,7 +99,7 @@ public class FragmentHourMinute extends FragmentBase {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         final ViewGroup rootView = (ViewGroup) inflater
-                .inflate(R.layout.fragment_hour_minute, container, false);
+                .inflate(R.layout.fragment_number_picker, container, false);
         setQuestionText(rootView, question);
         setHourMinute(rootView);
         return rootView;

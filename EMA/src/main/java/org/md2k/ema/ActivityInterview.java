@@ -22,6 +22,8 @@ import org.md2k.ema.fragment.FragmentHourMinute;
 import org.md2k.ema.fragment.FragmentHourMinuteAMPM;
 import org.md2k.ema.fragment.FragmentMinuteSecond;
 import org.md2k.ema.fragment.FragmentMultipleChoiceSelect;
+import org.md2k.ema.fragment.FragmentNumberPicker;
+import org.md2k.ema.fragment.FragmentSeekBar;
 import org.md2k.ema.fragment.FragmentTextNumeric;
 import org.md2k.ema.fragment.NonSwipeableViewPager;
 import org.md2k.ema.notification.Notification;
@@ -186,6 +188,12 @@ public class ActivityInterview extends ActivityAbstractInterview {
                         break;
                     case Constants.MINUTE_SECOND:
                         fragmentBase = FragmentMinuteSecond.create(position);
+                        break;
+                    case Constants.NUMBER_PICKER:
+                        fragmentBase = FragmentNumberPicker.create(position);
+                        break;
+                    case Constants.SEEK_BAR:
+                        fragmentBase = FragmentSeekBar.create(position);
                         break;
                     default:
                         fragmentBase = FragmentMultipleChoiceSelect.create(position);
