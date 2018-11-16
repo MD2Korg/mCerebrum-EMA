@@ -20,6 +20,7 @@ import org.md2k.ema.broadcast.BroadcastSend;
 import org.md2k.ema.fragment.FragmentBase;
 import org.md2k.ema.fragment.FragmentHourMinute;
 import org.md2k.ema.fragment.FragmentHourMinuteAMPM;
+import org.md2k.ema.fragment.FragmentImageSpot;
 import org.md2k.ema.fragment.FragmentMinuteSecond;
 import org.md2k.ema.fragment.FragmentMultipleChoiceSelect;
 import org.md2k.ema.fragment.FragmentNumberPicker;
@@ -142,6 +143,7 @@ public class ActivityInterview extends ActivityAbstractInterview {
 
     @Override
     public void onBackPressed() {
+/*
         MaterialDialog.Builder md = new MaterialDialog.Builder(this)
                 .title("Cancel Survey")
                 .content("Do you want to cancel survey?")
@@ -160,6 +162,7 @@ public class ActivityInterview extends ActivityAbstractInterview {
                     }
                 });
         md.show();
+*/
     }
 
     private class ScreenSlidePagerAdapter extends FragmentStatePagerAdapter {
@@ -194,6 +197,9 @@ public class ActivityInterview extends ActivityAbstractInterview {
                         break;
                     case Constants.SEEK_BAR:
                         fragmentBase = FragmentSeekBar.create(position);
+                        break;
+                    case Constants.IMAGE_SPOT:
+                        fragmentBase = FragmentImageSpot.create(position);
                         break;
                     default:
                         fragmentBase = FragmentMultipleChoiceSelect.create(position);

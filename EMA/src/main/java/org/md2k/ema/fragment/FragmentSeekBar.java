@@ -131,6 +131,7 @@ public class FragmentSeekBar extends FragmentBase {
         seekBar.setOnProgressChangedListener(new BubbleSeekBar.OnProgressChangedListener() {
             @Override
             public void onProgressChanged(BubbleSeekBar bubbleSeekBar, int progress, float progressFloat) {
+                seekBar.correctOffsetWhenContainerOnScrolling();
                 updateValue(progress);
 
             }
