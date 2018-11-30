@@ -4,7 +4,9 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Matrix;
 import android.graphics.Paint;
+import android.graphics.Point;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,6 +15,7 @@ import android.view.MenuInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 
 import org.md2k.ema.Constants;
@@ -62,14 +65,22 @@ public class FragmentImageSpot extends FragmentBase {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
+    private BitmapFactory.Options getBitmapOption(){
 
-    void setCircle(int x, int y) {
         BitmapFactory.Options myOptions = new BitmapFactory.Options();
-        myOptions.inDither = true;
-        myOptions.inScaled = false;
-        myOptions.inPreferredConfig = Bitmap.Config.ARGB_8888;// important
-        myOptions.inPurgeable = true;
-        Bitmap bitmap = getImage(myOptions);
+//        myOptions.inDither = true;
+//        myOptions.inScaled = false;
+//        myOptions.inPreferredConfig = Bitmap.Config.ARGB_8888;// important
+//        myOptions.inPurgeable = true;
+//        myOptions.inScaled=true;
+//        myOptions.in
+        myOptions = null;
+        return myOptions;
+    }
+
+    void setCircle() {
+        ArrayList<Point> points = readPoints();
+        Bitmap bitmap = getImage(getBitmapOption());
         Paint paint = new Paint();
         paint.setAntiAlias(true);
         paint.setColor(Color.RED);
@@ -80,7 +91,9 @@ public class FragmentImageSpot extends FragmentBase {
 
 
         Canvas canvas = new Canvas(mutableBitmap);
-        canvas.drawCircle(x, y, 50, paint);
+        for (int i = 0; i < points.size(); i++) {
+            canvas.drawCircle(points.get(i).x, points.get(i).y, 50, paint);
+        }
 
         imageView.setAdjustViewBounds(true);
         imageView.setImageBitmap(mutableBitmap);
@@ -101,28 +114,69 @@ public class FragmentImageSpot extends FragmentBase {
     void setImageView(ViewGroup rootView) {
         imageView = (ImageView) rootView.findViewById(R.id.imageView);
 
-        imageView.setImageBitmap(getImage(null));
+        imageView.setImageBitmap(getImage(getBitmapOption()));
+        if (question.getResponse() == null || question.getResponse().size() < 2) {
+            ArrayList<String> res = new ArrayList<>();
+            res.add(String.valueOf(imageView.getWidth()));
+            res.add(String.valueOf(imageView.getHeight()));
+            question.setResponse(res);
+        }
         imageView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
+                int index = event.getActionIndex();
+                final float[] coords = new float[] { event.getX(index), event.getY(index) };
+
+                Matrix matrix = new Matrix();
+                imageView.getImageMatrix().invert(matrix); //his drawable view extends ImageView
+                //so it has access to the getImageMatrix.
+                matrix.postTranslate(imageView.getScrollX(), imageView.getScrollY());
+                matrix.mapPoints(coords);
+
+                int xActual= (int) coords[0];
+                int yActual= (int) coords[1]-100;
+                switch(event.getAction()){
+                    case MotionEvent.ACTION_UP:
+                        break;
+
+                    case MotionEvent.ACTION_DOWN:
+                        addPoint(xActual, yActual);
+                        break;
+                    case MotionEvent.ACTION_MOVE:
+
+                        editLastPoint(xActual,yActual);
+                        break;
+                }
+                setCircle();
+/*
                 int[] viewCoords = new int[2];
                 imageView.getLocationOnScreen(viewCoords);
                 int x = (int) (event.getRawX() - viewCoords[0] - event.getXPrecision());
                 int y = (int) (event.getRawY() - viewCoords[1] - event.getYPrecision());
-                Log.d("abc", "[" + x + " " + y+"] ["+imageView.getWidth()+" "+imageView.getHeight()+"]");
+                Log.d("abc", "[" + x + " " + y + "] [" + imageView.getWidth() + " " + imageView.getHeight() + "]");
+                Log.d("abc", "touch=" + event.getRawX() + " " + event.getRawY());
+
                 setCircle(x, y);
                 ArrayList<String> res = new ArrayList<>();
                 res.add(String.valueOf(x));
                 res.add(String.valueOf(y));
                 res.add(String.valueOf(imageView.getWidth()));
                 res.add(String.valueOf(imageView.getHeight()));
+*/
 
-                question.setResponse(res);
+//                question.setResponse(res);
                 return true;
             }
             //            return false;
             //          }
         });
+        imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d("abc", "Click");
+            }
+        });
+
     }
 
     @Override
@@ -138,9 +192,59 @@ public class FragmentImageSpot extends FragmentBase {
                 .inflate(R.layout.fragment_image_spot, container, false);
         setQuestionText(rootView, question);
         setImageView(rootView);
-        if(question.getResponse()!=null && question.getResponse().size()==4){
-            setCircle(Integer.valueOf(question.getResponse().get(0)), Integer.valueOf(question.getResponse().get(1)));
-        }
+        setButton(rootView);
+        setCircle();
         return rootView;
+    }
+    private void setButton(ViewGroup rootView){
+        Button b;
+        b= (Button) rootView.findViewById(R.id.button_clear_last);
+        b.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(question.getResponse()!=null && question.getResponse().size()>2){
+                    question.getResponse().remove(question.getResponse().size()-1);
+                    question.getResponse().remove(question.getResponse().size()-1);
+                    setCircle();
+                }
+            }
+        });
+        b= (Button) rootView.findViewById(R.id.button_clear_all);
+        b.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(question.getResponse()!=null && question.getResponse().size()>2){
+                    ArrayList<String> p = question.getResponse();
+                    ArrayList<String> newP=new ArrayList<>();
+                    newP.add(p.get(0));
+                    newP.add(p.get(1));
+                    question.setResponse(newP);
+                    setCircle();
+                }
+            }
+        });
+
+    }
+    private ArrayList<Point> readPoints(){
+        ArrayList<Point> points = new ArrayList<>();
+        for(int i=2;question.getResponse()!=null && i<question.getResponse().size();i+=2){
+            Point p=new Point(Integer.parseInt(question.getResponse().get(i)),Integer.parseInt(question.getResponse().get(i+1)));
+            points.add(p);
+        }
+        return points;
+    }
+    private void addPoint(int x, int y){
+        ArrayList<String> res = question.getResponse();
+        res.add(String.valueOf(x));
+        res.add(String.valueOf(y));
+        question.setResponse(res);
+    }
+    private void editLastPoint(int x, int y){
+        ArrayList<String> res = question.getResponse();
+        res.remove(res.size()-1);
+        res.remove(res.size()-1);
+        res.add(String.valueOf(x));
+        res.add(String.valueOf(y));
+        question.setResponse(res);
     }
 }

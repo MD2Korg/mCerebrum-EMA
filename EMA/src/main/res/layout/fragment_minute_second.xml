@@ -55,7 +55,7 @@
             android:layout_height="wrap_content">
 
             <TextView
-                android:text="Minute:"
+                android:text="Minutes:"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
@@ -70,7 +70,7 @@
                 android:layout_weight="1" />
 
             <TextView
-                android:text="Second:"
+                android:text="Seconds:"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="1"

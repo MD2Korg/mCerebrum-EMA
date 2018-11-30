@@ -40,7 +40,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="Answer (please type):"
+            android:text="Answer (please slide the bar):"
             android:id="@+id/textView_please_select"
             android:textStyle="italic"
             android:textColor="@color/lightblue_900" />

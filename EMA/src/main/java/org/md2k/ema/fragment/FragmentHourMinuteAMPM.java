@@ -44,6 +44,7 @@ import java.util.Locale;
 public class FragmentHourMinuteAMPM extends FragmentBase {
     private static final String TAG = FragmentHourMinuteAMPM.class.getSimpleName();
     TimePicker timePicker;
+
     public static FragmentHourMinuteAMPM create(int pageNumber) {
         FragmentHourMinuteAMPM fragment = new FragmentHourMinuteAMPM();
         fragment.setArguments(getArgument(pageNumber));
@@ -56,16 +57,21 @@ public class FragmentHourMinuteAMPM extends FragmentBase {
     }
 
     void setHourMinute(ViewGroup rootView) {
-        timePicker= (TimePicker) rootView.findViewById(R.id.timePicker);
-        if(question.getResponse()==null || question.getResponse().size()==0) {
+        String defaultAnswer = "00:00:00";
+        if (question.getResponse_option() != null && question.getResponse_option().size() > 0) {
+            defaultAnswer = question.getResponse_option().get(0);
+        }
+        timePicker = (TimePicker) rootView.findViewById(R.id.timePicker);
+
+        if (question.getResponse() == null || question.getResponse().size() == 0) {
             ArrayList<String> s = new ArrayList<>();
-            s.add("00:00:00");
+            s.add(defaultAnswer);
             question.setResponse(s);
         }
-        String s=question.getResponse().get(0);
-        String split[]=s.split(":");
-        int hour=Integer.valueOf(split[0]);
-        int min=Integer.valueOf(split[1]);
+        String s = question.getResponse().get(0);
+        String split[] = s.split(":");
+        int hour = Integer.valueOf(split[0]);
+        int min = Integer.valueOf(split[1]);
         timePicker.setCurrentHour(hour);
         timePicker.setCurrentMinute(min);
         updateNext(true);
@@ -73,8 +79,8 @@ public class FragmentHourMinuteAMPM extends FragmentBase {
         timePicker.setOnTimeChangedListener(new TimePicker.OnTimeChangedListener() {
             @Override
             public void onTimeChanged(TimePicker view, int hourOfDay, int minute) {
-                ArrayList<String> s=new ArrayList<>();
-                s.add(String.format(Locale.US, "%02d:%02d:00",hourOfDay, minute));
+                ArrayList<String> s = new ArrayList<>();
+                s.add(String.format(Locale.US, "%02d:%02d:00", hourOfDay, minute));
                 question.setResponse(s);
                 updateNext(true);
             }
