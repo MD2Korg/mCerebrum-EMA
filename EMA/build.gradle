@@ -1,4 +1,4 @@
-version = '2.0.1'
+version = '2.0.4-RC3'
 apply from: 'versioning.gradle'
 buildscript {
     repositories {
@@ -67,6 +67,8 @@ dependencies {
     compile 'com.android.support:support-v4:25.3.1'
     compile 'com.android.support:support-v13:25.3.1'
     compile 'com.google.code.gson:gson:2.4'
+    compile 'com.xw.repo:bubbleseekbar:3.16'
+
     compile('com.crashlytics.sdk.android:crashlytics:2.6.1@aar') {
         transitive = true;
     }

@@ -40,7 +40,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="Answer (please select):"
+            android:text="Answer (please slide the bar):"
             android:id="@+id/textView_please_select"
             android:textStyle="italic"
             android:textColor="@color/lightblue_900" />
@@ -48,44 +48,64 @@
             android:layout_width="match_parent"
             android:orientation="vertical"
             android:layout_height="40dp" />
-
         <LinearLayout
-            android:orientation="horizontal"
             android:layout_width="match_parent"
+            android:orientation="horizontal"
             android:layout_height="wrap_content">
 
+        <TextView
+            android:text="Sleep Quality"
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView_selected"
+            android:paddingTop="50dp"
+            android:paddingBottom="50dp"
+            android:textSize="24sp"
+            android:gravity="right" />
+        <TextView
+            android:text="50"
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView_selectedValue"
+            android:textColor="@color/deeporange_500"
+            android:paddingTop="50dp"
+            android:paddingBottom="50dp"
+            android:textSize="24sp"
+            android:gravity="center" />
+    </LinearLayout>
+
+            <com.xw.repo.BubbleSeekBar
+                android:id="@+id/seekbar"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:orientation="horizontal">
+
             <TextView
-                android:text="Minutes:"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:textAlignment="center"
-                android:textSize="18sp"
-                android:gravity="center_vertical|center" />
-
-            <NumberPicker
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/numberPickerMinute"
-                android:layout_weight="1" />
+                android:gravity="left"
+                android:id="@+id/textView_lower"
+                android:text=""
+                android:textSize="12sp" />
 
             <TextView
-                android:text="Seconds:"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:textAlignment="center"
-                android:textSize="18sp"
-                android:gravity="center_vertical|center" />
-
-            <NumberPicker
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/numberPickerSecond"
-
-                android:layout_weight="1" />
+                android:id="@+id/textView_upper"
+                android:gravity="right"
+                android:text=""
+                android:textSize="12sp" />
         </LinearLayout>
-
 
     </LinearLayout>
 </LinearLayout>

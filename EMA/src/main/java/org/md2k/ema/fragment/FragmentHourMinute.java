@@ -74,10 +74,23 @@ public class FragmentHourMinute extends FragmentBase {
         numberPickerHour = (NumberPicker) rootView.findViewById(R.id.numberPickerHour);
         numberPickerHour.setMaxValue(23);
         numberPickerHour.setMinValue(0);
+        numberPickerHour.setFormatter(new NumberPicker.Formatter() {
+            @Override
+            public String format(int value) {
+                return String.format(Locale.getDefault(), "%02d",value);
+            }
+        });
         numberPickerMinute = (NumberPicker) rootView.findViewById(R.id.numberPickerMinute);
         numberPickerMinute.setMaxValue(59);
         numberPickerMinute.setMinValue(0);
-        if(question.getResponse() == null || question.getResponse().size() == 0) {
+        numberPickerMinute.setFormatter(new NumberPicker.Formatter() {
+            @Override
+            public String format(int value) {
+                return String.format(Locale.getDefault(), "%02d",value);
+            }
+        });
+
+        if(question.getResponse()==null || question.getResponse().size()==0) {
             ArrayList<String> s = new ArrayList<>();
             s.add("00:00:00");
             question.setResponse(s);

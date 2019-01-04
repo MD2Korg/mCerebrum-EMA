@@ -72,10 +72,15 @@ public class FragmentHourMinuteAMPM extends FragmentBase {
      * @param rootView The <code>View</code> that the picker will be placed in.
      */
     void setHourMinute(ViewGroup rootView) {
+        String defaultAnswer = "00:00:00";
+        if (question.getResponse_option() != null && question.getResponse_option().size() > 0) {
+            defaultAnswer = question.getResponse_option().get(0);
+        }
         timePicker = (TimePicker) rootView.findViewById(R.id.timePicker);
-        if(question.getResponse() == null || question.getResponse().size() == 0) {
+
+        if (question.getResponse() == null || question.getResponse().size() == 0) {
             ArrayList<String> s = new ArrayList<>();
-            s.add("00:00:00");
+            s.add(defaultAnswer);
             question.setResponse(s);
         }
         String s = question.getResponse().get(0);
@@ -96,7 +101,9 @@ public class FragmentHourMinuteAMPM extends FragmentBase {
             @Override
             public void onTimeChanged(TimePicker view, int hourOfDay, int minute) {
                 ArrayList<String> s = new ArrayList<>();
-                s.add(String.format(Locale.US, "%02d:%02d:00",hourOfDay, minute));
+              
+                s.add(String.format(Locale.US, "%02d:%02d:00", hourOfDay, minute));
+
                 question.setResponse(s);
                 updateNext(true);
             }
