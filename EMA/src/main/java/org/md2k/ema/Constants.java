@@ -41,6 +41,7 @@ public class Constants {
     public static final String HOUR_MINUTE="hour_minute";
     public static final String MINUTE_SECOND="minute_second";
     public static final String HOUR_MINUTE_AMPM="hour_minute_ampm";
+    public static final String DATETIME = "datetime";
     public static final String NUMBER_PICKER = "number_picker";
     public static final String SEEK_BAR = "seek_bar";
     public static final String IMAGE_SPOT="image_spot";

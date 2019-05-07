@@ -3,8 +3,6 @@ package org.md2k.ema;
 import android.app.Application;
 import android.content.Context;
 
-import com.beardedhen.androidbootstrap.TypefaceProvider;
-
 import org.md2k.mcerebrum.core.access.MCerebrum;
 
 /*

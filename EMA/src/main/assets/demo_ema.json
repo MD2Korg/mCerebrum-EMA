@@ -41,5 +41,47 @@
       "YES",
       "YES!!!"
     ]
+  },
+  {
+    "question_id": 4,
+    "question_type": "multiple_choice",
+    "question_text": "How would you describe your current pain experience?",
+    "response_option": [
+      "Pain flare with a clear starting point that I remember",
+      "Ongoing pain without a clear starting point"
+    ]
+  },
+  {
+    "question_id": 5,
+    "question_type": "datetime",
+    "question_text": "Please indicate the time when your current pain flare began",
+    "response_option": [
+      "Pain flare with a clear starting point that I remember",
+      "Ongoing pain without a clear starting point"
+    ],
+    "condition": [
+      "4:Pain flare with a clear starting point that I remember"
+    ]
+  },
+  {
+    "question_id": 6,
+    "question_type": "hour_minute",
+    "question_text": "Please indicate how long your pain has been at its current level",
+    "condition": [
+      "4:Ongoing pain without a clear starting point"
+    ]
+  },
+  {
+    "question_id": 7,
+    "question_type": "multiple_choice",
+    "question_text": "My Last Question",
+    "response_option": [
+      "NO!!!",
+      "NO",
+      "no",
+      "yes",
+      "YES",
+      "YES!!!"
+    ]
   }
 ]

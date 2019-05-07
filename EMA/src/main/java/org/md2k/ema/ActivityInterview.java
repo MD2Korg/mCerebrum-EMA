@@ -3,7 +3,6 @@ package org.md2k.ema;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v13.app.FragmentStatePagerAdapter;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -12,12 +11,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import com.afollestad.materialdialogs.DialogAction;
-import com.afollestad.materialdialogs.MaterialDialog;
-
 import org.md2k.datakitapi.time.DateTime;
 import org.md2k.ema.broadcast.BroadcastSend;
 import org.md2k.ema.fragment.FragmentBase;
+import org.md2k.ema.fragment.FragmentDateTime;
 import org.md2k.ema.fragment.FragmentHourMinute;
 import org.md2k.ema.fragment.FragmentHourMinuteAMPM;
 import org.md2k.ema.fragment.FragmentImageSpot;
@@ -188,6 +185,9 @@ public class ActivityInterview extends ActivityAbstractInterview {
                         break;
                     case Constants.HOUR_MINUTE_AMPM:
                         fragmentBase = FragmentHourMinuteAMPM.create(position);
+                        break;
+                    case Constants.DATETIME:
+                        fragmentBase = FragmentDateTime.create(position);
                         break;
                     case Constants.MINUTE_SECOND:
                         fragmentBase = FragmentMinuteSecond.create(position);

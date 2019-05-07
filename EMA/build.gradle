@@ -1,4 +1,4 @@
-version = '2.0.4-RC3'
+version = '2.0.4-RC4'
 apply from: 'versioning.gradle'
 buildscript {
     repositories {
@@ -41,8 +41,10 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.release
             applicationVariants.all { variant ->
-                variant.outputs.each { output ->
-                    output.outputFile = new File(output.outputFile.parent, output.outputFile.name.replace("-release", "${variant.versionName}"))
+                variant.outputs.all { output ->
+                    def relativeRootDir = output.packageApplication.outputDirectory.toPath()
+                            .relativize(rootDir.toPath()).toFile()
+                    output.outputFileName = new File("$relativeRootDir/release", outputFileName.replace("-release", "${variant.versionName}"))
                 }
             }
         }
@@ -58,18 +60,19 @@ android {
 }
 
 dependencies {
-    compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile project(':commons')
-    compile project(':core')
-    compile project(':datakitapi')
-    compile project(':system')
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation project(':commons')
+    implementation project(':core')
+    implementation project(':datakitapi')
+    implementation project(':system')
 
-    compile 'com.android.support:support-v4:25.3.1'
-    compile 'com.android.support:support-v13:25.3.1'
-    compile 'com.google.code.gson:gson:2.4'
-    compile 'com.xw.repo:bubbleseekbar:3.16'
+    implementation 'com.android.support:support-v4:25.4.0'
+    implementation 'com.google.code.gson:gson:2.8.5'
+    implementation 'com.xw.repo:bubbleseekbar:3.16'
+    implementation 'com.afollestad.material-dialogs:core:0.9.4.5'
+    implementation 'com.beardedhen:androidbootstrap:2.3.2'
 
-    compile('com.crashlytics.sdk.android:crashlytics:2.6.1@aar') {
+    implementation('com.crashlytics.sdk.android:crashlytics:2.6.1@aar') {
         transitive = true;
     }
 }
