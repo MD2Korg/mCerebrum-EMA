@@ -1,21 +1,6 @@
-package org.md2k.ema.data;
-
-import android.content.Context;
-
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-
-import org.md2k.ema.Constants;
-
-import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.lang.reflect.Type;
-
 /*
- * Copyright (c) 2016, The University of Memphis, MD2K Center
- * - Syed Monowar Hossain <monowar.hossain@gmail.com>
+ * Copyright (c) 2018, The University of Memphis, MD2K Center of Excellence
+ *
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -39,6 +24,25 @@ import java.lang.reflect.Type;
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
+package org.md2k.ema.data;
+
+import android.content.Context;
+
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import org.md2k.ema.Constants;
+
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.lang.reflect.Type;
+
+/**
+ * Provides methods for getting EMAs, comparing them, and provides metadata.
+ */
 public class EMAInfo {
     private String id;
     private String type;
@@ -47,29 +51,54 @@ public class EMAInfo {
     private String description;
     private String filename;
 
+    /**
+     * Returns the id.
+     * @return The id.
+     */
     public String getId() {
         return id;
     }
 
+    /**
+     * Returns the type.
+     * @return The type.
+     */
     public String getType() {
         return type;
     }
 
+    /**
+     * Returns the title.
+     * @return The title.
+     */
     public String getTitle() {
         return title;
     }
 
+    /**
+     * Returns the summary.
+     * @return The summary.
+     */
     public String getSummary() {
         return summary;
     }
 
+    /**
+     * Returns the description.
+     * @return The description.
+     */
     public String getDescription() {
         return description;
     }
 
+    /**
+     * Returns an array of <code>EMAInfo</code>.
+     * @param context Android context
+     * @return An array of <code>EMAInfo</code>.
+     */
     public static EMAInfo[] getEMAs(Context context) {
         EMAInfo[] ema;
-        String filename= Constants.CONFIG_DIRECTORY+Constants.CONFIG_FILENAME;
+        String filename = Constants.CONFIG_DIRECTORY + Constants.CONFIG_FILENAME;
         BufferedReader br = null;
         try {
             br = new BufferedReader(new InputStreamReader(new FileInputStream(filename)));
@@ -80,14 +109,19 @@ public class EMAInfo {
         } catch (IOException e) {
             return readFromAsset(context);
         }finally {
-            if(br!=null) try {
+            if(br != null)
+                try {
                 br.close();
-            } catch (IOException ignored) {
-
-            }
+                } catch (IOException ignored) {}
         }
         return ema;
     }
+
+    /**
+     * Reads <code>EMAInfo</code> from an asset file.
+     * @param context Android context
+     * @return An array of <code>EMAInfo</code>.
+     */
     private static EMAInfo[] readFromAsset(Context context){
         EMAInfo[] ema;
         BufferedReader br = null;
@@ -99,22 +133,25 @@ public class EMAInfo {
             }.getType();
             ema = gson.fromJson(br, collectionType);
         } catch (IOException e) {
-            ema=null;
+            ema = null;
         }finally {
-            if(br!=null) try {
+            if(br != null)
+                try {
                 br.close();
-            } catch (IOException ignored) {
-
-            }
+                } catch (IOException ignored) {}
         }
         return ema;
-
     }
 
+    /**
+     * Returns a question from the configuration file.
+     * @param context Android context
+     * @return A question from the configuration file.
+     */
     public String getQuestion(Context context) {
         StringBuilder text = new StringBuilder();
-        String f=Constants.CONFIG_DIRECTORY+filename;
-        BufferedReader br=null;
+        String f = Constants.CONFIG_DIRECTORY + filename;
+        BufferedReader br = null;
         try {
             String line;
             br = new BufferedReader(new InputStreamReader(new FileInputStream(f)));
@@ -126,18 +163,22 @@ public class EMAInfo {
         } catch (IOException ignored) {
             return getQuestionFromAsset(context);
         }finally {
-            if(br!=null) try {
+            if(br != null)
+                try {
                 br.close();
-            } catch (IOException ignored) {
-
-            }
+                } catch (IOException ignored) {}
         }
         return text.toString();
     }
 
+    /**
+     * Returns a question from an asset file.
+     * @param context Android context
+     * @return A question from an asset file.
+     */
     private String getQuestionFromAsset(Context context) {
         StringBuilder text = new StringBuilder();
-        BufferedReader br=null;
+        BufferedReader br = null;
         try {
             br = new BufferedReader(
                     new InputStreamReader(context.getAssets().open(filename)));
@@ -150,22 +191,33 @@ public class EMAInfo {
             br.close();
         } catch (IOException ignored) {
         }finally {
-            if(br!=null) try {
+            if(br != null)
+                try {
                 br.close();
-            } catch (IOException ignored) {
-
-            }
+                } catch (IOException ignored) {}
         }
         return text.toString();
     }
 
+    /**
+     * Returns whether this <code>EMAInfo</code> equals the given <code>id</code> and <code>type</code>.
+     * @param id Id to check.
+     * @param type Type to check.
+     * @return Whether this <code>EMAInfo</code> equals the given <code>id</code> and <code>type</code>.
+     */
     public boolean isEqual(String id, String type) {
-        if(this.id==null && id!=null) return false;
-        if(this.id!=null && id==null) return false;
-        if(this.type==null && type!=null) return false;
-        if(this.type!=null && type==null) return false;
-        if(this.id!=null && !this.id.equals(id)) return false;
-        if(this.type!=null && !this.type.equals(type)) return false;
+        if(this.id == null && id != null)
+            return false;
+        if(this.id != null && id == null)
+            return false;
+        if(this.type == null && type != null)
+            return false;
+        if(this.type != null && type == null)
+            return false;
+        if(this.id != null && !this.id.equals(id))
+            return false;
+        if(this.type != null && !this.type.equals(type))
+            return false;
         return true;
     }
 }

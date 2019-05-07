@@ -1,7 +1,6 @@
-package org.md2k.ema.broadcast;
 /*
- * Copyright (c) 2016, The University of Memphis, MD2K Center
- * - Syed Monowar Hossain <monowar.hossain@gmail.com>
+ * Copyright (c) 2018, The University of Memphis, MD2K Center of Excellence
+ *
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,23 +25,37 @@ package org.md2k.ema.broadcast;
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+package org.md2k.ema.broadcast;
+
 import android.content.Context;
 import android.content.Intent;
 
+/**
+ * Provides methods for sending broadcasts.
+ */
 public class BroadcastSend {
+    /**
+     * Sends an <code>"ALIVE"</code> broadcast.
+     * @param context Android context
+     */
     public static void alive(Context context){
-        Intent intent=new Intent();
+        Intent intent = new Intent();
         intent.setAction("org.md2k.scheduler.response");
-        intent.putExtra("TYPE","ALIVE");
-        intent.putExtra("OUTPUT",true);
-        context.sendBroadcast(intent);
-    }
-    public static void result(Context context, String status){
-        Intent intent=new Intent();
-        intent.setAction("org.md2k.scheduler.response");
-        intent.putExtra("TYPE","RESULT");
-        intent.putExtra("OUTPUT", status);
+        intent.putExtra("TYPE", "ALIVE");
+        intent.putExtra("OUTPUT", true);
         context.sendBroadcast(intent);
     }
 
+    /**
+     * Sends a <code>"RESULT"</code> broadcast.
+     * @param context Android context
+     * @param status Status of the EMA.
+     */
+    public static void result(Context context, String status){
+        Intent intent = new Intent();
+        intent.setAction("org.md2k.scheduler.response");
+        intent.putExtra("TYPE", "RESULT");
+        intent.putExtra("OUTPUT", status);
+        context.sendBroadcast(intent);
+    }
 }

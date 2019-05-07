@@ -1,14 +1,6 @@
-package org.md2k.ema.fragment;
-
-import android.content.Context;
-import android.support.v4.view.ViewPager;
-import android.util.AttributeSet;
-import android.view.MotionEvent;
-
-
-/**
- * Copyright (c) 2015, The University of Memphis, MD2K Center
- * - Syed Monowar Hossain <monowar.hossain@gmail.com>
+/*
+ * Copyright (c) 2018, The University of Memphis, MD2K Center of Excellence
+ *
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -32,25 +24,53 @@ import android.view.MotionEvent;
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
+package org.md2k.ema.fragment;
+
+import android.content.Context;
+import android.support.v4.view.ViewPager;
+import android.util.AttributeSet;
+import android.view.MotionEvent;
+
+/**
+ * Provides methods that prevent a swiping or touch event to switch between pages.
+ */
 public class NonSwipeableViewPager extends ViewPager {
 
+    /**
+     * Constructor
+     * @param context Android context
+     */
     public NonSwipeableViewPager(Context context) {
         super(context);
     }
 
+    /**
+     * Constructor
+     * @param context Android context
+     * @param attrs Android attributeSet
+     */
     public NonSwipeableViewPager(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
+    /**
+     * Never allow swiping to switch between pages.
+     * @param event Swiping event
+     * @return Always returns false to prevent switching.
+     */
     @Override
     public boolean onInterceptTouchEvent(MotionEvent event) {
-        // Never allow swiping to switch between pages
         return false;
     }
 
+    /**
+     * Never allow swiping to switch between pages.
+     * @param event Touch event
+     * @return Always returns false to prevent switching.
+     */
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        // Never allow swiping to switch between pages
         return false;
     }
 }

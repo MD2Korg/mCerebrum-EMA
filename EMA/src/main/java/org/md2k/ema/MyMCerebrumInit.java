@@ -1,7 +1,6 @@
-package org.md2k.ema;
 /*
- * Copyright (c) 2016, The University of Memphis, MD2K Center
- * - Syed Monowar Hossain <monowar.hossain@gmail.com>
+ * Copyright (c) 2018, The University of Memphis, MD2K Center of Excellence
+ *
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,6 +25,8 @@ package org.md2k.ema;
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+package org.md2k.ema;
+
 import android.content.Context;
 import android.content.Intent;
 
@@ -34,7 +35,14 @@ import org.md2k.mcerebrum.commons.permission.Permission;
 import org.md2k.mcerebrum.core.access.MCerebrum;
 import org.md2k.mcerebrum.core.access.MCerebrumInfo;
 
+/**
+ * Provides neccessary context for initializing mCerebrum.
+ */
 public class MyMCerebrumInit extends MCerebrumInfo {
+    /**
+     * Checks for permissions.
+     * @param context Android context
+     */
     @Override
     public void update(final Context context){
         if(!Permission.hasPermission(context)){
