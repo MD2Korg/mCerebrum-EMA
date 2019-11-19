@@ -42,10 +42,11 @@ import java.util.Locale;
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-public class FragmentNumberPicker extends FragmentBase {
-    NumberPicker numberPicker;
-    public static FragmentNumberPicker create(int pageNumber) {
-        FragmentNumberPicker fragment = new FragmentNumberPicker();
+public class FragmentStringPicker extends FragmentBase {
+    private NumberPicker numberPicker;
+    String[] strings;
+    public static FragmentStringPicker create(int pageNumber) {
+        FragmentStringPicker fragment = new FragmentStringPicker();
         fragment.setArguments(getArgument(pageNumber));
         return fragment;
     }
@@ -55,33 +56,39 @@ public class FragmentNumberPicker extends FragmentBase {
         super.onCreate(savedInstanceState);
     }
 
-    private void setHourMinute(ViewGroup rootView) {
-        int index=0;
+    private void setStringValues(ViewGroup rootView) {
         numberPicker = (NumberPicker) rootView.findViewById(R.id.number_picker);
-        if(question.getResponse_option().size()==3) {
-            TextView t = (TextView) rootView.findViewById(R.id.textView_numberpicker);
-            t.setText(question.getResponse_option().get(0));
-            index = 1;
+/*
+        TextView t = (TextView) rootView.findViewById(R.id.textView_numberpicker);
+        t.setText(question.getResponse_option().get(0));
+*/
+        strings = new String[question.getResponse_option().size()];
+        for(int i=0;i<question.getResponse_option().size();i++){
+            strings[i]=question.getResponse_option().get(i);
         }
-        int minValue = Integer.parseInt(question.getResponse_option().get(index));
-        int maxValue = Integer.parseInt(question.getResponse_option().get(index+1));
-        numberPicker.setMaxValue(maxValue);
-        numberPicker.setMinValue(minValue);
+        numberPicker.setMinValue(0);
+        numberPicker.setMaxValue(question.getResponse_option().size()-1);
+
+        numberPicker.setDisplayedValues(strings);
         if(question.getResponse()==null || question.getResponse().size()==0) {
             ArrayList<String> s = new ArrayList<>();
-            s.add(String.valueOf(minValue));
+            s.add(String.valueOf(strings[0]));
             question.setResponse(s);
         }
         String s=question.getResponse().get(0);
-        int value=Integer.parseInt(s);
-        numberPicker.setValue(value);
+        numberPicker.setValue(0);
+        for(int i=0;s!=null && i<strings.length;i++){
+            if(s.equals(strings[i]))
+                numberPicker.setValue(i);
+        }
         updateNext(true);
 
         numberPicker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
             @Override
             public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
                 ArrayList<String> s=new ArrayList<>();
-                s.add(String.format(Locale.getDefault(), "%d",numberPicker.getValue()));
+                s.add(strings[newVal]);
+//                s.add(String.format(Locale.getDefault(), "%d",numberPicker.getValue()));
                 question.setResponse(s);
                 updateNext(true);
             }
@@ -99,9 +106,9 @@ public class FragmentNumberPicker extends FragmentBase {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         final ViewGroup rootView = (ViewGroup) inflater
-                .inflate(R.layout.fragment_number_picker, container, false);
+                .inflate(R.layout.fragment_string_picker, container, false);
         setQuestionText(rootView, question);
-        setHourMinute(rootView);
+        setStringValues(rootView);
         return rootView;
     }
 }

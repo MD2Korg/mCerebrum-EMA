@@ -27,7 +27,6 @@
 
 package org.md2k.ema.fragment;
 
-import android.app.Fragment;
 import android.os.Bundle;
 import android.text.Html;
 import android.util.Log;
@@ -38,6 +37,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
+
+import androidx.fragment.app.Fragment;
 
 import org.md2k.ema.ActivityInterview;
 import org.md2k.ema.R;

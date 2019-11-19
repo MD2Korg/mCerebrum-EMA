@@ -27,8 +27,12 @@
 
 package org.md2k.ema;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+
+import androidx.core.content.ContextCompat;
 
 import org.md2k.mcerebrum.commons.permission.ActivityPermission;
 import org.md2k.mcerebrum.commons.permission.Permission;
@@ -45,10 +49,11 @@ public class MyMCerebrumInit extends MCerebrumInfo {
      */
     @Override
     public void update(final Context context){
-        if(!Permission.hasPermission(context)){
-            Intent intent = new Intent(context, ActivityPermission.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            context.startActivity(intent);
-        }
+        int permission = ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        if(permission != PackageManager.PERMISSION_GRANTED) {
+                Intent intent = new Intent(context, ActivityPermission.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                context.startActivity(intent);
+            }
     }
 }

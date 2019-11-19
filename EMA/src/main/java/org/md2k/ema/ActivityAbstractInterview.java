@@ -27,6 +27,7 @@
 
 package org.md2k.ema;
 
+
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -35,6 +36,8 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
+
+import androidx.fragment.app.FragmentActivity;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
@@ -58,7 +61,7 @@ import java.util.List;
 /**
  * Abstract class for an interviewing activity.
  */
-public abstract class ActivityAbstractInterview extends Activity {
+public abstract class ActivityAbstractInterview extends FragmentActivity {
     private static final String TAG = ActivityAbstractInterview.class.getSimpleName();
     DataKitAPI dataKitAPI;
     DataSourceClient dataSourceClient;

@@ -6,12 +6,13 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.NumberPicker;
-import android.widget.TextView;
+import android.widget.DatePicker;
+import android.widget.TimePicker;
 
 import org.md2k.ema.R;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Locale;
 
 
@@ -42,10 +43,11 @@ import java.util.Locale;
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-public class FragmentNumberPicker extends FragmentBase {
-    NumberPicker numberPicker;
-    public static FragmentNumberPicker create(int pageNumber) {
-        FragmentNumberPicker fragment = new FragmentNumberPicker();
+public class FragmentTime extends FragmentBase {
+    private static final String TAG = FragmentTime.class.getSimpleName();
+    TimePicker timePicker;
+    public static FragmentTime create(int pageNumber) {
+        FragmentTime fragment = new FragmentTime();
         fragment.setArguments(getArgument(pageNumber));
         return fragment;
     }
@@ -55,34 +57,25 @@ public class FragmentNumberPicker extends FragmentBase {
         super.onCreate(savedInstanceState);
     }
 
+
     private void setHourMinute(ViewGroup rootView) {
-        int index=0;
-        numberPicker = (NumberPicker) rootView.findViewById(R.id.number_picker);
-        if(question.getResponse_option().size()==3) {
-            TextView t = (TextView) rootView.findViewById(R.id.textView_numberpicker);
-            t.setText(question.getResponse_option().get(0));
-            index = 1;
-        }
-        int minValue = Integer.parseInt(question.getResponse_option().get(index));
-        int maxValue = Integer.parseInt(question.getResponse_option().get(index+1));
-        numberPicker.setMaxValue(maxValue);
-        numberPicker.setMinValue(minValue);
-        if(question.getResponse()==null || question.getResponse().size()==0) {
-            ArrayList<String> s = new ArrayList<>();
-            s.add(String.valueOf(minValue));
-            question.setResponse(s);
-        }
-        String s=question.getResponse().get(0);
-        int value=Integer.parseInt(s);
-        numberPicker.setValue(value);
+        timePicker = (TimePicker) rootView.findViewById(R.id.timePicker);
+
+        String s = question.getResponse().get(0);
+        String split[] = s.split(":");
+        int hour = Integer.valueOf(split[0]);
+        int min = Integer.valueOf(split[1]);
+        timePicker.setCurrentHour(hour);
+        timePicker.setCurrentMinute(min);
         updateNext(true);
 
-        numberPicker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
+        timePicker.setOnTimeChangedListener(new TimePicker.OnTimeChangedListener() {
             @Override
-            public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
-                ArrayList<String> s=new ArrayList<>();
-                s.add(String.format(Locale.getDefault(), "%d",numberPicker.getValue()));
-                question.setResponse(s);
+            public void onTimeChanged(TimePicker view, int hourOfDay, int minute) {
+                ArrayList<String> str = question.getResponse();
+                String ans = String.format(Locale.US, "%02d:%02d:00", hourOfDay, minute);
+                str.set(0, ans);
+                question.setResponse(str);
                 updateNext(true);
             }
         });
@@ -94,13 +87,26 @@ public class FragmentNumberPicker extends FragmentBase {
         super.onCreateOptionsMenu(menu, inflater);
         updateNext(true);
     }
+    private void setQuestionValue(){
+        if (question.getResponse() == null || question.getResponse().size() != 1) {
+            Calendar c = Calendar.getInstance();
+            int hour = c.get(Calendar.HOUR_OF_DAY);
+            int minute = c.get(Calendar.MINUTE);
+            String time = String.format(Locale.US, "%02d:%02d:00", hour, minute);
+            ArrayList<String> res = new ArrayList<>();
+            res.add(time);
+            question.setResponse(res);
+
+        }
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         final ViewGroup rootView = (ViewGroup) inflater
-                .inflate(R.layout.fragment_number_picker, container, false);
+                .inflate(R.layout.fragment_time, container, false);
         setQuestionText(rootView, question);
+        setQuestionValue();
         setHourMinute(rootView);
         return rootView;
     }

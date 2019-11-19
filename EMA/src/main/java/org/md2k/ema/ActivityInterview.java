@@ -27,16 +27,17 @@
 
 package org.md2k.ema;
 
-import android.app.Fragment;
-import android.app.FragmentManager;
 import android.os.Bundle;
-import android.support.v13.app.FragmentStatePagerAdapter;
-import android.support.v4.view.PagerAdapter;
-import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
+
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentStatePagerAdapter;
+import androidx.viewpager.widget.PagerAdapter;
+import androidx.viewpager.widget.ViewPager;
 
 import org.md2k.datakitapi.time.DateTime;
 import org.md2k.ema.broadcast.BroadcastSend;
@@ -49,7 +50,9 @@ import org.md2k.ema.fragment.FragmentMinuteSecond;
 import org.md2k.ema.fragment.FragmentMultipleChoiceSelect;
 import org.md2k.ema.fragment.FragmentNumberPicker;
 import org.md2k.ema.fragment.FragmentSeekBar;
+import org.md2k.ema.fragment.FragmentStringPicker;
 import org.md2k.ema.fragment.FragmentTextNumeric;
+import org.md2k.ema.fragment.FragmentTime;
 import org.md2k.ema.fragment.NonSwipeableViewPager;
 import org.md2k.ema.notification.Notification;
 
@@ -71,7 +74,7 @@ public class ActivityInterview extends ActivityAbstractInterview {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_question);
         mPager = (NonSwipeableViewPager) findViewById(R.id.view_pager);
-        mPagerAdapter = new ScreenSlidePagerAdapter(getFragmentManager());
+        mPagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
         mPager.setAdapter(mPagerAdapter);
         mPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             /**
@@ -186,7 +189,7 @@ public class ActivityInterview extends ActivityAbstractInterview {
                      * @param dialog Dialog clicked.
                      * @param which Dialog action clicked.
                      */
-                    @Override
+/*                    @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                         emaEnd(Constants.EMA_ABANDONED_BY_USER);
                     }
@@ -196,7 +199,7 @@ public class ActivityInterview extends ActivityAbstractInterview {
                      * @param dialog Dialog clicked.
                      * @param which Dialog action clicked.
                      */
-                    @Override
+/*                    @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {}
                 });
         md.show();
@@ -242,11 +245,17 @@ public class ActivityInterview extends ActivityAbstractInterview {
                     case Constants.DATETIME:
                         fragmentBase = FragmentDateTime.create(position);
                         break;
+                    case Constants.TIME:
+                        fragmentBase = FragmentTime.create(position);
+                        break;
                     case Constants.MINUTE_SECOND:
                         fragmentBase = FragmentMinuteSecond.create(position);
                         break;
                     case Constants.NUMBER_PICKER:
                         fragmentBase = FragmentNumberPicker.create(position);
+                        break;
+                    case Constants.STRING_PICKER:
+                        fragmentBase = FragmentStringPicker.create(position);
                         break;
                     case Constants.SEEK_BAR:
                         fragmentBase = FragmentSeekBar.create(position);

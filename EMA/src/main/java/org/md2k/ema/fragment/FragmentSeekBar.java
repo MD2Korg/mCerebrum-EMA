@@ -1,7 +1,7 @@
 package org.md2k.ema.fragment;
 
 import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
+import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -9,6 +9,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 
 import com.xw.repo.BubbleSeekBar;
 
@@ -112,7 +115,7 @@ public class FragmentSeekBar extends FragmentBase {
                 .showSectionText()
                 .sectionTextColor(ContextCompat.getColor(getActivity(), R.color.colorPrimary))
                 .sectionTextSize(18)
-                .sectionTextPosition(30)
+                .sectionTextPosition(BubbleSeekBar.TextPosition.SIDES)
 //                .showThumbText()
 //                .thumbTextColor(ContextCompat.getColor(getActivity(), R.color.deeporange_500))
 //                .thumbTextSize(18)

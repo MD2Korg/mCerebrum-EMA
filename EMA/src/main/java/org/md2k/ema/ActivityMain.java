@@ -27,6 +27,7 @@
 
 package org.md2k.ema;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -36,6 +37,13 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.Toast;
+
+import com.karumi.dexter.Dexter;
+import com.karumi.dexter.PermissionToken;
+import com.karumi.dexter.listener.PermissionDeniedResponse;
+import com.karumi.dexter.listener.PermissionGrantedResponse;
+import com.karumi.dexter.listener.PermissionRequest;
+import com.karumi.dexter.listener.single.PermissionListener;
 
 import org.md2k.ema.data.EMAInfo;
 import org.md2k.mcerebrum.commons.permission.Permission;
@@ -58,11 +66,33 @@ public class ActivityMain extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Dexter.withActivity(this).withPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE).withListener(new PermissionListener() {
+            @Override
+            public void onPermissionGranted(PermissionGrantedResponse response) {
+                load();
+            }
+
+            @Override
+            public void onPermissionDenied(PermissionDeniedResponse response) {
+                Toast.makeText(getApplicationContext(),
+                        "EMA app ... !PERMISSION DENIED !!! Could not continue...", Toast.LENGTH_SHORT).show();
+                finish();
+            }
+
+            @Override
+            public void onPermissionRationaleShouldBeShown(PermissionRequest permission, PermissionToken token) {
+
+
+            }
+        }).check();
+/*
         Permission.requestPermission(this, new PermissionCallback() {
-            /**
+            */
+/**
              * Generates an error if permissions are not granted, calls <code>load()</code> otherwise.
              * @param isGranted Whether permissions are granted or not.
-             */
+             *//*
+
             @Override
             public void OnResponse(boolean isGranted) {
                 if (!isGranted) {
@@ -74,6 +104,7 @@ public class ActivityMain extends Activity {
                 }
             }
         });
+*/
     }
 
     /**

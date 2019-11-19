@@ -28,9 +28,10 @@
 package org.md2k.ema.fragment;
 
 import android.content.Context;
-import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
+
+import androidx.viewpager.widget.ViewPager;
 
 /**
  * Provides methods that prevent a swiping or touch event to switch between pages.
